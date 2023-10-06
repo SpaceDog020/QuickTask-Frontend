@@ -28,15 +28,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleRegister = async ()  => {
     if(name === '' || lastName === '' || email === '' || password === ''){
-      if(name === ''){
-        alert('Ingrese un nombre valido');
-      }else if(lastName === ''){
-        alert('Ingrese un apellido valido');
-      }else if(email === ''){
-        alert('Ingrese un correo valido');
-      }else if(password === ''){
-        alert('Ingrese una contraseña valida');
-      }
+      alert('Todos los campos deben estar llenos');
     }else{
       try{
         const { data } = await register({
@@ -48,11 +40,10 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           }
         });
         if (data && data.register) {
-          console.log(data.register);
           if (data.register.response) {
             navigate("Login")
           }else{
-            alert("Correo ya existene");
+            alert("Correo ya existente");
           }
         } else {
           console.log("No se encontraron datos de registro");
@@ -62,17 +53,6 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
       }
     }
   };
-
-  const response = (error: boolean) => {
-    if (error) {
-      console.log("correcto");
-      navigate("Login")
-    }else{
-      alert("Correo ya existente");
-      console.log(error);
-      return;
-    }
-  }
   
   return (
     <SafeAreaView>

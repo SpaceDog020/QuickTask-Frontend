@@ -29,11 +29,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleLogin = async (email: string, password: string) => {
     if(email === '' || password === ''){
-      if(email === ''){
-        alert('Ingrese un correo valido');
-      }else if(password === ''){
-        alert('Ingrese una contraseña valida');
-      }
+      alert('Todos los campos deben estar llenos');
     }else{
       try{
         const { data } = await login({
@@ -43,7 +39,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           },
         });
         if (data && data.login) {
-          console.log(data.login.accessToken);
+          console.log("accessToken: ",data.login.accessToken);
           if (data.login.response) {
             setName(data.login.name);
             setAccessToken(data.login.accessToken);
