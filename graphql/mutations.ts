@@ -21,8 +21,10 @@ export const LOGIN = gql`
             email: $email,
             password: $password
         }) {
-
+        
+        name
         response
+        accessToken
             
         }
     }
