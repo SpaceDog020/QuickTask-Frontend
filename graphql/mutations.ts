@@ -9,7 +9,7 @@ export const REGISTER = gql`
             password: $password
         }) {
 
-        response
+            response
 
         }
     }
@@ -21,11 +21,46 @@ export const LOGIN = gql`
             email: $email,
             password: $password
         }) {
-        
-        name
-        response
-        accessToken
             
+            accessToken
+
         }
     }
+`;
+
+export const RECOVERY = gql`
+    mutation Recovery($email: String!) {
+        recovery(recoveryInput: {
+            email: $email
+        }) {
+            
+            response
+
+        }
+    }
+`;
+
+export const VALIDATERECOVERY = gql`
+  mutation ValidateRecovery($recoveryPass: Int!) {
+      validateRecovery(validaterecoveryInput: {
+          recoveryPass: $recoveryPass
+      }) {
+          
+          response
+
+      }
+  }
+`;
+
+export const CHANGEPASS = gql`
+  mutation ChangePass($password: String!, $recoveryPass: Int!) {
+      changePass(changePassUserInput: {
+          password: $password
+          recoveryPass: $recoveryPass
+      }) {
+          
+          response
+
+      }
+  }
 `;

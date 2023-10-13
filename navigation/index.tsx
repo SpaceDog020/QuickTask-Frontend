@@ -9,6 +9,8 @@ import Dashboard from "../screens/Dashboard";
 import PassResetScreen from "../screens/PassResetScreen";
 
 import { RootStackParamList } from "../types";
+import PassValScreen from "../screens/PassValScreen";
+import ChangePassScreen from "../screens/ChangePassScreen";
 
 const theme = {
   ...DefaultTheme,
@@ -38,6 +40,8 @@ function RootNavigator() {
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="PassReset" component={PassResetScreen} />
+      <Stack.Screen name="PassVal" component={PassValScreen} />
+      <Stack.Screen name="ChangePass" component={ChangePassScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Dashboard" component={Dashboard} />
     </Stack.Navigator>

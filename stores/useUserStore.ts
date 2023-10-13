@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type UseUserStoreT = {
   accessToken?: string;
-  name?: string;
-  setName: (name: string) => void;
+  recoveryPass?: number;
+  setRecoveryPass: (recoveryPass: number) => void;
   setAccessToken: (accessToken: string) => void;
   removeAccessToken: () => void;
 };
@@ -15,8 +15,8 @@ export const useUserStore = create<UseUserStoreT>()(
     persist(
       (set, get) => ({
         accessToken: undefined,
-        name: undefined,
-        setName: (name: string) => set(() => ({ name })),
+        recoveryPass: undefined,
+        setRecoveryPass: (recoveryPass: number) => set(() => ({ recoveryPass })),
         setAccessToken: (accessToken: string) => set(() => ({ accessToken })),
         removeAccessToken: () => set(() => ({ accessToken: undefined })),
       }),
