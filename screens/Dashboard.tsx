@@ -44,7 +44,7 @@ import {
                 textAlign: "center",
               }}
             >
-              Bienvenido {useUserStore().name}
+              Bienvenido
             </Text>
           </View>
           <View
