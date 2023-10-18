@@ -14,7 +14,11 @@ declare global {
 export type RootStackParamList = {
   Welcome: undefined;
   Login: undefined;
+  PassReset: undefined;
+  PassVal: undefined;
+  ChangePass: undefined;
   Register: undefined;
+  Dashboard: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
