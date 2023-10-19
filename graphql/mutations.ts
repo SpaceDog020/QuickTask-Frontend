@@ -21,7 +21,9 @@ export const LOGIN = gql`
             email: $email,
             password: $password
         }) {
-            
+            name
+            lastName
+            email
             accessToken
 
         }
@@ -64,3 +66,19 @@ export const CHANGEPASS = gql`
       }
   }
 `;
+
+export const UPDATEUSER = gql`
+  mutation UpdateUser($oldEmail: String!, $name: String!, $lastName: String!, $email: String!) {
+      updateUser(updateUserInput: {
+          oldEmail: $oldEmail,
+          name: $name,
+          lastName: $lastName,
+          email: $email
+      }) {
+          
+          response
+
+      }
+  }
+`;
+

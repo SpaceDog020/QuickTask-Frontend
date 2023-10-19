@@ -19,6 +19,9 @@ export type RootStackParamList = {
   ChangePass: undefined;
   Register: undefined;
   Dashboard: undefined;
+  UserProfile: undefined;
+  EditUserProfile: undefined;
+  ChangePassword: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

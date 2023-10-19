@@ -24,6 +24,9 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [password, setPassword] = useState('');
   const { accessToken, setAccessToken } = useUserStore();
   const { recoveryPass, setRecoveryPass } = useUserStore();
+  const { userName, setUserName } = useUserStore();
+  const { userLastName, setUserLastName } = useUserStore();
+  const { userEmail, setUserEmail } = useUserStore();
 
   const [login, { data, loading }] = useMutation(LOGIN);
 
@@ -39,7 +42,10 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           },
         });
         if (data && data.login) {
-          setAccessToken(data.login.accessToken);
+          setAccessToken(data.login.accessToken)
+          setUserName(data.login.name)
+          setUserLastName(data.login.lastName)
+          setUserEmail(data.login.email)
           navigate("Dashboard")
         }
       }catch(e){
