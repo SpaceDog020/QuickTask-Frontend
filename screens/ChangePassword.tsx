@@ -7,7 +7,7 @@ import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
-import { CHANGEPASS } from "../graphql/mutations";
+import { CHANGEPASSWORD } from "../graphql/mutations";
 import { useMutation } from "@apollo/client";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePassword">;

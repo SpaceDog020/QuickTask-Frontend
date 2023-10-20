@@ -54,10 +54,10 @@ export const VALIDATERECOVERY = gql`
   }
 `;
 
-export const CHANGEPASS = gql`
-  mutation ChangePass($password: String!, $recoveryPass: Int!) {
-      changePass(changePassUserInput: {
-          password: $password
+export const CHANGEPASSRECOVERY = gql`
+  mutation ChangePassRecovery($password: String!, $recoveryPass: Int!) {
+      changePassRecovery(changePassRecoveryUserInput: {
+          password: $password,
           recoveryPass: $recoveryPass
       }) {
           
@@ -66,6 +66,20 @@ export const CHANGEPASS = gql`
       }
   }
 `;
+
+export const CHANGEPASSWORD = gql`
+    mutation ChangePassword($email: String!, $oldPassword: String!, $newPassword: String!) {
+        changePassword(changePassInput: {
+            email: $email,
+            oldPassword: $oldPassword,
+            newPassword: $newPassword
+        }) {
+            
+            response
+    
+        }
+    }
+    `;
 
 export const UPDATEUSER = gql`
   mutation UpdateUser($oldEmail: String!, $name: String!, $lastName: String!, $email: String!) {
@@ -90,8 +104,21 @@ export const CREATETEAM = gql`
             idUser: $idUser
         }) {
             
-            response
+            id
     
+        }
+    }
+`;
+
+export const ADDTEAM = gql`
+    mutation AddTeam($idUser: Int!, $idTeam: Int!) {
+        addTeam(addTeamInput: {
+            idUser: $idUser,
+            idTeam: $idTeam
+        }) {
+            
+            response
+
         }
     }
 `;

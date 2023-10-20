@@ -14,7 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import AppTextInput from "../components/AppTextInput";
 import { useUserStore } from "../stores/useUserStore";
-import { CHANGEPASS } from "../graphql/mutations";
+import { CHANGEPASSRECOVERY } from "../graphql/mutations";
 import { useMutation } from "@apollo/client";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePass">;
@@ -24,7 +24,7 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [password2, setPassword2] = useState("");
   const { recoveryPass, setRecoveryPass } = useUserStore();
 
-  const [changePass, { data, loading }] = useMutation(CHANGEPASS);
+  const [changePassRecovery, { data, loading }] = useMutation(CHANGEPASSRECOVERY);
 
   const handleChangePass = async (password: string, password2: string) => {
     if (password === "" || password2 === "") {
@@ -32,13 +32,13 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
     } else {
       if (password === password2) {
         try {
-          const { data } = await changePass({
+          const { data } = await changePassRecovery({
             variables: {
               password,
               recoveryPass,
             },
           });
-          if (data && data.changePass) {
+          if (data && data.changePassRecovery) {
             alert("Contraseña cambiada con exito");
             setRecoveryPass(0);
             navigate("Login");

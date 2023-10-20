@@ -13,7 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import AppTextInput from "../components/AppTextInput";
 import { useMutation, useQuery } from '@apollo/client';
-import { GETUSERIDBYEMAIL, REGISTER } from '../graphql/mutations';
+import { ADDTEAM, GETUSERIDBYEMAIL, REGISTER } from '../graphql/mutations';
 import { CREATETEAM } from '../graphql/mutations';
 import { useUserStore } from "../stores/useUserStore";
 
@@ -35,6 +35,8 @@ const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const [createTeam, { data }] = useMutation(CREATETEAM);
 
+  const [addTeam, { data: addTeamData }] = useMutation(ADDTEAM);
+
   const handleTeamCreation = async () => {
     if (teamName === '' || teamDescription === '') {
       alert('Todos los campos deben estar llenos');
@@ -42,8 +44,7 @@ const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
       try {
         if (userIdData && userIdData.email.id) {
           
-          const userId = userIdData.email.id; // Access user ID correctly
-          console.log("User ID found", userId);
+          const userId = userIdData.email.id;
 
           const { data } = await createTeam({
             variables: {
@@ -52,21 +53,27 @@ const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               idUser: userId,
             },
           });
+
           console.log("Data", data);
           if (data && data.createTeam) {
-            if (data.createTeam.response) {
+            
+            const teamId = data.createTeam.id;
+
+            const { data: addTeamData } = await addTeam({
+              variables: {
+                idUser: userId,
+                idTeam: teamId,
+              },
+            });
+
+            if (addTeamData && addTeamData.addTeam) {
+              alert("Equipo creado correctamente");
               navigate("Dashboard");
-            } else {
-              alert("Error al crear equipo");
             }
-          } else {
-            console.log("No se encontraron datos de registro");
           }
-        } else {
-          console.log("No user ID found");
         }
       } catch (e) {
-        console.error("Error al registrar", e);
+        alert("Error al registrar el equipo");
       }
     }
   };
