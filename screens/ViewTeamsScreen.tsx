@@ -18,7 +18,7 @@ import { RootStackParamList } from "../types";
 const { height } = Dimensions.get("window");
 import { useUserStore } from '../stores/useUserStore';
 import { useQuery } from "@apollo/client";
-import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../graphql/mutations";
+import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
@@ -26,6 +26,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userEmail, setUserEmail } = useUserStore();
   const [teams, setTeams] = useState([]);
+  const { teamId, setTeamId } = useUserStore();
+
 
   const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
     variables: {
@@ -62,6 +64,10 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
     }, [userId])
   );
+  
+  const handleTeam = async ()  => {
+
+  }
 
   return (
     <SafeAreaView>
@@ -96,7 +102,10 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}
             >
               <TouchableOpacity
-                onPress={() => navigate("Dashboard")}
+                onPress={() => {
+                  setTeamId(team.id);
+                  navigate("TeamDetails");
+                }}
                 style={{
                   backgroundColor: Colors.primary,
                   paddingVertical: Spacing * 1,

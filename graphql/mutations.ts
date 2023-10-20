@@ -122,29 +122,3 @@ export const ADDTEAM = gql`
         }
     }
 `;
-
-export const GETUSERIDBYEMAIL = gql`
-  query email($email: String!) {
-    email(email: $email) {
-        id
-    }
-  }
-`;
-
-export const GETTEAMSIDBYEMAIL = gql`
-  query email($email: String!) {
-    email(email: $email) {
-        idTeams
-    }
-  }
-`;
-
-export const GETTEAMDETAILS = gql`
-    query TeamsByUserId($id: Int!) {
-        teamsByUserId(id: $id) {
-            id
-            name
-            description
-        }
-    }
-`;
