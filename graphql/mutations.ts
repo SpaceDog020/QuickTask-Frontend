@@ -21,7 +21,9 @@ export const LOGIN = gql`
             email: $email,
             password: $password
         }) {
-            
+            name
+            lastName
+            email
             accessToken
 
         }
@@ -52,15 +54,79 @@ export const VALIDATERECOVERY = gql`
   }
 `;
 
-export const CHANGEPASS = gql`
-  mutation ChangePass($password: String!, $recoveryPass: Int!) {
-      changePass(changePassUserInput: {
-          password: $password
+export const CHANGEPASSRECOVERY = gql`
+  mutation ChangePassRecovery($password: String!, $recoveryPass: Int!) {
+      changePassRecovery(changePassRecoveryUserInput: {
+          password: $password,
           recoveryPass: $recoveryPass
       }) {
           
           response
 
       }
+  }
+`;
+
+export const CHANGEPASSWORD = gql`
+    mutation ChangePassword($email: String!, $oldPassword: String!, $newPassword: String!) {
+        changePassword(changePassInput: {
+            email: $email,
+            oldPassword: $oldPassword,
+            newPassword: $newPassword
+        }) {
+            
+            response
+    
+        }
+    }
+    `;
+
+export const UPDATEUSER = gql`
+  mutation UpdateUser($oldEmail: String!, $name: String!, $lastName: String!, $email: String!) {
+      updateUser(updateUserInput: {
+          oldEmail: $oldEmail,
+          name: $name,
+          lastName: $lastName,
+          email: $email
+      }) {
+          
+          response
+
+      }
+  }
+`;
+
+export const CREATETEAM = gql`
+    mutation CreateTeam($name: String!, $description: String!, $idUser: Int!) {
+        createTeam(createTeamInput: {
+            name: $name,
+            description: $description,
+            idUser: $idUser
+        }) {
+            
+            id
+    
+        }
+    }
+`;
+
+export const ADDTEAM = gql`
+    mutation AddTeam($idUser: Int!, $idTeam: Int!) {
+        addTeam(addTeamInput: {
+            idUser: $idUser,
+            idTeam: $idTeam
+        }) {
+            
+            response
+
+        }
+    }
+`;
+
+export const GETUSERIDBYEMAIL = gql`
+  query email($email: String!) {
+    email(email: $email) {
+        id
+    }
   }
 `;

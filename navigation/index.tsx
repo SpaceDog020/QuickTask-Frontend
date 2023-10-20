@@ -7,10 +7,13 @@ import RegisterScreen from "../screens/RegisterScreen";
 import Welcome from "../screens/WelcomeScreen";
 import Dashboard from "../screens/Dashboard";
 import PassResetScreen from "../screens/PassResetScreen";
-
+import UserProfile from "../screens/UserProfile";
 import { RootStackParamList } from "../types";
 import PassValScreen from "../screens/PassValScreen";
 import ChangePassScreen from "../screens/ChangePassScreen";
+import ChangePassword from "../screens/ChangePassword";
+import TeamCreationScreen from "../screens/TeamCreationScreen";
+import ViewTeamsScreen from "../screens/ViewTeamsScreen";
 
 const theme = {
   ...DefaultTheme,
@@ -39,11 +42,16 @@ function RootNavigator() {
     >
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="TeamCreationScreen" component={TeamCreationScreen} />
+      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="UserProfile" component={UserProfile} />
       <Stack.Screen name="PassReset" component={PassResetScreen} />
       <Stack.Screen name="PassVal" component={PassValScreen} />
       <Stack.Screen name="ChangePass" component={ChangePassScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="ViewTeamsScreen" component={ViewTeamsScreen} />
+
     </Stack.Navigator>
   );
 }
