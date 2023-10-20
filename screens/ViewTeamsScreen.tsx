@@ -26,12 +26,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userEmail, setUserEmail } = useUserStore();
   const [teams, setTeams] = useState([]);
-<<<<<<< HEAD
-  const [selectedTeam, setSelectedTeam] = useState(null);
-=======
   const { teamId, setTeamId } = useUserStore();
 
->>>>>>> 92b66970d648eb91b3e1e50114d2efd0fc7db991
 
   const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
     variables: {
@@ -102,14 +98,10 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}
             >
               <TouchableOpacity
-<<<<<<< HEAD
-                onPress={() => navigate("ViewTeams")}
-=======
                 onPress={() => {
                   setTeamId(team.id);
                   navigate("TeamDetails");
                 }}
->>>>>>> 92b66970d648eb91b3e1e50114d2efd0fc7db991
                 style={{
                   backgroundColor: Colors.primary,
                   paddingVertical: Spacing * 1,

@@ -13,9 +13,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import AppTextInput from "../components/AppTextInput";
 import { useMutation, useQuery } from '@apollo/client';
-import { ADDTEAM, GETUSERIDBYEMAIL, REGISTER } from '../graphql/mutations';
+import { ADDTEAM, REGISTER } from '../graphql/mutations';
 import { CREATETEAM } from '../graphql/mutations';
 import { useUserStore } from "../stores/useUserStore";
+import { GETUSERIDBYEMAIL } from "../graphql/queries";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeamCreationScreen">;
 
