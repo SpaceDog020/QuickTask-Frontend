@@ -86,79 +86,88 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   return (
     <SafeAreaView>
-      <View>
-        <Text
-          style={{
-            paddingTop: Spacing * 4,
-            fontSize: FontSize.xxLarge,
-            color: Colors.primary,
-            fontFamily: Font["poppins-bold"],
-            textAlign: "center",
-          }}
-        >
-          Tu Perfil
-        </Text>
-        {/* Add the trash icon to navigate to DeleteUserScreen */}
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 4,
-            right: Spacing * 2,
-            zIndex: 1,
-          }}
-          onPress={() => navigate("DeleteUserScreen")}
-        >
-          {/* Use the icon for a trash bin */}
-          <Icon
-            raised
-
-            name='trash'
-            type='font-awesome-5'
-            color='black'/>
-        </TouchableOpacity>
-      </View>
-      
       <View
         style={{
-          marginVertical: Spacing * 1,
+          padding: Spacing * 2,
         }}
       >
-        <Text style={{ paddingLeft: 20, fontSize: 18, fontWeight: "800" }}>
-          Nombre
-        </Text>
-        <AppTextInput
-          value={newName}
-          editable={editable} // Set the editability based on the state
-          onChangeText={setNewName} 
-          // Update the state when the text changes
-        />
-        <Text style={{ paddingLeft: 20, fontSize: 18, fontWeight: "800" }}>
-          Apellido
-        </Text>
-        <AppTextInput
-          value={newLastName}
-          editable={editable} // Set the editability based on the state
-          onChangeText={setNewLastName} // Update the state when the text changes
-        />
-        
-        <Text style={{ paddingLeft: 20, fontSize: 18, fontWeight: "800" }}>
-          Email
-        </Text>
-        <AppTextInput
-          value={newEmail}
-          editable={editable}
-          keyboardType="email-address" // Set the editability based on the state
-          onChangeText={setNewEmail}  // Update the state when the text changes
-        />
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: FontSize.xLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              marginVertical: Spacing * 2,
+            }}
+          >
+            Tu perfil
+          </Text>
+          <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 1,
+            right: Spacing * 1,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("DeleteUserScreen")}
+          >
+            <Icon
+              raised
+
+              name='trash'
+              type='font-awesome-5'
+              color='black'/>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Nombre
+          </Text>
+          <AppTextInput placeholder="Nombre" value={newName} editable={editable} onChangeText={setNewName}/>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Apellido
+          </Text>
+          <AppTextInput placeholder="Apellido" value={newLastName} editable={editable} onChangeText={setNewLastName}/>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Correo
+          </Text>
+          <AppTextInput placeholder="Nombre" value={newEmail} editable={editable} onChangeText={setNewEmail}/>
+        </View>
 
         <TouchableOpacity
           onPress={handleButtonPress}
           style={{
-            marginHorizontal: 95,
+            padding: Spacing * 1,
             backgroundColor: Colors.primary,
-            paddingVertical: Spacing * 1.5,
-            paddingHorizontal: Spacing * 2,
-            width: "48%",
+            marginVertical: Spacing * 1,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
             shadowOffset: {
@@ -173,28 +182,21 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             style={{
               fontFamily: Font["poppins-bold"],
               color: Colors.onPrimary,
-              fontSize: FontSize.medium,
               textAlign: "center",
+              fontSize: FontSize.large,
             }}
           >
             {editable ? "Cancelar" : "Editar Datos"}
           </Text>
         </TouchableOpacity>
-
         
-        
-      </View>
-      <View>
-      {editable && (
+        {editable && (
           <TouchableOpacity
             onPress={handleSaveChanges}
             style={{
-              marginBottom: 10,
-              marginHorizontal: 95,
+              padding: Spacing * 1,
               backgroundColor: Colors.primary,
-              paddingVertical: Spacing * 1.5,
-              paddingHorizontal: Spacing * 2,
-              width: "48%",
+              marginVertical: Spacing * 1,
               borderRadius: Spacing,
               shadowColor: Colors.primary,
               shadowOffset: {
@@ -209,48 +211,47 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
               style={{
                 fontFamily: Font["poppins-bold"],
                 color: Colors.onPrimary,
-                fontSize: FontSize.medium,
                 textAlign: "center",
+                fontSize: FontSize.large,
               }}
             >
               Guardar
             </Text>
           </TouchableOpacity>
         )}
-      </View>
-      <View>
-      <TouchableOpacity
-              onPress={() => navigate("ChangePassword")}
-              style={{
-                marginLeft: 95,
-                backgroundColor: Colors.primary,
-                paddingVertical: Spacing * 1.5,
-                paddingHorizontal: Spacing * 2,
-                width: "48%",
-                borderRadius: Spacing,
-                shadowColor: Colors.primary,
-                shadowOffset: {
-                  width: 0,
-                  height: Spacing,
-                },
-                shadowOpacity: 0.3,
-                shadowRadius: Spacing,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  fontSize: FontSize.medium,
-                  textAlign: "center",
-                }}
-              >
-                Cambiar Contraseña
-              </Text>
-            </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigate("ChangePassword")}
+          style={{
+            padding: Spacing * 1,
+            backgroundColor: Colors.primary,
+            marginVertical: Spacing * 1,
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.onPrimary,
+              textAlign: "center",
+              fontSize: FontSize.large,
+            }}
+          >
+            Cambiar Contraseña
+          </Text>
+        </TouchableOpacity>
+
       </View>
     </SafeAreaView>
   );
+  
 };
 
 export default UserProfile;
