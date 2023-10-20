@@ -22,6 +22,8 @@ export type RootStackParamList = {
   UserProfile: undefined;
   EditUserProfile: undefined;
   ChangePassword: undefined;
+  TeamCreationScreen: undefined;
+  ViewTeamsScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

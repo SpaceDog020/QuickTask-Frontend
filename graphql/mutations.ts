@@ -82,3 +82,24 @@ export const UPDATEUSER = gql`
   }
 `;
 
+export const CREATETEAM = gql`
+    mutation CreateTeam($name: String!, $description: String!, $id: String!) {
+        createTeam(createTeamInput: {
+            name: $name,
+            description: $description,
+            id: $id
+        }) {
+            
+            response
+    
+        }
+    }
+`;
+
+export const GETUSERIDBYEMAIL = gql`
+  query GetUserIdByEmail($email: String!) {
+    email(email: $email) {
+      id
+    }
+  }
+`;

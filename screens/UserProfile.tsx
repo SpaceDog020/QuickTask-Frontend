@@ -28,6 +28,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
     userLastName: initialUserLastName,
     userEmail: initialUserEmail,
   } = useUserStore();
+  
   const [userName, setUserName] = useState(initialUserName);
   const [userLastName, setUserLastName] = useState(initialUserLastName);
   const [userEmail, setUserEmail] = useState(initialUserEmail);
@@ -96,7 +97,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             name="user"
             type="font-awesome-5"
             color="black"
-            onPress={() => navigate("EditUserProfile")}
+            onPress={() => navigate("ChangePassword")}
           />
         </TouchableOpacity>
       </View>

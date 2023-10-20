@@ -41,43 +41,7 @@ import {
               Bienvenido
             </Text>
           </View>
-          <View
-            style={{
-              paddingHorizontal: Spacing * 2,
-              paddingTop: Spacing * 6,
-              flexDirection: "row",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => navigate("Login")}
-              style={{
-                marginLeft: 90,
-                backgroundColor: Colors.primary,
-                paddingVertical: Spacing * 1.5,
-                paddingHorizontal: Spacing * 2,
-                width: "48%",
-                borderRadius: Spacing,
-                shadowColor: Colors.primary,
-                shadowOffset: {
-                  width: 0,
-                  height: Spacing,
-                },
-                shadowOpacity: 0.3,
-                shadowRadius: Spacing,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  fontSize: FontSize.large,
-                  textAlign: "center",
-                }}
-              >
-                Volver
-              </Text>
-            </TouchableOpacity>
-          </View>
+          
           <View
             style={{
               paddingHorizontal: Spacing * 2,
@@ -112,6 +76,117 @@ import {
                 }}
               >
                 User Profile
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 6,
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => navigate("Login")}
+              style={{
+                marginLeft: 90,
+                backgroundColor: Colors.primary,
+                paddingVertical: Spacing * 1.5,
+                paddingHorizontal: Spacing * 2,
+                width: "48%",
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  fontSize: FontSize.large,
+                  textAlign: "center",
+                }}
+              >
+                Ver equipos
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 6,
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => navigate("TeamCreationScreen")}
+              style={{
+                marginLeft: 90,
+                backgroundColor: Colors.primary,
+                paddingVertical: Spacing * 1.5,
+                paddingHorizontal: Spacing * 2,
+                width: "48%",
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  fontSize: FontSize.large,
+                  textAlign: "center",
+                }}
+              >
+                Crear Equipo
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 6,
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => navigate("Login")}
+              style={{
+                marginLeft: 90,
+                backgroundColor: Colors.primary,
+                paddingVertical: Spacing * 1.5,
+                paddingHorizontal: Spacing * 2,
+                width: "48%",
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  fontSize: FontSize.large,
+                  textAlign: "center",
+                }}
+              >
+                Salir
               </Text>
             </TouchableOpacity>
           </View>
