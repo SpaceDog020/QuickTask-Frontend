@@ -54,7 +54,6 @@ const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             },
           });
 
-          console.log("Data", data);
           if (data && data.createTeam) {
             
             const teamId = data.createTeam.id;

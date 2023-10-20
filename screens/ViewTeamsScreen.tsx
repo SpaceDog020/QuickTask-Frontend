@@ -1,141 +1,181 @@
 import {
-    SafeAreaView,
-    Text,
-    TouchableOpacity,
-    View,
-  } from "react-native";
-  import React, { useState } from "react";
-  import Spacing from "../constants/Spacing";
-  import FontSize from "../constants/FontSize";
-  import Colors from "../constants/Colors";
-  import Font from "../constants/Font";
-  import { NativeStackScreenProps } from "@react-navigation/native-stack";
-  import { RootStackParamList } from "../types";
-  import AppTextInput from "../components/AppTextInput";
-  import { useMutation } from '@apollo/client';
-  import { REGISTER } from '../graphql/mutations';
+  Dimensions,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import Spacing from "../constants/Spacing";
+import FontSize from "../constants/FontSize";
+import Colors from "../constants/Colors";
+import Font from "../constants/Font";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types";
+const { height } = Dimensions.get("window");
+import { useUserStore } from '../stores/useUserStore';
+import { useQuery } from "@apollo/client";
+import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../graphql/mutations";
+import { useFocusEffect } from "@react-navigation/core";
+
+type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
+
+const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const { userEmail, setUserEmail } = useUserStore();
+  const [teams, setTeams] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+
+  const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
+    variables: {
+      email: userEmail,
+    },
+  });
+
+  const userId = userIdData?.email.id; // Asegúrate de verificar si userIdData está definido
+
+  const { refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
+    variables: {
+      id: userId,
+    },
+  });
+
+  useEffect(() => {
+    refetchTeams()
+      .then(({ data }) => {
+        setTeams(data?.teamsByUserId || []);
+      })
+      .catch((error) => {
+        console.error("Error al cargar equipos:", error);
+      });
+  }, [userId]);
   
-  type Props = NativeStackScreenProps<RootStackParamList, "ViewTeamsScreen">;
+  useFocusEffect(
+    React.useCallback(() => {
+      refetchTeams()
+        .then(({ data }) => {
+          setTeams(data?.teamsByUserId || []);
+        })
+        .catch((error) => {
+          console.error("Error al cargar equipos:", error);
+        });
+    }, [userId])
+  );
   
-  const ViewTeamsScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
-    const [name, setName] = useState('');
-    const [lastName, setlastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(false);
-    
-    const [register, { data }] = useMutation(REGISTER);
-  
-    const handleRegister = async ()  => {
-      if(name === '' || lastName === '' || email === '' || password === ''){
-        alert('Todos los campos deben estar llenos');
-      }else{
-        try{
-          const { data } = await register({
-            variables: {
-                name,
-                lastName,
-                email,
-                password,
-            }
-          });
-          if (data && data.register) {
-            if (data.register.response) {
-              navigate("Login")
-            }else{
-              alert("Correo ya existente");
-            }
-          } else {
-            console.log("No se encontraron datos de registro");
-          }
-        }catch(e){
-          alert("Error al registrar");
-        }
-      }
-    };
-    
-    return (
-      <SafeAreaView>
+  const handleTeam = async ()  => {
+
+  }
+
+  return (
+    <SafeAreaView>
+      <View>
         <View
           style={{
-            padding: Spacing * 2,
+            paddingTop: Spacing * 6,
           }}
         >
-          <View
+          <Text
             style={{
-              alignItems: "center",
+              fontSize: FontSize.xxLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              textAlign: "center",
             }}
           >
-            <Text
-              style={{
-                fontSize: FontSize.xLarge,
-                color: Colors.primary,
-                fontFamily: Font["poppins-bold"],
-                marginVertical: Spacing * 3,
-              }}
-            >
-              Crea tu cuenta
-            </Text>
-          </View>
-          <View
-            style={{
-              marginVertical: Spacing * 1,
-            }}
-          >
-            <AppTextInput placeholder="Nombre" value={name} onChangeText={setName}/>
-            <AppTextInput placeholder="Apellido" value={lastName} onChangeText={setlastName}/>
-            <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail}/>
-            <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry/>
-          </View>
-  
-          <TouchableOpacity
-            onPress={handleRegister}
-            style={{
-              padding: Spacing * 2,
-              backgroundColor: Colors.primary,
-              marginVertical: Spacing * 1,
-              borderRadius: Spacing,
-              shadowColor: Colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: Spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: Spacing,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: Font["poppins-bold"],
-                color: Colors.onPrimary,
-                textAlign: "center",
-                fontSize: FontSize.large,
-              }}
-            >
-              Crear Cuenta
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigate("Login")}
-            style={{
-              padding: Spacing,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: Font["poppins-bold"],
-                color: Colors.text,
-                textAlign: "center",
-                fontSize: FontSize.medium,
-              }}
-            >
-              Ya tengo una cuenta
-            </Text>
-          </TouchableOpacity>
+            Equipos
+          </Text>
         </View>
-      </SafeAreaView>
-    );
-  };
+      </View>
+      
+      <ScrollView style={{ maxHeight: 447 }}>
+        {teams &&
+          teams.map((team) => (
+            <View
+              key={team.id}
+              style={{
+                paddingHorizontal: Spacing * 2,
+                paddingTop: Spacing * 2,
+                flexDirection: "row",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => navigate("ViewTeams")}
+                style={{
+                  backgroundColor: Colors.primary,
+                  paddingVertical: Spacing * 1,
+                  paddingHorizontal: Spacing * 2,
+                  width: "100%", // Ajusta el ancho del botón al 100%
+                  borderRadius: Spacing,
+                  shadowColor: Colors.primary,
+                  shadowOffset: {
+                    width: 0,
+                    height: Spacing,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: Spacing,
+                  flexDirection: "row", // Añade flexDirection para alinear el texto a la izquierda
+                  alignItems: "center", // Centra verticalmente el texto
+                  justifyContent: "flex-start", // Alinea el texto a la izquierda
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: Font["poppins-bold"],
+                    color: Colors.onPrimary,
+                    fontSize: FontSize.large,
+                  }}
+                >
+                  {team.name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+      </ScrollView>
+      
+      <View
+        style={{
+          paddingHorizontal: Spacing * 2,
+          paddingTop: Spacing * 3,
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigate("Dashboard")}
+          style={{
+            marginLeft: 90,
+            backgroundColor: Colors.primary,
+            paddingVertical: Spacing * 1.5,
+            paddingHorizontal: Spacing * 2,
+            width: "48%", // Ancho original del botón de volver
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.onPrimary,
+              fontSize: FontSize.large,
+              textAlign: "center",
+            }}
+          >
+            Volver
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
   
-  export default ViewTeamsScreen;
-  
+};
+
+export default ViewTeams;
+
+const styles = StyleSheet.create({});

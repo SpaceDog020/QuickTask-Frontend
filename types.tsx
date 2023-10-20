@@ -1,8 +1,3 @@
-/**
- * Learn more about using TypeScript with React Navigation:
- * https://reactnavigation.org/docs/typescript/
- */
-
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 declare global {
@@ -23,7 +18,7 @@ export type RootStackParamList = {
   EditUserProfile: undefined;
   ChangePassword: undefined;
   TeamCreationScreen: undefined;
-  ViewTeamsScreen: undefined;
+  ViewTeams: undefined;
   DeleteUserScreen: undefined;
 };
 

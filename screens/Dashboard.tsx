@@ -108,7 +108,7 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => navigate("Dashboard")}
+          onPress={() => navigate("ViewTeams")}
           style={{
             marginLeft: 90,
             backgroundColor: Colors.primary,
