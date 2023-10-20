@@ -15,6 +15,7 @@ import ChangePassword from "../screens/ChangePassword";
 import TeamCreationScreen from "../screens/TeamCreationScreen";
 import ViewTeamsScreen from "../screens/ViewTeamsScreen";
 import DeleteUserScreen from "../screens/DeleteUserScreen";
+import TeamDetailsScreen from "../screens/TeamDetailsScreen";
 
 const theme = {
   ...DefaultTheme,
@@ -53,6 +54,7 @@ function RootNavigator() {
       <Stack.Screen name="ViewTeams" component={ViewTeamsScreen} />
       <Stack.Screen name="TeamCreationScreen" component={TeamCreationScreen} />
       <Stack.Screen name="DeleteUserScreen" component={DeleteUserScreen} />
+      <Stack.Screen name="TeamDetails" component={TeamDetailsScreen} />
 
     </Stack.Navigator>
   );
