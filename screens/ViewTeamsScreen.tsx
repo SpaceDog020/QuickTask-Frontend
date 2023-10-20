@@ -64,10 +64,6 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
     }, [userId])
   );
-  
-  const handleTeam = async ()  => {
-
-  }
 
   return (
     <SafeAreaView>

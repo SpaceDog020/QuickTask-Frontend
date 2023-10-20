@@ -16,7 +16,7 @@ import Font from "../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 const { height } = Dimensions.get("window");
-import { useUserStore } from '../stores/useUserStore';
+import { useUserStore } from "../stores/useUserStore";
 import { useQuery } from "@apollo/client";
 import { GETTEAMBYID } from "../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
@@ -28,33 +28,86 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
     const { data: teamData } = useQuery(GETTEAMBYID, {
         variables: {
-          id: teamId,
+            id: teamId,
         },
     });
 
     return (
         <SafeAreaView>
-        <View>
+            <View>
+                <View
+                    style={{
+                        paddingTop: Spacing * 6,
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: FontSize.xxLarge,
+                            color: Colors.primary,
+                            fontFamily: Font["poppins-bold"],
+                            textAlign: "center",
+                        }}
+                    >
+                        {teamData.team.name}
+                    </Text>
+
+                    <Text
+                        style={{
+                            fontSize: FontSize.large,
+                            fontFamily: Font["poppins-bold"],
+                            textAlign: "center",
+                        }}
+                    >
+                        {teamData.team.description}
+                    </Text>
+                </View>
+                <View
+                    style={{
+                        paddingHorizontal: Spacing * 2,
+                        paddingTop: Spacing * 6,
+                        flexDirection: "row",
+                    }}
+                ></View>
+            </View>
             <View
-            style={{
-                paddingTop: Spacing * 6,
-            }}
-            >
-            <Text
                 style={{
-                fontSize: FontSize.xxLarge,
-                color: Colors.primary,
-                fontFamily: Font["poppins-bold"],
-                textAlign: "center",
+                    paddingHorizontal: Spacing * 2,
+                    paddingTop: Spacing * 3,
+                    flexDirection: "row",
                 }}
             >
-                {}
-            </Text>
+                <TouchableOpacity
+                    onPress={() => navigate("ViewTeams")}
+                    style={{
+                        marginLeft: 90,
+                        backgroundColor: Colors.primary,
+                        paddingVertical: Spacing * 1.5,
+                        paddingHorizontal: Spacing * 2,
+                        width: "48%", // Ancho original del botón de volver
+                        borderRadius: Spacing,
+                        shadowColor: Colors.primary,
+                        shadowOffset: {
+                            width: 0,
+                            height: Spacing,
+                        },
+                        shadowOpacity: 0.3,
+                        shadowRadius: Spacing,
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: Font["poppins-bold"],
+                            color: Colors.onPrimary,
+                            fontSize: FontSize.large,
+                            textAlign: "center",
+                        }}
+                    >
+                        Volver
+                    </Text>
+                </TouchableOpacity>
             </View>
-        </View>
         </SafeAreaView>
     );
-
 };
 
 export default TeamDetails;
