@@ -98,7 +98,26 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         >
           Tu Perfil
         </Text>
+        {/* Add the trash icon to navigate to DeleteUserScreen */}
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 4,
+            right: Spacing * 2,
+            zIndex: 1,
+          }}
+          onPress={() => navigate("DeleteUserScreen")}
+        >
+          {/* Use the icon for a trash bin */}
+          <Icon
+            raised
+
+            name='trash'
+            type='font-awesome-5'
+            color='black'/>
+        </TouchableOpacity>
       </View>
+      
       <View
         style={{
           marginVertical: Spacing * 1,
