@@ -9,6 +9,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import { CHANGEPASSWORD } from "../graphql/mutations";
 import { useMutation } from "@apollo/client";
+import { useUserStore } from "../stores/useUserStore";
+
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePassword">;
 
@@ -16,50 +18,75 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatNewPassword, setRepeatNewPassword] = useState("");
+  const {
+    userEmail: initialUserEmail
+  } = useUserStore();
 
-  const handleChangePassword = () => {
-    if (newPassword !== repeatNewPassword) {
-      // Passwords do not match
-      alert("New passwords do not match.");
+  const [changePassword] = useMutation(CHANGEPASSWORD);
+
+  const handleChangePassword = async () => {
+    if (newPassword === "" || repeatNewPassword === "") {
+      alert("Todos los campos deben estar llenos");
     } else {
-      // Perform a password change request to your backend or authentication service
-      // You may need to pass currentPassword and newPassword to your API
-      // Handle success and error cases accordingly
-
-      // After a successful password change, navigate back to the user profile screen or any other screen
-      // where the user can continue using your app.
-      navigate("UserProfile");
+      if (newPassword === repeatNewPassword) {
+        try{
+          const { data } = await changePassword({
+            variables: {
+              email: initialUserEmail,
+              oldPassword: currentPassword,
+              newPassword: newPassword,
+            },
+          });
+          if (data && data.changePassword) {
+            alert("Contraseña cambiada con exito");
+            navigate("UserProfile");
+          }
+          else{
+            alert("Contraseña incorrecta");
+          }
+        
+        }
+        catch(e){
+          alert("Hubo un error al cambiar la contraseña");
+          console.log(e);
+        }
+      }
+      else{
+        alert("Las contraseñas no coinciden");
+      }
     }
   };
+
+  
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Text style={styles.title}>Change Password</Text>
+        <Text style={styles.title}>Cambio de Contraseña</Text>
 
         <AppTextInput
-          placeholder="Current Password"
+          placeholder="Contraseña actual"
           value={currentPassword}
           onChangeText={setCurrentPassword}
           secureTextEntry
         />
 
         <AppTextInput
-          placeholder="New Password"
+          placeholder="Contraseña nueva"
           value={newPassword}
           onChangeText={setNewPassword}
           secureTextEntry
         />
 
         <AppTextInput
-          placeholder="Repeat New Password"
+          placeholder="Repita la contraseña nueva"
           value={repeatNewPassword}
           onChangeText={setRepeatNewPassword}
           secureTextEntry
         />
 
         <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Change Password</Text>
+          <Text style={styles.buttonText}>Cambiar contraseña</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

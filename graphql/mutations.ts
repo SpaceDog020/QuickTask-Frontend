@@ -130,3 +130,21 @@ export const GETUSERIDBYEMAIL = gql`
     }
   }
 `;
+
+export const GETTEAMSIDBYEMAIL = gql`
+  query email($email: String!) {
+    email(email: $email) {
+        idTeams
+    }
+  }
+`;
+
+export const GETTEAMDETAILS = gql`
+    query TeamsByUserId($id: Int!) {
+        teamsByUserId(id: $id) {
+            id
+            name
+            description
+        }
+    }
+`;

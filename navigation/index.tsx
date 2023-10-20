@@ -14,6 +14,7 @@ import ChangePassScreen from "../screens/ChangePassScreen";
 import ChangePassword from "../screens/ChangePassword";
 import TeamCreationScreen from "../screens/TeamCreationScreen";
 import ViewTeamsScreen from "../screens/ViewTeamsScreen";
+import DeleteUserScreen from "../screens/DeleteUserScreen";
 
 const theme = {
   ...DefaultTheme,
@@ -42,15 +43,16 @@ function RootNavigator() {
     >
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="PassVal" component={PassValScreen} />
+      <Stack.Screen name="PassReset" component={PassResetScreen} />
+      <Stack.Screen name="ChangePass" component={ChangePassScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="TeamCreationScreen" component={TeamCreationScreen} />
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="UserProfile" component={UserProfile} />
-      <Stack.Screen name="PassReset" component={PassResetScreen} />
-      <Stack.Screen name="PassVal" component={PassValScreen} />
-      <Stack.Screen name="ChangePass" component={ChangePassScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
-      <Stack.Screen name="ViewTeamsScreen" component={ViewTeamsScreen} />
+      <Stack.Screen name="ViewTeams" component={ViewTeamsScreen} />
+      <Stack.Screen name="TeamCreationScreen" component={TeamCreationScreen} />
+      <Stack.Screen name="DeleteUserScreen" component={DeleteUserScreen} />
 
     </Stack.Navigator>
   );

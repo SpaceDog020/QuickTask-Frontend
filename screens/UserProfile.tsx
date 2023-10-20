@@ -42,9 +42,11 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const handleButtonPress = () => {
     if (editable) {
         // Reset the text input values to the current user data
-        setNewName(userName);
-        setNewLastName(userLastName);
-        setNewEmail(userEmail);
+        if (newName !== userName || newLastName !== userLastName || newEmail !== userEmail) {
+          setNewName(userName);
+          setNewLastName(userLastName);
+          setNewEmail(userEmail);
+        }
       }
     
     setEditable(!editable);
@@ -84,26 +86,10 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   return (
     <SafeAreaView>
-      <View
-        style={{
-          alignItems: "flex-end",
-          paddingTop: 25,
-          flexGrow: 1,
-        }}
-      >
-        <TouchableOpacity>
-          <Icon
-            raised
-            name="user"
-            type="font-awesome-5"
-            color="black"
-            onPress={() => navigate("ChangePassword")}
-          />
-        </TouchableOpacity>
-      </View>
       <View>
         <Text
           style={{
+            paddingTop: Spacing * 4,
             fontSize: FontSize.xxLarge,
             color: Colors.primary,
             fontFamily: Font["poppins-bold"],
@@ -112,7 +98,26 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         >
           Tu Perfil
         </Text>
+        {/* Add the trash icon to navigate to DeleteUserScreen */}
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 4,
+            right: Spacing * 2,
+            zIndex: 1,
+          }}
+          onPress={() => navigate("DeleteUserScreen")}
+        >
+          {/* Use the icon for a trash bin */}
+          <Icon
+            raised
+
+            name='trash'
+            type='font-awesome-5'
+            color='black'/>
+        </TouchableOpacity>
       </View>
+      
       <View
         style={{
           marginVertical: Spacing * 1,
@@ -153,7 +158,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             backgroundColor: Colors.primary,
             paddingVertical: Spacing * 1.5,
             paddingHorizontal: Spacing * 2,
-            width: "50%",
+            width: "48%",
             borderRadius: Spacing,
             shadowColor: Colors.primary,
             shadowOffset: {
@@ -176,15 +181,20 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           </Text>
         </TouchableOpacity>
 
-        {editable && (
+        
+        
+      </View>
+      <View>
+      {editable && (
           <TouchableOpacity
             onPress={handleSaveChanges}
             style={{
+              marginBottom: 10,
               marginHorizontal: 95,
               backgroundColor: Colors.primary,
               paddingVertical: Spacing * 1.5,
               paddingHorizontal: Spacing * 2,
-              width: "50%",
+              width: "48%",
               borderRadius: Spacing,
               shadowColor: Colors.primary,
               shadowOffset: {
@@ -207,6 +217,37 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             </Text>
           </TouchableOpacity>
         )}
+      </View>
+      <View>
+      <TouchableOpacity
+              onPress={() => navigate("ChangePassword")}
+              style={{
+                marginLeft: 95,
+                backgroundColor: Colors.primary,
+                paddingVertical: Spacing * 1.5,
+                paddingHorizontal: Spacing * 2,
+                width: "48%",
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  fontSize: FontSize.medium,
+                  textAlign: "center",
+                }}
+              >
+                Cambiar Contraseña
+              </Text>
+            </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
