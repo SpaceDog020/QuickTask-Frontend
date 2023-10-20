@@ -21,6 +21,7 @@ export const LOGIN = gql`
             email: $email,
             password: $password
         }) {
+            id
             name
             lastName
             email
@@ -109,6 +110,22 @@ export const CREATETEAM = gql`
         }
     }
 `;
+
+export const UPDATETEAM = gql`
+    mutation UpdateTeam($idTeam: Int!, $idUser: Int!, $name: String!, $description: String!) {
+        updateTeam(updateTeamInput: {
+            idTeam: $idTeam,
+            idUser: $idUser,
+            name: $name,
+            description: $description
+        }) {
+            
+            response
+
+        }
+    }
+`;
+
 
 export const ADDTEAM = gql`
     mutation AddTeam($idUser: Int!, $idTeam: Int!) {

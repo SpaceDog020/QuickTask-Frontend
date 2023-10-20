@@ -48,6 +48,7 @@ function RootNavigator() {
       <Stack.Screen name="PassVal" component={PassValScreen} />
       <Stack.Screen name="PassReset" component={PassResetScreen} />
       <Stack.Screen name="ChangePass" component={ChangePassScreen} />
+      <Stack.Screen name="EditTeamScreen" component={EditTeamScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="UserProfile" component={UserProfile} />
@@ -56,7 +57,6 @@ function RootNavigator() {
       <Stack.Screen name="TeamCreationScreen" component={TeamCreationScreen} />
       <Stack.Screen name="DeleteUserScreen" component={DeleteUserScreen} />
       <Stack.Screen name="TeamDetails" component={TeamDetailsScreen} />
-      <Stack.Screen name="EditTeamScreen" component={EditTeamScreen} />
 
     </Stack.Navigator>
   );

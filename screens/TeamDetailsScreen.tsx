@@ -112,6 +112,43 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               </Text>
             </TouchableOpacity>
           </View>
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 3,
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => navigate("EditTeamScreen")}
+              style={{
+                marginLeft: 90,
+                backgroundColor: Colors.primary,
+                paddingVertical: Spacing * 1.5,
+                paddingHorizontal: Spacing * 2,
+                width: "48%",
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  fontSize: FontSize.large,
+                  textAlign: "center",
+                }}
+              >
+                Editar
+              </Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
       );
 
