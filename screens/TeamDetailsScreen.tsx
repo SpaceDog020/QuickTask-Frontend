@@ -34,80 +34,87 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
     return (
         <SafeAreaView>
-            <View>
-                <View
+          <View>
+            <View
+              style={{
+                paddingTop: Spacing * 6,
+              }}
+            >
+              {teamData && teamData.team ? (
+                <>
+                  <Text
                     style={{
-                        paddingTop: Spacing * 6,
+                      fontSize: FontSize.xxLarge,
+                      color: Colors.primary,
+                      fontFamily: Font["poppins-bold"],
+                      textAlign: "center",
                     }}
-                >
-                    <Text
-                        style={{
-                            fontSize: FontSize.xxLarge,
-                            color: Colors.primary,
-                            fontFamily: Font["poppins-bold"],
-                            textAlign: "center",
-                        }}
-                    >
-                        {teamData.team.name}
-                    </Text>
-
-                    <Text
-                        style={{
-                            fontSize: FontSize.large,
-                            fontFamily: Font["poppins-bold"],
-                            textAlign: "center",
-                        }}
-                    >
-                        {teamData.team.description}
-                    </Text>
-                </View>
-                <View
+                  >
+                    {teamData.team.name}
+                  </Text>
+      
+                  <Text
                     style={{
-                        paddingHorizontal: Spacing * 2,
-                        paddingTop: Spacing * 6,
-                        flexDirection: "row",
+                      fontSize: FontSize.large,
+                      fontFamily: Font["poppins-bold"],
+                      textAlign: "center",
                     }}
-                ></View>
+                  >
+                    {teamData.team.description}
+                  </Text>
+                </>
+              ) : (
+                <Text style={{ textAlign: "center" }}>Cargando información del equipo...</Text>
+              )}
             </View>
             <View
-                style={{
-                    paddingHorizontal: Spacing * 2,
-                    paddingTop: Spacing * 3,
-                    flexDirection: "row",
-                }}
+              style={{
+                paddingHorizontal: Spacing * 2,
+                paddingTop: Spacing * 6,
+                flexDirection: "row",
+              }}
+            ></View>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 3,
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => navigate("ViewTeams")}
+              style={{
+                marginLeft: 90,
+                backgroundColor: Colors.primary,
+                paddingVertical: Spacing * 1.5,
+                paddingHorizontal: Spacing * 2,
+                width: "48%",
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
             >
-                <TouchableOpacity
-                    onPress={() => navigate("ViewTeams")}
-                    style={{
-                        marginLeft: 90,
-                        backgroundColor: Colors.primary,
-                        paddingVertical: Spacing * 1.5,
-                        paddingHorizontal: Spacing * 2,
-                        width: "48%", // Ancho original del botón de volver
-                        borderRadius: Spacing,
-                        shadowColor: Colors.primary,
-                        shadowOffset: {
-                            width: 0,
-                            height: Spacing,
-                        },
-                        shadowOpacity: 0.3,
-                        shadowRadius: Spacing,
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontFamily: Font["poppins-bold"],
-                            color: Colors.onPrimary,
-                            fontSize: FontSize.large,
-                            textAlign: "center",
-                        }}
-                    >
-                        Volver
-                    </Text>
-                </TouchableOpacity>
-            </View>
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  fontSize: FontSize.large,
+                  textAlign: "center",
+                }}
+              >
+                Volver
+              </Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
-    );
+      );
+
 };
 
 export default TeamDetails;
