@@ -83,11 +83,11 @@ export const UPDATEUSER = gql`
 `;
 
 export const CREATETEAM = gql`
-    mutation CreateTeam($name: String!, $description: String!, $id: String!) {
+    mutation CreateTeam($name: String!, $description: String!, $idUser: Int!) {
         createTeam(createTeamInput: {
             name: $name,
             description: $description,
-            id: $id
+            idUser: $idUser
         }) {
             
             response
@@ -97,9 +97,9 @@ export const CREATETEAM = gql`
 `;
 
 export const GETUSERIDBYEMAIL = gql`
-  query GetUserIdByEmail($email: String!) {
+  query email($email: String!) {
     email(email: $email) {
-      id
+        id
     }
   }
 `;

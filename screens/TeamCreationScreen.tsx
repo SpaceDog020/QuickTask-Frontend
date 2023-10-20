@@ -21,19 +21,18 @@ type Props = NativeStackScreenProps<RootStackParamList, "TeamCreationScreen">;
 
 const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const {
-    userName: initialUserName,
-    userLastName: initialUserLastName,
-    userEmail: initialUserEmail,
+    userEmail: initialUserEmail
   } = useUserStore();
 
   const [teamName, setTeamName] = useState('');
   const [teamDescription, setTeamDescription] = useState('');
-
+  
   const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
     variables: {
       email: initialUserEmail,
     },
   });
+
   const [createTeam, { data }] = useMutation(CREATETEAM);
 
   const handleTeamCreation = async () => {
@@ -41,20 +40,21 @@ const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
       alert('Todos los campos deben estar llenos');
     } else {
       try {
-        if (userIdData && userIdData.email) {
+        if (userIdData && userIdData.email.id) {
+          
           const userId = userIdData.email.id; // Access user ID correctly
+          console.log("User ID found", userId);
 
-          // Now, you can send the user ID to the createTeam mutation
-          const teamCreationData = await createTeam({
+          const { data } = await createTeam({
             variables: {
               name: teamName,
               description: teamDescription,
-              id: userId,
+              idUser: userId,
             },
           });
-
-          if (teamCreationData.data && teamCreationData.data.createTeam) {
-            if (teamCreationData.data.createTeam.response) {
+          console.log("Data", data);
+          if (data && data.createTeam) {
+            if (data.createTeam.response) {
               navigate("Dashboard");
             } else {
               alert("Error al crear equipo");
