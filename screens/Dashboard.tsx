@@ -25,12 +25,15 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userLastName, setUserLastName } = useUserStore();
   const { userEmail, setUserEmail } = useUserStore();
   const { removeAccessToken } = useUserStore();
+  const { userId, setUserId } = useUserStore();
+
 
   const logout = async ()  => {
     await removeAccessToken()
     setUserName('')
     setUserLastName('')
     setUserEmail('')
+    setUserId(-1)
     navigate("Welcome")
   }
   

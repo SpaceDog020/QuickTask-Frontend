@@ -27,6 +27,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName, setUserName } = useUserStore();
   const { userLastName, setUserLastName } = useUserStore();
   const { userEmail, setUserEmail } = useUserStore();
+  const { userId, setUserId } = useUserStore();
 
   const [login, { data, loading }] = useMutation(LOGIN);
 
@@ -46,6 +47,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           setUserName(data.login.name)
           setUserLastName(data.login.lastName)
           setUserEmail(data.login.email)
+          setUserId(data.login.id)
           navigate("Dashboard")
         }
       }catch(e){
