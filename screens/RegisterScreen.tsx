@@ -49,7 +49,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           console.log("No se encontraron datos de registro");
         }
       }catch(e){
-        console.log(e);
+        alert("Error al registrar");
       }
     }
   };

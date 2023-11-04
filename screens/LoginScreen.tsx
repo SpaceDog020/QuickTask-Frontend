@@ -22,10 +22,14 @@ type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {name, setName} = useUserStore();
   const { accessToken, setAccessToken } = useUserStore();
+  const { recoveryPass, setRecoveryPass } = useUserStore();
+  const { userName, setUserName } = useUserStore();
+  const { userLastName, setUserLastName } = useUserStore();
+  const { userEmail, setUserEmail } = useUserStore();
+  const { userId, setUserId } = useUserStore();
 
-  const [login, { data }] = useMutation(LOGIN);
+  const [login, { data, loading }] = useMutation(LOGIN);
 
   const handleLogin = async (email: string, password: string) => {
     if(email === '' || password === ''){
@@ -39,18 +43,15 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           },
         });
         if (data && data.login) {
-          console.log("accessToken: ",data.login.accessToken);
-          if (data.login.response) {
-            setName(data.login.name);
-            setAccessToken(data.login.accessToken);
-            navigate("Dashboard")
-          }else{
-            alert("Credenciales incorrectas");
-          }
-        } else {
-          console.log("No se encontraron datos de inicio de sesión");
+          setAccessToken(data.login.accessToken)
+          setUserName(data.login.name)
+          setUserLastName(data.login.lastName)
+          setUserEmail(data.login.email)
+          setUserId(data.login.id)
+          navigate("Dashboard")
         }
       }catch(e){
+        alert("Credenciales incorrectas");
         console.log(e);
       }
     }

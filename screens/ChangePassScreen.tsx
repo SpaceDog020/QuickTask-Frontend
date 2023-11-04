@@ -13,34 +13,45 @@ import Font from "../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import AppTextInput from "../components/AppTextInput";
-import { RECOVERY } from "../graphql/mutations";
+import { useUserStore } from "../stores/useUserStore";
+import { CHANGEPASSRECOVERY } from "../graphql/mutations";
 import { useMutation } from "@apollo/client";
 
-type Props = NativeStackScreenProps<RootStackParamList, "PassReset">;
+type Props = NativeStackScreenProps<RootStackParamList, "ChangePass">;
 
-const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const [email, setEmail] = useState("");
-  
-  const [recovery, { data, loading }] = useMutation(RECOVERY);
+const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const { recoveryPass, setRecoveryPass } = useUserStore();
 
-  const handleRecovery = async (email: string) => {
-    if(email === ''){
-      alert('Todos los campos deben estar llenos');
-    }else{
-      try{
-        const { data } = await recovery({
-          variables: {
-            email,
-          },
-        });
-        if (data && data.recovery) {;
-          navigate("PassVal");
+  const [changePassRecovery, { data, loading }] = useMutation(CHANGEPASSRECOVERY);
+
+  const handleChangePass = async (password: string, password2: string) => {
+    if (password === "" || password2 === "") {
+      alert("Todos los campos deben estar llenos");
+    } else {
+      if (password === password2) {
+        try {
+          const { data } = await changePassRecovery({
+            variables: {
+              password,
+              recoveryPass,
+            },
+          });
+          if (data && data.changePassRecovery) {
+            alert("Contraseña cambiada con exito");
+            setRecoveryPass(0);
+            navigate("Login");
+          }
+        } catch (e) {
+          alert("Contraseña ya utilizada");
+          console.log(e);
         }
-      }catch(e){
-        navigate("PassVal");
+      } else {
+        alert("Las contraseñas no coinciden");
       }
     }
-  }
+  };
 
   return (
     <SafeAreaView>
@@ -63,7 +74,7 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               textAlign: "center",
             }}
           >
-            Recuperar Contraseña
+            Cambiar Contraseña
           </Text>
           <Text
             style={{
@@ -73,7 +84,7 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               textAlign: "center",
             }}
           >
-            Ingresa el correo asociado a tu cuenta
+            Ingrese su contraseña nueva
           </Text>
         </View>
         <View
@@ -82,19 +93,31 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <AppTextInput
-            placeholder="Correo"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+        </View>
+        <View
+          style={{
+            marginVertical: -30,
+          }}
+        >
+          <AppTextInput
+            placeholder="Confirmar Contraseña"
+            value={password2}
+            onChangeText={setPassword2}
+            secureTextEntry
           />
         </View>
 
         <TouchableOpacity
-          onPress={() => handleRecovery(email)}
+          onPress={() => handleChangePass(password, password2)}
           style={{
             padding: Spacing * 2,
             backgroundColor: Colors.primary,
-            marginVertical: Spacing * 3,
+            marginVertical: Spacing * 7,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
             shadowOffset: {
@@ -113,11 +136,12 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               fontSize: FontSize.large,
             }}
           >
-            Recuperar contraseña
+            Cambiar contraseña
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigate("Login")}
+          onPressIn={() => setRecoveryPass(0)}
           style={{
             padding: Spacing,
           }}
@@ -138,6 +162,6 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   );
 };
 
-export default PassResetScreen;
+export default ChangePassScreen;
 
 const styles = StyleSheet.create({});
