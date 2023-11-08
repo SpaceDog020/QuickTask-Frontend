@@ -5,15 +5,15 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
-import AppTextInput from "../components/AppTextInput";
+import { RootStackParamList } from "../../types";
+import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from '@apollo/client';
-import { REGISTER } from '../graphql/mutations';
+import { REGISTER } from '../../graphql/mutations';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
@@ -23,37 +23,38 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
-  
+
   const [register, { data }] = useMutation(REGISTER);
 
-  const handleRegister = async ()  => {
-    if(name === '' || lastName === '' || email === '' || password === ''){
+  const handleRegister = async () => {
+    if (name === '' || lastName === '' || email === '' || password === '') {
       alert('Todos los campos deben estar llenos');
-    }else{
-      try{
+    } else {
+      try {
         const { data } = await register({
           variables: {
-              name,
-              lastName,
-              email,
-              password,
+            name,
+            lastName,
+            email,
+            password,
           }
         });
         if (data && data.register) {
           if (data.register.response) {
+            alert("Registro exitoso");
             navigate("Login")
-          }else{
+          } else {
             alert("Correo ya existente");
           }
         } else {
           console.log("No se encontraron datos de registro");
         }
-      }catch(e){
+      } catch (e) {
         alert("Error al registrar");
       }
     }
   };
-  
+
   return (
     <SafeAreaView>
       <View
@@ -82,10 +83,10 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             marginVertical: Spacing * 1,
           }}
         >
-          <AppTextInput placeholder="Nombre" value={name} onChangeText={setName}/>
-          <AppTextInput placeholder="Apellido" value={lastName} onChangeText={setlastName}/>
-          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail}/>
-          <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry/>
+          <AppTextInput placeholder="Nombre" value={name} onChangeText={setName} />
+          <AppTextInput placeholder="Apellido" value={lastName} onChangeText={setlastName} />
+          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail} />
+          <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
         </View>
 
         <TouchableOpacity

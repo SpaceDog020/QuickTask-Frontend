@@ -14,6 +14,7 @@ export const GETTEAMDETAILS = gql`
             id
             name
             description
+            idUsers
         }
     }
 `;
@@ -25,6 +26,25 @@ export const GETTEAMBYID = gql`
             description
             idUsers
             idCreator
+        }
+    }
+`;
+
+export const GETUSERSBYTEAMID = gql`
+    query TeamUserIds($id: Int!) {
+        teamUserIds(id: $id) {
+            userIds
+        }
+    }
+`;
+
+export const GETUSERSBYIDS = gql`
+    query UsersByIds($ids: [Int!]!) {
+        usersByIds(ids: $ids) {
+            id
+            name
+            lastName
+            email
         }
     }
 `;

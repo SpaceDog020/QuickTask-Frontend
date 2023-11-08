@@ -2,21 +2,24 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import Colors from "../constants/Colors";
-import LoginScreen from "../screens/LoginScreen";
-import RegisterScreen from "../screens/RegisterScreen";
+import LoginScreen from "../screens/Auth/LoginScreen";
+import RegisterScreen from "../screens/Auth/RegisterScreen";
 import Welcome from "../screens/WelcomeScreen";
 import Dashboard from "../screens/Dashboard";
-import PassResetScreen from "../screens/PassResetScreen";
-import UserProfile from "../screens/UserProfile";
+import PassResetScreen from "../screens/Auth/PassResetScreen";
+import UserProfile from "../screens/Profile/UserProfile";
 import { RootStackParamList } from "../types";
-import PassValScreen from "../screens/PassValScreen";
-import ChangePassScreen from "../screens/ChangePassScreen";
-import ChangePassword from "../screens/ChangePassword";
-import TeamCreationScreen from "../screens/TeamCreationScreen";
-import ViewTeamsScreen from "../screens/ViewTeamsScreen";
-import DeleteUserScreen from "../screens/DeleteUserScreen";
-import TeamDetailsScreen from "../screens/TeamDetailsScreen";
-import EditTeamScreen from "../screens/EditTeamScreen";
+import PassValScreen from "../screens/Auth/PassValScreen";
+import ChangePassScreen from "../screens/Auth/ChangePassScreen";
+import ChangePassword from "../screens/Profile/ChangePassword";
+import TeamCreationScreen from "../screens/Team/TeamCreationScreen";
+import ViewTeamsScreen from "../screens/Team/ViewTeamsScreen";
+import DeleteUserScreen from "../screens/Profile/DeleteUserScreen";
+import TeamDetailsScreen from "../screens/Team/TeamDetailsScreen";
+import EditTeamScreen from "../screens/Team/EditTeamScreen";
+import AddUserScreen from "../screens/Team/AddUserScreen";
+import UserDetailsScreen from "../screens/Team/UserDetailsScreen";
+
 
 const theme = {
   ...DefaultTheme,
@@ -53,10 +56,12 @@ function RootNavigator() {
       <Stack.Screen name="UserProfile" component={UserProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="ViewTeams" component={ViewTeamsScreen} />
-      <Stack.Screen name="TeamCreationScreen" component={TeamCreationScreen} />
-      <Stack.Screen name="DeleteUserScreen" component={DeleteUserScreen} />
+      <Stack.Screen name="TeamCreation" component={TeamCreationScreen} />
+      <Stack.Screen name="DeleteUser" component={DeleteUserScreen} />
       <Stack.Screen name="TeamDetails" component={TeamDetailsScreen} />
-      <Stack.Screen name="EditTeamScreen" component={EditTeamScreen} />
+      <Stack.Screen name="EditTeam" component={EditTeamScreen} />
+      <Stack.Screen name="AddUser" component={AddUserScreen} />
+      <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
 
     </Stack.Navigator>
   );

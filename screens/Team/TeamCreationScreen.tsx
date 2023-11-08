@@ -5,22 +5,22 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
-import AppTextInput from "../components/AppTextInput";
+import { RootStackParamList } from "../../types";
+import AppTextInput from "../../components/AppTextInput";
 import { useMutation, useQuery } from '@apollo/client';
-import { ADDTEAM, REGISTER } from '../graphql/mutations';
-import { CREATETEAM } from '../graphql/mutations';
-import { useUserStore } from "../stores/useUserStore";
-import { GETUSERIDBYEMAIL } from "../graphql/queries";
+import { ADDTEAM, REGISTER } from '../../graphql/mutations';
+import { CREATETEAM } from '../../graphql/mutations';
+import { useUserStore } from "../../stores/useUserStore";
+import { GETUSERIDBYEMAIL } from "../../graphql/queries";
 
-type Props = NativeStackScreenProps<RootStackParamList, "TeamCreationScreen">;
+type Props = NativeStackScreenProps<RootStackParamList, "TeamCreation">;
 
-const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const {
     userEmail: initialUserEmail
   } = useUserStore();
@@ -143,4 +143,4 @@ const TeamCreationScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   );
 };
 
-export default TeamCreationScreen;
+export default TeamCreation;
