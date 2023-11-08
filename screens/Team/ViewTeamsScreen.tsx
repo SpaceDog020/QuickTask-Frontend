@@ -53,7 +53,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         console.error("Error al cargar equipos:", error);
       });
   }, [userId]);
-  
+
   useFocusEffect(
     React.useCallback(() => {
       refetchTeams()
@@ -86,7 +86,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
           </Text>
         </View>
       </View>
-      
+
       <ScrollView style={{ maxHeight: 447 }}>
         {teams &&
           teams.map((team) => (
@@ -151,7 +151,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
             </View>
           ))}
       </ScrollView>
-      
+
       <View
         style={{
           paddingHorizontal: Spacing * 2,
@@ -191,7 +191,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
       </View>
     </SafeAreaView>
   );
-  
+
 };
 
 export default ViewTeams;

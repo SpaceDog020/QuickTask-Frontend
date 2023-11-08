@@ -5,15 +5,15 @@ import {
     View,
   } from "react-native";
   import React, { useState } from "react";
-  import Spacing from "../../constants/Spacing";
-  import FontSize from "../../constants/FontSize";
-  import Colors from "../../constants/Colors";
-  import Font from "../../constants/Font";
+  import Spacing from "../../../constants/Spacing";
+  import FontSize from "../../../constants/FontSize";
+  import Colors from "../../../constants/Colors";
+  import Font from "../../../constants/Font";
   import { NativeStackScreenProps } from "@react-navigation/native-stack";
-  import { RootStackParamList } from "../../types";
-  import AppTextInput from "../../components/AppTextInput";
+  import { RootStackParamList } from "../../../types";
+  import AppTextInput from "../../../components/AppTextInput";
   import { useMutation } from '@apollo/client';
-  import { REGISTER } from '../../graphql/mutations';
+  import { REGISTER } from '../../../graphql/mutations';
   
   type Props = NativeStackScreenProps<RootStackParamList, "AddUser">;
   

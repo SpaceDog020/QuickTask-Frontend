@@ -36,13 +36,8 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   useEffect(() => {
     if (teamData && teamData.team) {
-      console.log(userId);
-      console.log(teamData.team.idCreator);
       if (userId === teamData.team.idCreator) {
-        console.log("El usuario es el creador del equipo");
         setUserIsCreator(true);
-      }else{
-        console.log("El usuario no es el creador del equipo");
       }
     }
   }, [userIsCreator, userId, setUserIsCreator]);

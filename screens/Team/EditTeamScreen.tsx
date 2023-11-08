@@ -17,10 +17,10 @@ import {
   const { height } = Dimensions.get("window");
   import { useUserStore } from "../../stores/useUserStore";
   
-  type Props = NativeStackScreenProps<RootStackParamList, "EditTeamScreen">;
+  type Props = NativeStackScreenProps<RootStackParamList, "EditTeam">;
   
   
-  const EditTeamScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const EditTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
     const { userName, setUserName } = useUserStore();
     const { userLastName, setUserLastName } = useUserStore();
     const { userEmail, setUserEmail } = useUserStore();
@@ -145,7 +145,7 @@ import {
           }}
         >
           <TouchableOpacity
-            onPress={() => navigate("TeamCreationScreen")}
+            onPress={() => navigate("TeamCreation")}
             style={{
               marginLeft: 90,
               backgroundColor: Colors.primary,
@@ -215,6 +215,6 @@ import {
     );
   };
   
-  export default EditTeamScreen;
+  export default EditTeam;
   
   const styles = StyleSheet.create({});

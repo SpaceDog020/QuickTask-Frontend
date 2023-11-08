@@ -7,16 +7,16 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types";
-import { useUserStore } from '../../stores/useUserStore';
+import { RootStackParamList } from "../../../types";
+import { useUserStore } from '../../../stores/useUserStore';
 import { useQuery } from "@apollo/client";
-import { GETUSERSBYIDS } from "../../graphql/queries";
+import { GETUSERSBYIDS } from "../../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Spacing from "../../constants/Spacing";
-import Colors from "../../constants/Colors";
-import Font from "../../constants/Font";
-import FontSize from "../../constants/FontSize";
+import Spacing from "../../../constants/Spacing";
+import Colors from "../../../constants/Colors";
+import Font from "../../../constants/Font";
+import FontSize from "../../../constants/FontSize";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserDetails">;
 

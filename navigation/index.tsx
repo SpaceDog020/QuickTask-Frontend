@@ -17,8 +17,8 @@ import ViewTeamsScreen from "../screens/Team/ViewTeamsScreen";
 import DeleteUserScreen from "../screens/Profile/DeleteUserScreen";
 import TeamDetailsScreen from "../screens/Team/TeamDetailsScreen";
 import EditTeamScreen from "../screens/Team/EditTeamScreen";
-import AddUserScreen from "../screens/Team/AddUserScreen";
-import UserDetailsScreen from "../screens/Team/UserDetailsScreen";
+import AddUserScreen from "../screens/Team/User/AddUserScreen";
+import UserDetailsScreen from "../screens/Team/User/UserDetailsScreen";
 
 
 const theme = {
