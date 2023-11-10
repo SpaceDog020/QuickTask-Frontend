@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import AppTextInput from "../components/AppTextInput";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
-import FontSize from "../constants/FontSize";
-import Spacing from "../constants/Spacing";
+import AppTextInput from "../../components/AppTextInput";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
+import FontSize from "../../constants/FontSize";
+import Spacing from "../../constants/Spacing";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
-import { CHANGEPASSWORD } from "../graphql/mutations";
+import { RootStackParamList } from "../../types";
+import { CHANGEPASSWORD } from "../../graphql/mutations";
 import { useMutation } from "@apollo/client";
-import { useUserStore } from "../stores/useUserStore";
+import { useUserStore } from "../../stores/useUserStore";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePassword">;

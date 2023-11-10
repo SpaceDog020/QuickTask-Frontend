@@ -17,11 +17,13 @@ export type RootStackParamList = {
   UserProfile: undefined;
   EditUserProfile: undefined;
   ChangePassword: undefined;
-  TeamCreationScreen: undefined;
+  TeamCreation: undefined;
   ViewTeams: undefined;
-  DeleteUserScreen: undefined;
+  DeleteUser: undefined;
   TeamDetails: undefined;
-  EditTeamScreen: undefined;
+  EditTeam: undefined;
+  AddUser: undefined;
+  UserDetails: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

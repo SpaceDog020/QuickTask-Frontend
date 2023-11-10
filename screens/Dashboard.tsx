@@ -51,7 +51,7 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
     {
       label: 'Crear Equipo',
       icon: 'plus', // Nombre del icono de FontAwesome
-      onPress: () => navigate('TeamCreationScreen'),
+      onPress: () => navigate('TeamCreation'),
     },
     {
       label: 'Cerrar Sesión',

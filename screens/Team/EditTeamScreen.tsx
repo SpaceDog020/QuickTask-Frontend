@@ -1,0 +1,220 @@
+import {
+  Dimensions,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React from "react";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../types";
+const { height } = Dimensions.get("window");
+import { useUserStore } from "../../stores/useUserStore";
+
+type Props = NativeStackScreenProps<RootStackParamList, "EditTeam">;
+
+
+const EditTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const { userName, setUserName } = useUserStore();
+  const { userLastName, setUserLastName } = useUserStore();
+  const { userEmail, setUserEmail } = useUserStore();
+  const { removeAccessToken } = useUserStore();
+
+  const logout = async ()  => {
+    await removeAccessToken()
+    setUserName('')
+    setUserLastName('')
+    setUserEmail('')
+    navigate("Welcome")
+  }
+  
+  return (
+    <SafeAreaView>
+      <View>
+        <View
+          style={{
+            paddingHorizontal: Spacing * 4,
+            paddingTop: Spacing * 4,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: FontSize.xxLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              textAlign: "center",
+            }}
+          >
+            Bienvenido 
+          </Text>
+          <Text
+          style={{
+            fontSize: FontSize.large,
+            fontFamily: Font["poppins-bold"],
+            textAlign: "center",
+          }}>
+            {userName}
+          </Text>
+        </View>
+      </View>
+      <View
+          style={{
+            paddingHorizontal: Spacing * 2,
+            paddingTop: Spacing * 6,
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigate("UserProfile")}
+            style={{
+              marginLeft: 90,
+              backgroundColor: Colors.primary,
+              paddingVertical: Spacing * 1.5,
+              paddingHorizontal: Spacing * 2,
+              width: "48%",
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                fontSize: FontSize.large,
+                textAlign: "center",
+              }}
+            >
+              Tu Perfil
+            </Text>
+          </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: Spacing * 2,
+          paddingTop: Spacing * 6,
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigate("ViewTeams")}
+          style={{
+            marginLeft: 90,
+            backgroundColor: Colors.primary,
+            paddingVertical: Spacing * 1.5,
+            paddingHorizontal: Spacing * 2,
+            width: "48%",
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.onPrimary,
+              fontSize: FontSize.large,
+              textAlign: "center",
+            }}
+          >
+            Ver Equipos
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: Spacing * 2,
+          paddingTop: Spacing * 6,
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigate("TeamCreation")}
+          style={{
+            marginLeft: 90,
+            backgroundColor: Colors.primary,
+            paddingVertical: Spacing * 1.5,
+            paddingHorizontal: Spacing * 2,
+            width: "48%",
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.onPrimary,
+              fontSize: FontSize.large,
+              textAlign: "center",
+            }}
+          >
+            Crear Equipo
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: Spacing * 2,
+          paddingTop: Spacing * 6,
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => logout()}
+          style={{
+            marginLeft: 90,
+            backgroundColor: Colors.primary,
+            paddingVertical: Spacing * 1.5,
+            paddingHorizontal: Spacing * 2,
+            width: "48%",
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.onPrimary,
+              fontSize: FontSize.large,
+              textAlign: "center",
+            }}
+          >
+            Cerrar Sesión
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default EditTeam;
+
+const styles = StyleSheet.create({});

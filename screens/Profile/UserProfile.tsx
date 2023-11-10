@@ -7,18 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
+import { RootStackParamList } from "../../types";
 const { height } = Dimensions.get("window");
-import { useUserStore } from "../stores/useUserStore";
+import { useUserStore } from "../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
-import AppTextInput from "../components/AppTextInput";
+import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
-import { UPDATEUSER } from "../graphql/mutations";
+import { UPDATEUSER } from "../../graphql/mutations";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
@@ -113,7 +113,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             right: Spacing * 1,
             zIndex: 1,
           }}
-            onPress={() => navigate("DeleteUserScreen")}
+            onPress={() => navigate("DeleteUser")}
           >
             <Icon
               raised

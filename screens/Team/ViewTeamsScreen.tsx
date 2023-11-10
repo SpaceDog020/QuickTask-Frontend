@@ -9,17 +9,18 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
+import { RootStackParamList } from "../../types";
 const { height } = Dimensions.get("window");
-import { useUserStore } from '../stores/useUserStore';
+import { useUserStore } from '../../stores/useUserStore';
 import { useQuery } from "@apollo/client";
-import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../graphql/queries";
+import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
+import FontAwesome from "react-native-vector-icons/FontAwesome5";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 
@@ -27,7 +28,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userEmail, setUserEmail } = useUserStore();
   const [teams, setTeams] = useState([]);
   const { teamId, setTeamId } = useUserStore();
-
+  const { teamUsersIds, setTeamUsersIds } = useUserStore();
 
   const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
     variables: {
@@ -52,7 +53,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         console.error("Error al cargar equipos:", error);
       });
   }, [userId]);
-  
+
   useFocusEffect(
     React.useCallback(() => {
       refetchTeams()
@@ -85,7 +86,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
           </Text>
         </View>
       </View>
-      
+
       <ScrollView style={{ maxHeight: 447 }}>
         {teams &&
           teams.map((team) => (
@@ -100,6 +101,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               <TouchableOpacity
                 onPress={() => {
                   setTeamId(team.id);
+                  setTeamUsersIds(team.idUsers);
                   navigate("TeamDetails");
                 }}
                 style={{
@@ -129,11 +131,27 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                 >
                   {team.name}
                 </Text>
+                <FontAwesome // Renderiza el icono
+                  style={{ marginLeft: 170 }}
+                  name={'users'}
+                  size={20} // Tamaño del icono
+                  color={Colors.onPrimary} // Color del icono
+                />
+                <Text
+                  style={{
+                    fontFamily: Font["poppins-bold"],
+                    color: Colors.onPrimary,
+                    fontSize: FontSize.medium,
+                    paddingHorizontal: Spacing * 1,
+                  }}
+                >
+                  {team.idUsers.length}
+                </Text>
               </TouchableOpacity>
             </View>
           ))}
       </ScrollView>
-      
+
       <View
         style={{
           paddingHorizontal: Spacing * 2,
@@ -173,7 +191,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
       </View>
     </SafeAreaView>
   );
-  
+
 };
 
 export default ViewTeams;

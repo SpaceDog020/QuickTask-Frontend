@@ -9,15 +9,15 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
+import Spacing from "../../constants/Spacing";
+import FontSize from "../../constants/FontSize";
+import Colors from "../../constants/Colors";
+import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
+import { RootStackParamList } from "../../types";
 const { height } = Dimensions.get("window");
-import { useUserStore } from "../stores/useUserStore";
-import AppTextInput from "../components/AppTextInput";
+import { useUserStore } from "../../stores/useUserStore";
+import AppTextInput from "../../components/AppTextInput";
 import { Button } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DeleteUserScreen">;
