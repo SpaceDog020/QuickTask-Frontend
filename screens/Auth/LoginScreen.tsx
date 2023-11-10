@@ -36,7 +36,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
     if(email === '' || password === ''){
       Toast.show({
         type: 'error',
-        text1: 'Debe llenar todos los campos',
+        text1: 'Debe llenar  todos los campos',
         text2: 'Intente nuevamente',
         position: 'bottom', // Display at the bottom
         visibilityTime: 2000, // Duration in milliseconds
