@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -6,19 +7,19 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import React from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
-const { height } = Dimensions.get("window");
-import { useUserStore } from "../stores/useUserStore";
+} from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Importa el icono
+import Spacing from '../constants/Spacing';
+import FontSize from '../constants/FontSize';
+import Colors from '../constants/Colors';
+import Font from '../constants/Font';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types';
+import { useUserStore } from '../stores/useUserStore';
 
-type Props = NativeStackScreenProps<RootStackParamList, "Dashboard">;
+const { height, width } = Dimensions.get('window');
 
+type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
 const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName, setUserName } = useUserStore();
@@ -27,16 +28,38 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { removeAccessToken } = useUserStore();
   const { userId, setUserId } = useUserStore();
 
+  const logout = async () => {
+    await removeAccessToken();
+    setUserName('');
+    setUserLastName('');
+    setUserEmail('');
+    setUserId(-1);
+    navigate('Welcome');
+  };
 
-  const logout = async ()  => {
-    await removeAccessToken()
-    setUserName('')
-    setUserLastName('')
-    setUserEmail('')
-    setUserId(-1)
-    navigate("Welcome")
-  }
-  
+  const buttons = [
+    {
+      label: 'Tu Perfil',
+      icon: 'user', // Nombre del icono de FontAwesome
+      onPress: () => navigate('UserProfile'),
+    },
+    {
+      label: 'Ver Equipos',
+      icon: 'list', // Nombre del icono de FontAwesome
+      onPress: () => navigate('ViewTeams'),
+    },
+    {
+      label: 'Crear Equipo',
+      icon: 'plus', // Nombre del icono de FontAwesome
+      onPress: () => navigate('TeamCreationScreen'),
+    },
+    {
+      label: 'Cerrar Sesión',
+      icon: 'sign-out', // Nombre del icono de FontAwesome
+      onPress: logout,
+    },
+  ];
+
   return (
     <SafeAreaView>
       <View>
@@ -44,44 +67,36 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
           style={{
             paddingHorizontal: Spacing * 4,
             paddingTop: Spacing * 4,
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: FontSize.xxLarge,
               color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              textAlign: "center",
-            }}
-          >
-            Bienvenido 
+              fontFamily: Font['poppins-bold'],
+              textAlign: 'center',
+            }}>
+            Bienvenido
           </Text>
           <Text
-          style={{
-            fontSize: FontSize.large,
-            fontFamily: Font["poppins-bold"],
-            textAlign: "center",
-          }}>
+            style={{
+              fontSize: FontSize.large,
+              fontFamily: Font['poppins-bold'],
+              textAlign: 'center',
+            }}>
             {userName}
           </Text>
         </View>
       </View>
-      <View
-          style={{
-            paddingHorizontal: Spacing * 2,
-            paddingTop: Spacing * 6,
-            flexDirection: "row",
-          }}
-        >
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 4, }}>
+        {buttons.map((button, index) => (
           <TouchableOpacity
-            onPress={() => navigate("UserProfile")}
+            key={index}
+            onPress={button.onPress}
             style={{
-              marginLeft: 90,
+              margin: Spacing / 2, // Añade margen para separar los botones
               backgroundColor: Colors.primary,
-              paddingVertical: Spacing * 1.5,
-              paddingHorizontal: Spacing * 2,
-              width: "48%",
-              borderRadius: Spacing,
+              padding: Spacing * 1.5,
+              borderRadius: 10, // Ajusta el radio para que sean cuadrados
               shadowColor: Colors.primary,
               shadowOffset: {
                 width: 0,
@@ -89,130 +104,14 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
               },
               shadowOpacity: 0.3,
               shadowRadius: Spacing,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: Font["poppins-bold"],
-                color: Colors.onPrimary,
-                fontSize: FontSize.large,
-                textAlign: "center",
-              }}
-            >
-              Tu Perfil
-            </Text>
+            }}>
+            <FontAwesome // Renderiza el icono
+              name={button.icon}
+              size={30} // Tamaño del icono
+              color={Colors.onPrimary} // Color del icono
+            />
           </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          paddingHorizontal: Spacing * 2,
-          paddingTop: Spacing * 6,
-          flexDirection: "row",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigate("ViewTeams")}
-          style={{
-            marginLeft: 90,
-            backgroundColor: Colors.primary,
-            paddingVertical: Spacing * 1.5,
-            paddingHorizontal: Spacing * 2,
-            width: "48%",
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              fontSize: FontSize.large,
-              textAlign: "center",
-            }}
-          >
-            Ver Equipos
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          paddingHorizontal: Spacing * 2,
-          paddingTop: Spacing * 6,
-          flexDirection: "row",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigate("TeamCreationScreen")}
-          style={{
-            marginLeft: 90,
-            backgroundColor: Colors.primary,
-            paddingVertical: Spacing * 1.5,
-            paddingHorizontal: Spacing * 2,
-            width: "48%",
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              fontSize: FontSize.large,
-              textAlign: "center",
-            }}
-          >
-            Crear Equipo
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          paddingHorizontal: Spacing * 2,
-          paddingTop: Spacing * 6,
-          flexDirection: "row",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => logout()}
-          style={{
-            marginLeft: 90,
-            backgroundColor: Colors.primary,
-            paddingVertical: Spacing * 1.5,
-            paddingHorizontal: Spacing * 2,
-            width: "48%",
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              fontSize: FontSize.large,
-              textAlign: "center",
-            }}
-          >
-            Cerrar Sesión
-          </Text>
-        </TouchableOpacity>
+        ))}
       </View>
     </SafeAreaView>
   );

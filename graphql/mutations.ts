@@ -126,7 +126,6 @@ export const UPDATETEAM = gql`
     }
 `;
 
-
 export const ADDTEAM = gql`
     mutation AddTeam($idUser: Int!, $idTeam: Int!) {
         addTeam(addTeamInput: {
