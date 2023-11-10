@@ -21,7 +21,6 @@ export const LOGIN = gql`
             email: $email,
             password: $password
         }) {
-
             id
             name
             lastName

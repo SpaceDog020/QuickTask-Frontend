@@ -1,10 +1,5 @@
-import {
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useState } from "react";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import Spacing from "../../constants/Spacing";
 import FontSize from "../../constants/FontSize";
 import Colors from "../../constants/Colors";
@@ -12,23 +7,42 @@ import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types";
 import AppTextInput from "../../components/AppTextInput";
-import { useMutation } from '@apollo/client';
-import { REGISTER } from '../../graphql/mutations';
+import { useMutation } from "@apollo/client";
+import { REGISTER } from "../../graphql/mutations";
+import Toast from "react-native-toast-message";
+import useButtonTimeout from "../../hooks/UseButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
 const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const [name, setName] = useState('');
-  const [lastName, setlastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [register, { data }] = useMutation(REGISTER);
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1500,
+    isSubmitting
+  );
+
   const handleRegister = async () => {
-    if (name === '' || lastName === '' || email === '' || password === '') {
-      alert('Todos los campos deben estar llenos');
+    setIsSubmitting(true);
+    if (name === "" || lastName === "" || email === "" || password === "") {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Todos los campos deben estar llenos",
+        position: "bottom",
+        visibilityTime: 1500, // Duration in milliseconds
+        autoHide: true,
+      });
     } else {
       try {
         const { data } = await register({
@@ -37,20 +51,42 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             lastName,
             email,
             password,
-          }
+          },
         });
         if (data && data.register) {
           if (data.register.response) {
-            alert("Registro exitoso");
-            navigate("Login")
+            Toast.show({
+              type: "success",
+              text1: "Registro exitoso",
+              text2: "Ahora puede logearse",
+              position: "bottom",
+              visibilityTime: 3000, // Duration in milliseconds
+              autoHide: true,
+            });
+
+            navigate("Login");
           } else {
-            alert("Correo ya existente");
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "El correo ya está registrado",
+              position: "bottom",
+              visibilityTime: 3000, // Duration in milliseconds
+              autoHide: true,
+            });
           }
         } else {
           console.log("No se encontraron datos de registro");
         }
       } catch (e) {
-        alert("Error al registrar");
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Error al registrar",
+          position: "bottom",
+          visibilityTime: 3000, // Duration in milliseconds
+          autoHide: true,
+        });
       }
     }
   };
@@ -83,17 +119,36 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             marginVertical: Spacing * 1,
           }}
         >
-          <AppTextInput placeholder="Nombre" value={name} onChangeText={setName} />
-          <AppTextInput placeholder="Apellido" value={lastName} onChangeText={setlastName} />
-          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail} />
-          <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
+          <AppTextInput
+            placeholder="Nombre"
+            value={name}
+            onChangeText={setName}
+          />
+          <AppTextInput
+            placeholder="Apellido"
+            value={lastName}
+            onChangeText={setlastName}
+          />
+          <AppTextInput
+            placeholder="Correo"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <AppTextInput
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
         </View>
 
         <TouchableOpacity
           onPress={handleRegister}
+          disabled={isSubmitting}
           style={{
             padding: Spacing * 2,
-            backgroundColor: Colors.primary,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
             marginVertical: Spacing * 1,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
@@ -104,6 +159,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             shadowOpacity: 0.3,
             shadowRadius: Spacing,
           }}
+          // Disable the button when submitting
         >
           <Text
             style={{

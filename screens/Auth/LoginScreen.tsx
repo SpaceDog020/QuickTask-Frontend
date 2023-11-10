@@ -16,6 +16,7 @@ import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/mutations";
 import { useUserStore } from '../../stores/useUserStore';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -33,7 +34,14 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleLogin = async (email: string, password: string) => {
     if(email === '' || password === ''){
-      alert('Todos los campos deben estar llenos');
+      Toast.show({
+        type: 'error',
+        text1: 'Debe llenar todos los campos',
+        text2: 'Intente nuevamente',
+        position: 'bottom', // Display at the bottom
+        visibilityTime: 2000, // Duration in milliseconds
+        autoHide: true,
+      });
     }else{
       try{
         const { data } = await login({
@@ -51,7 +59,14 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           navigate("Dashboard")
         }
       }catch(e){
-        alert("Credenciales incorrectas");
+        Toast.show({
+          type: 'error',
+          text1: 'Credenciales incorrectas',
+          text2: 'Intente nuevamente',
+          position: 'bottom', // Display at the bottom
+          visibilityTime: 1500, // Duration in milliseconds
+          autoHide: true,
+        });
         console.log(e);
       }
     }
