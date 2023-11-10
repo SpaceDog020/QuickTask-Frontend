@@ -1,4 +1,10 @@
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Spacing from "../../constants/Spacing";
 import FontSize from "../../constants/FontSize";
@@ -10,7 +16,7 @@ import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
 import { REGISTER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
-import useButtonTimeout from "../../hooks/UseButtonTimeout";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
@@ -21,7 +27,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [register, { data }] = useMutation(REGISTER);
 
   useButtonTimeout(
@@ -45,6 +51,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
     } else {
       try {
+        setIsLoading(true);
         const { data } = await register({
           variables: {
             name,
@@ -53,6 +60,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             password,
           },
         });
+        setIsLoading(false);
         if (data && data.register) {
           if (data.register.response) {
             Toast.show({
@@ -79,6 +87,8 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           console.log("No se encontraron datos de registro");
         }
       } catch (e) {
+        setIsSubmitting(false);
+        setIsLoading(false);
         Toast.show({
           type: "error",
           text1: "Error",
@@ -145,7 +155,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
         <TouchableOpacity
           onPress={handleRegister}
-          disabled={isSubmitting}
+          disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing * 2,
             backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
@@ -161,19 +171,24 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
           // Disable the button when submitting
         >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Crear Cuenta
-          </Text>
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Crear Cuenta
+            </Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigate("Login")}
+          disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing,
           }}

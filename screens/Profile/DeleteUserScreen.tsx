@@ -20,7 +20,7 @@ import { useUserStore } from "../../stores/useUserStore";
 import AppTextInput from "../../components/AppTextInput";
 import { Button } from "@rneui/themed";
 
-type Props = NativeStackScreenProps<RootStackParamList, "DeleteUserScreen">;
+type Props = NativeStackScreenProps<RootStackParamList, "DeleteUser">;
 
 const DeleteUserScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName, setUserName } = useUserStore();
