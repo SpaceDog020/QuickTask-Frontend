@@ -36,8 +36,6 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const [createTeam, { data }] = useMutation(CREATETEAM);
 
-  const [addTeam, { data: addTeamData }] = useMutation(ADDTEAM);
-
   const handleTeamCreation = async () => {
     if (teamName === '' || teamDescription === '') {
       alert('Todos los campos deben estar llenos');
@@ -56,20 +54,8 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           });
 
           if (data && data.createTeam) {
-            
-            const teamId = data.createTeam.id;
-
-            const { data: addTeamData } = await addTeam({
-              variables: {
-                idUser: userId,
-                idTeam: teamId,
-              },
-            });
-
-            if (addTeamData && addTeamData.addTeam) {
-              alert("Equipo creado correctamente");
-              navigate("Dashboard");
-            }
+            alert("Equipo creado correctamente");
+            navigate("Dashboard");
           }
         }
       } catch (e) {

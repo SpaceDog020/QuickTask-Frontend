@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import fonts from './config/fonts';
@@ -6,10 +6,9 @@ import Navigation from './navigation';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Toast from 'react-native-toast-message';
 import CustomToast from './components/CustomToast'; // Import your custom toast component
-import Colors from './constants/Colors';
 
 const client = new ApolloClient({
-  uri: 'http://10.162.163.46:3000/graphql',
+  uri: 'http://192.168.0.3:3000/graphql',
   cache: new InMemoryCache(),
 });
 
