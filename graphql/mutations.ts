@@ -138,3 +138,16 @@ export const ADDTEAM = gql`
         }
     }
 `;
+
+export const ADDUSERS = gql`
+    mutation AddUsers($idTeam: Int!, $idUser: Int!) {
+        addUsers(addUsersInput: {
+            idTeam: $idTeam,
+            idUser: $idUser
+        }) {
+            
+            response
+
+        }
+    }
+`;

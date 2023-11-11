@@ -58,16 +58,6 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const commonButtons = [
     {
-      label: 'Ver Tareas',
-      icon: 'tasks',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
-      label: 'Agregar Tarea',
-      icon: 'calendar-plus',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
       label: 'Ver Usuarios',
       icon: 'users',
       onPress: () => navigate('UserDetails'),
@@ -79,17 +69,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     {
       label: 'Agregar Usuario',
       icon: 'user-plus',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
-      label: 'Ver Roles',
-      icon: 'tags',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
-      label: 'Agregar Rol',
-      icon: 'plus-circle',
-      onPress: () => navigate('AddRoles'),
+      onPress: () => navigate('AddUser'),
     },
     {
       label: 'Editar Equipo',
