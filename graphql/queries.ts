@@ -15,6 +15,7 @@ export const GETTEAMDETAILS = gql`
             name
             description
             idUsers
+            idCreator
         }
     }
 `;

@@ -10,7 +10,7 @@ import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
 import { REGISTER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
-import useButtonTimeout from "../../hooks/UseButtonTimeout";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 

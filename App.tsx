@@ -9,7 +9,7 @@ import CustomToast from './components/CustomToast'; // Import your custom toast 
 import Colors from './constants/Colors';
 
 const client = new ApolloClient({
-  uri: 'http://10.151.26.208:3000/graphql',
+  uri: 'http://10.162.163.46:3000/graphql',
   cache: new InMemoryCache(),
 });
 

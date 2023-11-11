@@ -19,6 +19,7 @@ import TeamDetailsScreen from "../screens/Team/TeamDetailsScreen";
 import EditTeamScreen from "../screens/Team/EditTeamScreen";
 import AddUserScreen from "../screens/Team/User/AddUserScreen";
 import UserDetailsScreen from "../screens/Team/User/UserDetailsScreen";
+import AddRolesScreen from "../screens/Team/Role/AddRolesScreen";
 
 
 const theme = {
@@ -62,6 +63,7 @@ function RootNavigator() {
       <Stack.Screen name="EditTeam" component={EditTeamScreen} />
       <Stack.Screen name="AddUser" component={AddUserScreen} />
       <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
+      <Stack.Screen name="AddRoles" component={AddRolesScreen} />
 
     </Stack.Navigator>
   );
