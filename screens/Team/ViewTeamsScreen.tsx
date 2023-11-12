@@ -25,17 +25,9 @@ import FontAwesome from "react-native-vector-icons/FontAwesome5";
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 
 const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const { userEmail, setUserEmail } = useUserStore();
+  const { userId } = useUserStore();
   const [teams, setTeams] = useState([]);
   const { teamId, setTeamId } = useUserStore();
-
-  const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
-    variables: {
-      email: userEmail,
-    },
-  });
-
-  const userId = userIdData?.email.id; // Asegúrate de verificar si userIdData está definido
 
   const { refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
     variables: {
@@ -49,7 +41,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         setTeams(data?.teamsByUserId || []);
       })
       .catch((error) => {
-        console.error("Error al cargar equipos:", error);
+        console.log("Error al cargar equipos:", error);
       });
   }, [userId]);
 
@@ -60,7 +52,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
           setTeams(data?.teamsByUserId || []);
         })
         .catch((error) => {
-          console.error("Error al cargar equipos:", error);
+          console.log("Error al cargar equipos:", error);
         });
     }, [userId])
   );

@@ -12,7 +12,7 @@ import { useUserStore } from '../../../stores/useUserStore';
 import { useQuery } from "@apollo/client";
 import { GETTEAMBYID, GETUSERSBYIDS } from "../../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import Spacing from "../../../constants/Spacing";
 import Colors from "../../../constants/Colors";
 import Font from "../../../constants/Font";
@@ -22,6 +22,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "UserDetails">;
 
 const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     const [users, setUsers] = useState([]);
+    const [ idCreator, setIdCreator ] = useState();
     const { teamId } = useUserStore();
 
     const { data: teamData } = useQuery(GETTEAMBYID, {
@@ -36,6 +37,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
   
     useEffect(() => {
       if (teamData && teamData.team) {
+        setIdCreator(teamData.team.idCreator);
         const ids = teamData.team.idUsers;
         refetchUsers({ ids })
         .then(({ data: usersData }) => {
@@ -45,7 +47,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
             console.error("Error al cargar equipos:", error);
           });;
       }
-    }, [teamData, usersData]);
+    }, [teamData, usersData, idCreator]);
   
     return (
       <SafeAreaView>
@@ -63,7 +65,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                 textAlign: "center",
               }}
             >
-              Equipos
+              Usuarios
             </Text>
           </View>
         </View>
@@ -101,6 +103,14 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                     justifyContent: "flex-start",
                   }}
                 >
+                  {user.id === idCreator && (
+                  <FontAwesome
+                    style={{ marginRight: 5 }}
+                    name={'crown'}
+                    size={20}
+                    color={Colors.onPrimary}
+                  />
+                )}
                   <Text
                     style={{
                       fontFamily: Font["poppins-bold"],

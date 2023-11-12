@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
-  Dimensions,
-  ImageBackground,
+  BackHandler,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Importa el icono
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Spacing from '../constants/Spacing';
 import FontSize from '../constants/FontSize';
 import Colors from '../constants/Colors';
@@ -17,16 +16,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useUserStore } from '../stores/useUserStore';
 
-const { height, width } = Dimensions.get('window');
-
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
 const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName, setUserName } = useUserStore();
-  const { userLastName, setUserLastName } = useUserStore();
-  const { userEmail, setUserEmail } = useUserStore();
+  const { setUserLastName } = useUserStore();
+  const { setUserEmail } = useUserStore();
   const { removeAccessToken } = useUserStore();
-  const { userId, setUserId } = useUserStore();
+  const { setUserId } = useUserStore();
 
   const logout = async () => {
     await removeAccessToken();
@@ -40,63 +37,97 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const buttons = [
     {
       label: 'Tu Perfil',
-      icon: 'user', // Nombre del icono de FontAwesome
+      icon: 'user',
       onPress: () => navigate('UserProfile'),
     },
     {
+      label: 'Cerrar Sesión',
+      icon: 'sign-out',
+      onPress: logout,
+    },
+    {
       label: 'Ver Equipos',
-      icon: 'list', // Nombre del icono de FontAwesome
+      icon: 'list',
       onPress: () => navigate('ViewTeams'),
     },
     {
       label: 'Crear Equipo',
-      icon: 'plus', // Nombre del icono de FontAwesome
+      icon: 'plus',
       onPress: () => navigate('TeamCreation'),
     },
     {
-      label: 'Cerrar Sesión',
-      icon: 'sign-out', // Nombre del icono de FontAwesome
-      onPress: logout,
+      label: 'Ver Proyectos',
+      icon: 'list',
+      onPress: () => navigate('ViewTeams'),
+    },
+    {
+      label: 'Crear Proyectos',
+      icon: 'plus',
+      onPress: () => navigate('ProjectCreation'),
     },
   ];
 
+  const buttonColors = {
+    'Tu Perfil': 'blue',
+    'Cerrar Sesión': 'blue',
+    'Ver Equipos': 'royalblue',
+    'Crear Equipo': 'royalblue',
+    'Ver Proyectos': 'dodgerblue',
+    'Crear Proyectos': 'dodgerblue',
+  };
+
+  useEffect(() => {
+    const backAction = () => {
+      logout();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
+
   return (
-    <SafeAreaView>
-      <View>
-        <View
+    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ marginBottom: Spacing * 3 }}>
+        <Text
           style={{
-            paddingHorizontal: Spacing * 4,
-            paddingTop: Spacing * 4,
+            fontSize: FontSize.xxLarge,
+            color: Colors.primary,
+            fontFamily: Font['poppins-bold'],
+            textAlign: 'center',
           }}>
-          <Text
-            style={{
-              fontSize: FontSize.xxLarge,
-              color: Colors.primary,
-              fontFamily: Font['poppins-bold'],
-              textAlign: 'center',
-            }}>
-            Bienvenido
-          </Text>
-          <Text
-            style={{
-              fontSize: FontSize.large,
-              fontFamily: Font['poppins-bold'],
-              textAlign: 'center',
-            }}>
-            {userName}
-          </Text>
-        </View>
+          Bienvenido
+        </Text>
+        <Text
+          style={{
+            fontSize: FontSize.large,
+            fontFamily: Font['poppins-bold'],
+            textAlign: 'center',
+          }}>
+          {userName}
+        </Text>
+        <Text
+          style={{
+            marginTop: Spacing * 5,
+            fontSize: FontSize.large,
+            fontFamily: Font['poppins-bold'],
+            textAlign: 'center',
+          }}>
+          ¿Qué deseas hacer hoy?
+        </Text>
       </View>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 4, }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 2 }}>
         {buttons.map((button, index) => (
           <TouchableOpacity
             key={index}
             onPress={button.onPress}
             style={{
-              margin: Spacing / 2, // Añade margen para separar los botones
-              backgroundColor: Colors.primary,
-              padding: Spacing * 1.5,
-              borderRadius: 10, // Ajusta el radio para que sean cuadrados
+              width: 160,
+              height: 120,
+              margin: Spacing / 2,
+              backgroundColor: buttonColors[button.label],
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
               shadowColor: Colors.primary,
               shadowOffset: {
                 width: 0,
@@ -105,11 +136,19 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
               shadowOpacity: 0.3,
               shadowRadius: Spacing,
             }}>
-            <FontAwesome // Renderiza el icono
+            <FontAwesome
               name={button.icon}
-              size={30} // Tamaño del icono
-              color={Colors.onPrimary} // Color del icono
+              size={50}
+              color={Colors.onPrimary}
             />
+            <Text
+              style={{
+                color: Colors.onPrimary,
+                fontFamily: Font['poppins-bold'],
+                textAlign: 'center',
+              }}>
+              {button.label}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>

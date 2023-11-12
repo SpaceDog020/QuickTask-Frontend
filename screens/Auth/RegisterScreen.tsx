@@ -82,7 +82,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: "Error al registrar",
+          text2: e.message,
           position: "bottom",
           visibilityTime: 3000, // Duration in milliseconds
           autoHide: true,

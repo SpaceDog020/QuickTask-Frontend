@@ -12,27 +12,16 @@ import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types";
 import AppTextInput from "../../components/AppTextInput";
-import { useMutation, useQuery } from '@apollo/client';
-import { ADDTEAM, REGISTER } from '../../graphql/mutations';
+import { useMutation } from '@apollo/client';
 import { CREATETEAM } from '../../graphql/mutations';
 import { useUserStore } from "../../stores/useUserStore";
-import { GETUSERIDBYEMAIL } from "../../graphql/queries";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeamCreation">;
 
 const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const {
-    userEmail: initialUserEmail
-  } = useUserStore();
-
+  const { userId } = useUserStore();
   const [teamName, setTeamName] = useState('');
   const [teamDescription, setTeamDescription] = useState('');
-  
-  const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
-    variables: {
-      email: initialUserEmail,
-    },
-  });
 
   const [createTeam, { data }] = useMutation(CREATETEAM);
 
@@ -40,11 +29,7 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
     if (teamName === '' || teamDescription === '') {
       alert('Todos los campos deben estar llenos');
     } else {
-      try {
-        if (userIdData && userIdData.email.id) {
-          
-          const userId = userIdData.email.id;
-
+      try {    
           const { data } = await createTeam({
             variables: {
               name: teamName,
@@ -57,9 +42,8 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             alert("Equipo creado correctamente");
             navigate("Dashboard");
           }
-        }
-      } catch (e) {
-        alert("Error al registrar el equipo");
+        } catch (e) {
+        alert("Error: " + e.message);
       }
     }
   };
