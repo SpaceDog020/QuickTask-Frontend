@@ -20,6 +20,7 @@ import { useUserStore } from "../../stores/useUserStore";
 import { useQuery } from "@apollo/client";
 import { GETTEAMBYID } from "../../graphql/queries";
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeamDetails">;
 
@@ -28,31 +29,34 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userId, setUserId } = useUserStore();
   const [userIsCreator, setUserIsCreator] = useState(false);
 
-  const { data: teamData } = useQuery(GETTEAMBYID, {
+  const { data: teamData, refetch: refetchTeam } = useQuery(GETTEAMBYID, {
     variables: {
       id: teamId,
     },
   });
 
-  useEffect(() => {
+  const checkUserIsCreator = () => {
     if (teamData && teamData.team) {
       if (userId === teamData.team.idCreator) {
         setUserIsCreator(true);
       }
     }
-  }, [userIsCreator, userId, setUserIsCreator]);
+  };
+
+  useEffect(() => {
+    checkUserIsCreator();
+  }, [userId, teamData]);
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      checkUserIsCreator();
+      refetchTeam().catch((error) => {
+        console.error("Error al cargar el equipo:", error);
+      });
+    }, [userId, teamData])
+  );
 
   const commonButtons = [
-    {
-      label: 'Ver Tareas',
-      icon: 'tasks',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
-      label: 'Agregar Tarea',
-      icon: 'calendar-plus',
-      onPress: () => navigate('Dashboard'),
-    },
     {
       label: 'Ver Usuarios',
       icon: 'users',
@@ -65,17 +69,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     {
       label: 'Agregar Usuario',
       icon: 'user-plus',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
-      label: 'Ver Roles',
-      icon: 'tags',
-      onPress: () => navigate('Dashboard'),
-    },
-    {
-      label: 'Agregar Rol',
-      icon: 'plus-circle',
-      onPress: () => navigate('Dashboard'),
+      onPress: () => navigate('AddUser'),
     },
     {
       label: 'Editar Equipo',
@@ -219,4 +213,8 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 export default TeamDetails;
 
 const styles = StyleSheet.create({});
+
+function refetchTeams() {
+  throw new Error("Function not implemented.");
+}
 

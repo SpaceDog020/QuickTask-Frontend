@@ -1,5 +1,14 @@
 import { gql } from '@apollo/client';
 
+export const GETTEAMS = gql`
+    query Teams {
+        teams {
+            id
+            name
+        }
+    }
+`;
+
 export const GETUSERIDBYEMAIL = gql`
   query email($email: String!) {
     email(email: $email) {
@@ -15,6 +24,7 @@ export const GETTEAMDETAILS = gql`
             name
             description
             idUsers
+            idCreator
         }
     }
 `;
@@ -45,6 +55,16 @@ export const GETUSERSBYIDS = gql`
             name
             lastName
             email
+        }
+    }
+`;
+
+export const FINDTEAMSBYCREATORID = gql`
+    query FindTeamsByCreatorId($id: Int!) {
+        findTeamsByCreatorId(id: $id) {
+
+            response
+
         }
     }
 `;

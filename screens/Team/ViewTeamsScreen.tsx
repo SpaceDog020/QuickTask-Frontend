@@ -25,18 +25,9 @@ import FontAwesome from "react-native-vector-icons/FontAwesome5";
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 
 const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const { userEmail, setUserEmail } = useUserStore();
+  const { userId } = useUserStore();
   const [teams, setTeams] = useState([]);
   const { teamId, setTeamId } = useUserStore();
-  const { teamUsersIds, setTeamUsersIds } = useUserStore();
-
-  const { data: userIdData } = useQuery(GETUSERIDBYEMAIL, {
-    variables: {
-      email: userEmail,
-    },
-  });
-
-  const userId = userIdData?.email.id; // Asegúrate de verificar si userIdData está definido
 
   const { refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
     variables: {
@@ -50,7 +41,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         setTeams(data?.teamsByUserId || []);
       })
       .catch((error) => {
-        console.error("Error al cargar equipos:", error);
+        console.log("Error al cargar equipos:", error);
       });
   }, [userId]);
 
@@ -61,7 +52,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
           setTeams(data?.teamsByUserId || []);
         })
         .catch((error) => {
-          console.error("Error al cargar equipos:", error);
+          console.log("Error al cargar equipos:", error);
         });
     }, [userId])
   );
@@ -96,19 +87,19 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                 paddingHorizontal: Spacing * 2,
                 paddingTop: Spacing * 2,
                 flexDirection: "row",
+                justifyContent: "space-between",
               }}
             >
               <TouchableOpacity
                 onPress={() => {
                   setTeamId(team.id);
-                  setTeamUsersIds(team.idUsers);
                   navigate("TeamDetails");
                 }}
                 style={{
                   backgroundColor: Colors.primary,
                   paddingVertical: Spacing * 1,
                   paddingHorizontal: Spacing * 2,
-                  width: "100%", // Ajusta el ancho del botón al 100%
+                  width: "100%",
                   borderRadius: Spacing,
                   shadowColor: Colors.primary,
                   shadowOffset: {
@@ -117,11 +108,19 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                   },
                   shadowOpacity: 0.3,
                   shadowRadius: Spacing,
-                  flexDirection: "row", // Añade flexDirection para alinear el texto a la izquierda
-                  alignItems: "center", // Centra verticalmente el texto
-                  justifyContent: "flex-start", // Alinea el texto a la izquierda
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
                 }}
               >
+                {userId === team.idCreator && ( // Condición para mostrar la corona
+                  <FontAwesome
+                    style={{ marginRight: 5 }}
+                    name={'crown'}
+                    size={20}
+                    color={Colors.onPrimary}
+                  />
+                )}
                 <Text
                   style={{
                     fontFamily: Font["poppins-bold"],
@@ -131,11 +130,11 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                 >
                   {team.name}
                 </Text>
-                <FontAwesome // Renderiza el icono
-                  style={{ marginLeft: 170 }}
+                <FontAwesome
+                  style={{ marginLeft: 140 }}
                   name={'users'}
-                  size={20} // Tamaño del icono
-                  color={Colors.onPrimary} // Color del icono
+                  size={20}
+                  color={Colors.onPrimary}
                 />
                 <Text
                   style={{
@@ -149,7 +148,8 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-          ))}
+          ))
+        }
       </ScrollView>
 
       <View

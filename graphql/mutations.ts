@@ -138,3 +138,43 @@ export const ADDTEAM = gql`
         }
     }
 `;
+
+export const ADDUSERS = gql`
+    mutation AddUsers($idTeam: Int!, $idUser: Int!) {
+        addUsers(addUsersInput: {
+            idTeam: $idTeam,
+            idUser: $idUser
+        }) {
+            
+            response
+
+        }
+    }
+`;
+
+export const DELETEUSER = gql`
+    mutation DeleteUser($idUser: Int!, $password: String!) {
+        deleteUser(deleteUserInput: {
+            idUser: $idUser
+            password: $password
+        }) {
+            
+            response
+
+        }
+    }
+`;
+
+export const CREATEPROJECT = gql`
+    mutation CreateProject($name: String!, $description: String!, $idTeam: Int!) {
+        createProject(createProjectInput: {
+            name: $name,
+            description: $description,
+            idTeam: $idTeam
+        }) {
+            
+            id
+
+        }
+    }
+`;

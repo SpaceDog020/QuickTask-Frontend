@@ -89,6 +89,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
       <View
         style={{
           padding: Spacing * 2,
+          marginTop: Spacing * 2,
         }}
       >
         <View
