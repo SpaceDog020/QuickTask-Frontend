@@ -19,6 +19,7 @@ import { Icon } from "@rneui/themed";
 import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
 import { UPDATEUSER } from "../../graphql/mutations";
+import Toast from "react-native-toast-message";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
@@ -55,7 +56,14 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleSaveChanges = async () => {
     if (newName === "" || newLastName === "" || newEmail === "") {
-      alert("Todos los campos deben estar llenos");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Todos los campos deben estar llenos",
+        position: "bottom",
+        visibilityTime: 1500, // Duration in milliseconds
+        autoHide: true,
+      });
     } else {
       try {
         // Call the updateUser mutation with the updated user data
@@ -74,12 +82,26 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             userLastName: newLastName,
             userEmail: newEmail,
           });
-        
+        Toast.show({
+          type: "success",
+          text1: "Datos actualizados",
+          text2: "Se han guardado los datos",
+          position: "bottom",
+          visibilityTime: 3000, // Duration in milliseconds
+          autoHide: true,
+        });
 
         // Disable editability after saving changes
         setEditable(false);
       } catch (e) {
-        alert("Error al actualizar datos, ingrese un correo válido");
+        Toast.show({
+              type: "error",
+              text1: "Error al actualizar datos",
+              text2: "Ingrese un correo válido",
+              position: "bottom",
+              visibilityTime: 3000, // Duration in milliseconds
+              autoHide: true,
+            });
       }
     }
   };
@@ -97,6 +119,22 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+          <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 1.5,
+            left: -Spacing,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("Dashboard")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xLarge,
@@ -111,7 +149,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           style={{
             position: "absolute",
             top: Spacing * 1,
-            right: Spacing * 1,
+            right: -Spacing,
             zIndex: 1,
           }}
             onPress={() => navigate("DeleteUser")}

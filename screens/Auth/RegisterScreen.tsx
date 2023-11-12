@@ -17,6 +17,7 @@ import { useMutation } from "@apollo/client";
 import { REGISTER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
+import { Icon } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
@@ -113,6 +114,22 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+          <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 2,
+            left: -Spacing,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("Welcome")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xLarge,

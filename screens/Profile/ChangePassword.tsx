@@ -10,6 +10,8 @@ import { RootStackParamList } from "../../types";
 import { CHANGEPASSWORD } from "../../graphql/mutations";
 import { useMutation } from "@apollo/client";
 import { useUserStore } from "../../stores/useUserStore";
+import { Icon } from "@rneui/themed";
+import Toast from "react-native-toast-message";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePassword">;
@@ -26,7 +28,14 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleChangePassword = async () => {
     if (newPassword === "" || repeatNewPassword === "") {
-      alert("Todos los campos deben estar llenos");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Todos los campos deben estar llenos",
+        position: "bottom",
+        visibilityTime: 1500, // Duration in milliseconds
+        autoHide: true,
+      });
     } else {
       if (newPassword === repeatNewPassword) {
         try{
@@ -62,6 +71,22 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
+      <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 5,
+            left: Spacing * 0.5,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("UserProfile")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
         <Text style={styles.title}>Cambio de Contraseña</Text>
 
         <AppTextInput

@@ -12,6 +12,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useUserStore } from "../../stores/useUserStore";
 import { FINDTEAMSBYCREATORID } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/native";
+import { Icon } from "@rneui/themed";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "DeleteUser">;
@@ -95,6 +96,22 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
 return (
   <SafeAreaView>
     <View style={styles.container}>
+    <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 3.8,
+            left: Spacing * 0.3,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("UserProfile")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
       <Text style={styles.title}>Eliminar Usuario</Text>
 
       <Text

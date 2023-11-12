@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -15,29 +16,69 @@ import { RootStackParamList } from "../../types";
 import AppTextInput from "../../components/AppTextInput";
 import { RECOVERY } from "../../graphql/mutations";
 import { useMutation } from "@apollo/client";
+import { Icon } from "@rneui/themed";
+import Toast from "react-native-toast-message";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "PassReset">;
 
 const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   const [recovery, { data, loading }] = useMutation(RECOVERY);
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1500,
+    isSubmitting
+  );
+  
   const handleRecovery = async (email: string) => {
+    setIsSubmitting(true);
     if(email === ''){
-      alert('Todos los campos deben estar llenos');
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Todos los campos deben estar llenos",
+        position: "bottom",
+        visibilityTime: 1500, // Duration in milliseconds
+        autoHide: true,
+      });
     }else{
       try{
+        setIsLoading(true);
         const { data } = await recovery({
           variables: {
             email,
           },
         });
-        if (data && data.recovery) {;
+        setIsLoading(false);
+        if (data && data.recovery) {
+          Toast.show({
+            type: "success",
+            text1: "Correo enviado",
+            text2: "Se ha enviado el código de recuperación a tu correo",
+            position: "bottom",
+            visibilityTime: 3000, // Duration in milliseconds
+            autoHide: true,
+          });
           navigate("PassVal");
         }
       }catch(e){
-        navigate("PassVal");
+        setIsSubmitting(false);
+        setIsLoading(false);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Ingrese sus datos correctamente",
+          position: "bottom",
+          visibilityTime: 3000, // Duration in milliseconds
+          autoHide: true,
+        });
       }
     }
   }
@@ -54,6 +95,22 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+          <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 2,
+            left: -Spacing,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("Login")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xLarge,
@@ -91,9 +148,10 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
         <TouchableOpacity
           onPress={() => handleRecovery(email)}
+          disabled={isSubmitting || isLoading}
           style={{
             padding: Spacing * 2,
-            backgroundColor: Colors.primary,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
             marginVertical: Spacing * 3,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
@@ -105,6 +163,9 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             shadowRadius: Spacing,
           }}
         >
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
           <Text
             style={{
               fontFamily: Font["poppins-bold"],
@@ -115,24 +176,9 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Recuperar contraseña
           </Text>
+          )}
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigate("Login")}
-          style={{
-            padding: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.text,
-              textAlign: "center",
-              fontSize: FontSize.medium,
-            }}
-          >
-            Volver
-          </Text>
-        </TouchableOpacity>
+        
       </View>
     </SafeAreaView>
   );

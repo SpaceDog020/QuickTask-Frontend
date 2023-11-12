@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -17,10 +18,14 @@ import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../graphql/mutations";
 import { useUserStore } from '../../stores/useUserStore';
 import Toast from 'react-native-toast-message';
+import useButtonTimeout from "../../hooks/useButtonTimeout";
+import { Icon } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { accessToken, setAccessToken } = useUserStore();
@@ -29,36 +34,56 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userLastName, setUserLastName } = useUserStore();
   const { userEmail, setUserEmail } = useUserStore();
   const { userId, setUserId } = useUserStore();
-
   const [login, { data, loading }] = useMutation(LOGIN);
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1000,
+    isSubmitting
+  );
+
   const handleLogin = async (email: string, password: string) => {
+    setIsSubmitting(true);
     if(email === '' || password === ''){
       Toast.show({
         type: 'error',
-        text1: 'Debe llenar  todos los campos',
+        text1: 'Debe llenar todos los campos',
         text2: 'Intente nuevamente',
         position: 'bottom', // Display at the bottom
-        visibilityTime: 2000, // Duration in milliseconds
+        visibilityTime: 1000, // Duration in milliseconds
         autoHide: true,
       });
     }else{
       try{
+        setIsLoading(true);
         const { data } = await login({
           variables: {
             email,
             password,
           },
         });
+        setIsLoading(false);
         if (data && data.login) {
           setAccessToken(data.login.accessToken)
           setUserName(data.login.name)
           setUserLastName(data.login.lastName)
           setUserEmail(data.login.email)
           setUserId(data.login.id)
+          Toast.show({
+            type: "success",
+            text1: "Ingreso exitoso",
+            text2: "Redirigiendo al dashboard",
+            position: "bottom",
+            visibilityTime: 1250, // Duration in milliseconds
+            autoHide: true,
+          });
           navigate("Dashboard")
         }
       }catch(e){
+        setIsSubmitting(false);
+        setIsLoading(false);
         Toast.show({
           type: 'error',
           text1: 'Credenciales incorrectas',
@@ -84,6 +109,22 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+          <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 1.5,
+            left: -Spacing,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("Welcome")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xLarge,
@@ -92,7 +133,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               marginVertical: Spacing * 3,
             }}
           >
-            Inicia sesion
+            Inicia sesión
           </Text>
           <Text
             style={{
@@ -125,14 +166,15 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               alignSelf: "flex-end",
             }}
           >
-            Olvide mi contraseña
+            Olvidé mi contraseña
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
         onPress={() => handleLogin(email, password)}
+        disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing * 2,
-            backgroundColor: Colors.primary,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
             marginVertical: Spacing * 3,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
@@ -144,6 +186,9 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             shadowRadius: Spacing,
           }}
         >
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
           <Text
             style={{
               fontFamily: Font["poppins-bold"],
@@ -152,11 +197,14 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               fontSize: FontSize.large,
             }}
           >
-            Iniciar Sesion
+            Iniciar Sesión
           </Text>
+
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigate("Register")}
+          disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing,
           }}
