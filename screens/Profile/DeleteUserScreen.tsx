@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AppTextInput from "../../components/AppTextInput";
 import Colors from "../../constants/Colors";
 import Font from "../../constants/Font";
@@ -13,6 +13,8 @@ import { useUserStore } from "../../stores/useUserStore";
 import { FINDTEAMSBYCREATORID } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
+import Toast from "react-native-toast-message";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "DeleteUser">;
@@ -26,6 +28,8 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName, setUserName } = useUserStore();
   const { userLastName, setUserLastName } = useUserStore();
   const { userEmail, setUserEmail } = useUserStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [deleteUser] = useMutation(DELETEUSER);
 
@@ -53,32 +57,78 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
     }, [userId, creatorData])
   );
+  
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1500,
+    isSubmitting
+  );
 
   const handleDeleteUser = async () => {
+    setIsSubmitting(true);
     if (password === "" || repeatPassword === "") {
-      alert("Todos los campos deben estar llenos");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Todos los campos deben estar llenos",
+        position: "bottom",
+        visibilityTime: 1500, // Duration in milliseconds
+        autoHide: true,
+      });
     } else if (password !== repeatPassword) {
-      alert("Las contraseñas no coinciden");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Las contraseñas no coinciden",
+        position: "bottom",
+        visibilityTime: 2000, // Duration in milliseconds
+        autoHide: true,
+      });
     } else {
       if(userIsCreator){
-        alert("No puedes eliminar tu cuenta porque eres creador de un equipo");
-        return;
+        Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "No puedes eliminar tu cuenta porque eres creador de un equipo",
+        position: "bottom",
+        visibilityTime: 2000, // Duration in milliseconds
+        autoHide: true,
+      });
       }else{
         try {
+          setIsLoading(true);
           const { data } = await deleteUser({
             variables: {
               idUser: userId,
               password: password,
             },
           });
+          setIsLoading(false);
           if (data && data.deleteUser) {
-            alert("Usuario eliminado correctamente");
+            Toast.show({
+              type: "success",
+              text1: "Usuario eliminado correctamente",
+              text2: "Volviendo a pantalla de bienvenida",
+              position: "bottom",
+              visibilityTime: 3000, // Duration in milliseconds
+              autoHide: true,
+            });
             logout();
           }
         }
         catch (e) {
-          alert("Error: " + e.message);
-          console.log(e);
+          setIsSubmitting(false);
+          setIsLoading(false);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: e.message,
+            position: "bottom",
+            visibilityTime: 3000, // Duration in milliseconds
+            autoHide: true,
+          });
         }
       }
     }
@@ -139,8 +189,18 @@ return (
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleDeleteUser}>
-        <Text style={styles.buttonText}>Eliminar Usuario</Text>
+      <TouchableOpacity style={[
+            styles.button,
+            {
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+            },
+          ]}
+          onPress={handleDeleteUser} disabled={isLoading || isSubmitting}>
+        {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text style={styles.buttonText}>Eliminar Usuario</Text>
+          )}
       </TouchableOpacity>
     </View>
   </SafeAreaView>

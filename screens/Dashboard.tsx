@@ -15,6 +15,7 @@ import Font from '../constants/Font';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useUserStore } from '../stores/useUserStore';
+import { useIsFocused } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -24,6 +25,22 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { setUserEmail } = useUserStore();
   const { removeAccessToken } = useUserStore();
   const { setUserId } = useUserStore();
+  const isFocused = useIsFocused();
+
+
+  useEffect(() => {
+    const backAction = () => {
+      if (isFocused) { // Utiliza isFocused para verificar si la pantalla está enfocada
+        logout();
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [useIsFocused]);
+
 
   const logout = async () => {
     await removeAccessToken();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AppTextInput from "../../components/AppTextInput";
 import Colors from "../../constants/Colors";
 import Font from "../../constants/Font";
@@ -12,6 +12,7 @@ import { useMutation } from "@apollo/client";
 import { useUserStore } from "../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
 import Toast from "react-native-toast-message";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePassword">;
@@ -20,13 +21,24 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatNewPassword, setRepeatNewPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     userEmail: initialUserEmail
   } = useUserStore();
 
   const [changePassword] = useMutation(CHANGEPASSWORD);
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1500,
+    isSubmitting
+  );
+
   const handleChangePassword = async () => {
+    setIsSubmitting(true);
     if (newPassword === "" || repeatNewPassword === "") {
       Toast.show({
         type: "error",
@@ -39,6 +51,7 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
     } else {
       if (newPassword === repeatNewPassword) {
         try{
+          setIsLoading(true);
           const { data } = await changePassword({
             variables: {
               email: initialUserEmail,
@@ -46,22 +59,52 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
               newPassword: newPassword,
             },
           });
+          setIsLoading(false);          
           if (data && data.changePassword) {
-            alert("Contraseña cambiada con exito");
+            Toast.show({
+              type: "success",
+              text1: "Contraseña ha sido cambiada",
+              text2: "Volviendo a perfil",
+              position: "bottom",
+              visibilityTime: 3000, // Duration in milliseconds
+              autoHide: true,
+            });
             navigate("UserProfile");
           }
           else{
-            alert("Contraseña incorrecta");
+            Toast.show({
+              type: "success",
+              text1: "Contraseña incorrecta",
+              text2: "Intente nuevamente",
+              position: "bottom",
+              visibilityTime: 3000, // Duration in milliseconds
+              autoHide: true,
+            });
           }
         
         }
         catch(e){
-          alert("Hubo un error al cambiar la contraseña");
-          console.log(e);
+          setIsSubmitting(false);
+          setIsLoading(false);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: e.message,
+            position: "bottom",
+            visibilityTime: 3000, // Duration in milliseconds
+            autoHide: true,
+          });
         }
       }
       else{
-        alert("Las contraseñas no coinciden");
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Las contraseñas no coinciden",
+          position: "bottom",
+          visibilityTime: 3000, // Duration in milliseconds
+          autoHide: true,
+        });
       }
     }
   };
@@ -71,22 +114,23 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-      <TouchableOpacity
+        <TouchableOpacity
           style={{
             position: "absolute",
             top: Spacing * 5,
             left: Spacing * 0.5,
             zIndex: 1,
           }}
-            onPress={() => navigate("UserProfile")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary}/>
-          </TouchableOpacity>
+          onPress={() => navigate("UserProfile")}
+        >
+          <Icon
+            raised
+            size={25}
+            name="arrow-back"
+            type="Ionicons"
+            color={Colors.primary}
+          />
+        </TouchableOpacity>
         <Text style={styles.title}>Cambio de Contraseña</Text>
 
         <AppTextInput
@@ -110,8 +154,21 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Cambiar contraseña</Text>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            {
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+            },
+          ]}
+          onPress={handleChangePassword}
+          disabled={isLoading || isSubmitting}
+        >
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text style={styles.buttonText}>Cambiar contraseña</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -130,7 +187,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: Colors.primary,
     padding: Spacing * 2,
     marginVertical: Spacing * 7,
     borderRadius: Spacing,
