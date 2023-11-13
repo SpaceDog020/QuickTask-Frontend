@@ -22,6 +22,7 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [teamDescription, setTeamDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [createTeam, { data }] = useMutation(CREATETEAM);
 
   useButtonTimeout(
@@ -68,25 +69,14 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
       } catch (e) {
         setIsSubmitting(false);
         setIsLoading(false);
-        if (e.message.includes("team already")) {
-          Toast.show({
-            type: "error",
-            text1: "El equipo ya existe",
-            text2: "Intente nuevamente",
-            position: "bottom",
-            visibilityTime: 3000, // Duration in milliseconds
-            autoHide: true,
-          });
-        } else {
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: e.message,
-            position: "bottom",
-            visibilityTime: 3000, // Duration in milliseconds
-            autoHide: true,
-          });
-        }
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: e.message,
+          position: "bottom",
+          visibilityTime: 3000, // Duration in milliseconds
+          autoHide: true,
+        });
       }
     }
   };
@@ -104,12 +94,12 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 2,
-            left: -Spacing,
-            zIndex: 1,
-          }}
+            style={{
+              position: "absolute",
+              top: Spacing * 2,
+              left: -Spacing,
+              zIndex: 1,
+            }}
             onPress={() => navigate("Dashboard")}
           >
             <Icon
@@ -117,7 +107,7 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               size={25}
               name='arrow-back'
               type='Ionicons'
-              color={Colors.primary}/>
+              color={Colors.primary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -125,6 +115,8 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               color: Colors.primary,
               fontFamily: Font["poppins-bold"],
               marginVertical: Spacing * 3,
+              marginHorizontal: Spacing * 5,
+              textAlign: "center",
             }}
           >
             Crea tu equipo
@@ -167,16 +159,16 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           {isLoading || isSubmitting ? (
             <ActivityIndicator size="large" color={Colors.primary} />
           ) : (
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Crear Equipo
-          </Text>
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Crear Equipo
+            </Text>
           )}
         </TouchableOpacity>
       </View>

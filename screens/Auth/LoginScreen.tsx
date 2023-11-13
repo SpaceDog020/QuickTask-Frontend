@@ -46,7 +46,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleLogin = async (email: string, password: string) => {
     setIsSubmitting(true);
-    if(email === '' || password === ''){
+    if (email === '' || password === '') {
       Toast.show({
         type: 'error',
         text1: 'Debe llenar todos los campos',
@@ -55,8 +55,8 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         visibilityTime: 1000, // Duration in milliseconds
         autoHide: true,
       });
-    }else{
-      try{
+    } else {
+      try {
         setIsLoading(true);
         const { data } = await login({
           variables: {
@@ -81,7 +81,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           });
           navigate("Dashboard")
         }
-      }catch(e){
+      } catch (e) {
         setIsSubmitting(false);
         setIsLoading(false);
         Toast.show({
@@ -92,7 +92,6 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           visibilityTime: 1500, // Duration in milliseconds
           autoHide: true,
         });
-        console.log(e);
       }
     }
   };
@@ -109,13 +108,15 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+
           <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 1.5,
-            left: -Spacing,
-            zIndex: 1,
-          }}
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 1.5,
+              left: -Spacing,
+              zIndex: 1,
+            }}
             onPress={() => navigate("Welcome")}
           >
             <Icon
@@ -123,7 +124,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               size={25}
               name='arrow-back'
               type='Ionicons'
-              color={Colors.primary}/>
+              color={Colors.primary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -131,6 +132,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               color: Colors.primary,
               fontFamily: Font["poppins-bold"],
               marginVertical: Spacing * 3,
+              textAlign: "center",
             }}
           >
             Inicia sesión
@@ -151,12 +153,13 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             marginVertical: Spacing * 3,
           }}
         >
-          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail}/>
-          <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry/>
+          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail} />
+          <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
         </View>
 
         <TouchableOpacity
           onPress={() => navigate("PassReset")}
+          disabled={isLoading || isSubmitting}
         >
           <Text
             style={{
@@ -170,8 +173,8 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={() => handleLogin(email, password)}
-        disabled={isLoading || isSubmitting}
+          onPress={() => handleLogin(email, password)}
+          disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing * 2,
             backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
@@ -189,16 +192,16 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           {isLoading || isSubmitting ? (
             <ActivityIndicator size="large" color={Colors.primary} />
           ) : (
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Iniciar Sesión
-          </Text>
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Iniciar Sesión
+            </Text>
 
           )}
         </TouchableOpacity>

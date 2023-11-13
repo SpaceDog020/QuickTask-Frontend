@@ -40,15 +40,17 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
   });
 
   const checkUserIsCreator = () => {
-    if (creatorData && creatorData.findTeamsByCreatorId) {{
-      setUserIsCreator(creatorData.findTeamsByCreatorId.response);
-    }};
+    if (creatorData && creatorData.findTeamsByCreatorId) {
+      {
+        setUserIsCreator(creatorData.findTeamsByCreatorId.response);
+      }
+    };
   };
 
   useEffect(() => {
     checkUserIsCreator();
   }, [userId, creatorData]);
-  
+
   useFocusEffect(
     React.useCallback(() => {
       checkUserIsCreator();
@@ -57,7 +59,7 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
     }, [userId, creatorData])
   );
-  
+
   useButtonTimeout(
     () => {
       setIsSubmitting(false);
@@ -87,16 +89,16 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
         autoHide: true,
       });
     } else {
-      if(userIsCreator){
+      if (userIsCreator) {
         Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "No puedes eliminar tu cuenta porque eres creador de un equipo",
-        position: "bottom",
-        visibilityTime: 2000, // Duration in milliseconds
-        autoHide: true,
-      });
-      }else{
+          type: "error",
+          text1: "Error",
+          text2: "No puedes eliminar tu cuenta porque eres creador de un equipo",
+          position: "bottom",
+          visibilityTime: 2000, // Duration in milliseconds
+          autoHide: true,
+        });
+      } else {
         try {
           setIsLoading(true);
           const { data } = await deleteUser({
@@ -143,68 +145,73 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
     navigate('Welcome');
   };
 
-return (
-  <SafeAreaView>
-    <View style={styles.container}>
-    <TouchableOpacity
+  return (
+    <SafeAreaView>
+      <View style={styles.container}>
+        <TouchableOpacity
+          disabled={isLoading || isSubmitting}
           style={{
             position: "absolute",
             top: Spacing * 3.8,
             left: Spacing * 0.3,
             zIndex: 1,
           }}
-            onPress={() => navigate("UserProfile")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary}/>
-          </TouchableOpacity>
-      <Text style={styles.title}>Eliminar Usuario</Text>
+          onPress={() => navigate("UserProfile")}
+        >
+          <Icon
+            raised
+            size={25}
+            name='arrow-back'
+            type='Ionicons'
+            color={Colors.primary} />
+        </TouchableOpacity>
+        <Text style={
+          styles.title
+        }>
+          Eliminar Usuario
+        </Text>
 
-      <Text
-        style={{
-          fontFamily: Font["poppins-semiBold"],
-          fontSize: FontSize.large,
-          textAlign: "center",
-          marginVertical: Spacing * 3,
-        }}
-      >
-        ¿Estás seguro de que deseas eliminar tu cuenta de usuario?
-      </Text>
+        <Text
+          style={{
+            fontFamily: Font["poppins-semiBold"],
+            fontSize: FontSize.large,
+            textAlign: "center",
+            marginBottom: Spacing * 2
+          }}
+        >
+          ¿Estás seguro de que deseas eliminar tu cuenta de usuario?
+        </Text>
 
-      <AppTextInput
-        placeholder="Contraseña actual"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <AppTextInput
+          placeholder="Contraseña actual"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-      <AppTextInput
-        placeholder="Repita la contraseña"
-        value={repeatPassword}
-        onChangeText={setRepeatPassword}
-        secureTextEntry
-      />
+        <AppTextInput
+          placeholder="Repita la contraseña"
+          value={repeatPassword}
+          onChangeText={setRepeatPassword}
+          secureTextEntry
+        />
 
-      <TouchableOpacity style={[
-            styles.button,
-            {
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-            },
-          ]}
+        <TouchableOpacity style={[
+          styles.button,
+          {
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+          },
+        ]}
           onPress={handleDeleteUser} disabled={isLoading || isSubmitting}>
-        {isLoading || isSubmitting ? (
+          {isLoading || isSubmitting ? (
             <ActivityIndicator size="large" color={Colors.primary} />
           ) : (
             <Text style={styles.buttonText}>Eliminar Usuario</Text>
           )}
-      </TouchableOpacity>
-    </View>
-  </SafeAreaView>
-);
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -216,6 +223,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontFamily: Font["poppins-bold"],
     marginVertical: Spacing * 3,
+    marginHorizontal: Spacing * 4,
     textAlign: "center",
   },
   button: {

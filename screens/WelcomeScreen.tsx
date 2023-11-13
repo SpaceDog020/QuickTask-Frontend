@@ -32,7 +32,6 @@ const WelcomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         <View
           style={{
             paddingHorizontal: Spacing * 4,
-            paddingTop: Spacing * 4,
           }}
         >
           <Text
@@ -60,19 +59,16 @@ const WelcomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         </View>
         <View
           style={{
-            paddingHorizontal: Spacing * 2,
-            paddingTop: Spacing * 6,
-            flexDirection: "row",
+            marginVertical: Spacing * 1,
+            padding: Spacing * 2,
           }}
         >
           <TouchableOpacity
             onPress={() => navigate("Login")}
             style={{
-              marginLeft: 20,
+              padding: Spacing * 2,
               backgroundColor: Colors.primary,
-              paddingVertical: Spacing * 1.5,
-              paddingHorizontal: Spacing * 2,
-              width: "48%",
+              marginVertical: Spacing * 3,
               borderRadius: Spacing,
               shadowColor: Colors.primary,
               shadowOffset: {
@@ -97,18 +93,15 @@ const WelcomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           <TouchableOpacity
             onPress={() => navigate("Register")}
             style={{
-              paddingVertical: Spacing * 1.5,
-              paddingHorizontal: Spacing * 2,
-              width: "48%",
-              borderRadius: Spacing,
+              padding: Spacing,
             }}
           >
             <Text
               style={{
                 fontFamily: Font["poppins-bold"],
                 color: Colors.text,
-                fontSize: FontSize.large,
                 textAlign: "center",
+                fontSize: FontSize.large,
               }}
             >
               Registrarse

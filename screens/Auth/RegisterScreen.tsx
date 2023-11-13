@@ -136,16 +136,14 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               color: Colors.primary,
               fontFamily: Font["poppins-bold"],
               marginVertical: Spacing * 3,
+              marginHorizontal: Spacing * 5,
+              textAlign: "center",
             }}
           >
-            Crea tu cuenta
+            Crea tu nueva cuenta
           </Text>
         </View>
-        <View
-          style={{
-            marginVertical: Spacing * 1,
-          }}
-        >
+        <View>
           <AppTextInput
             placeholder="Nombre"
             value={name}

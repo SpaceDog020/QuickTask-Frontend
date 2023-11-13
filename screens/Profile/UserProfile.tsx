@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   SafeAreaView,
   StyleSheet,
@@ -20,6 +21,7 @@ import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
 import { UPDATEUSER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
@@ -29,7 +31,8 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
     userLastName: initialUserLastName,
     userEmail: initialUserEmail,
   } = useUserStore();
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
   const [userLastName, setUserLastName] = useState(initialUserLastName);
   const [userEmail, setUserEmail] = useState(initialUserEmail);
@@ -39,22 +42,30 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [newLastName, setNewLastName] = useState(userLastName);
   const [newEmail, setNewEmail] = useState(userEmail);
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1000,
+    isSubmitting
+  );
 
   const handleButtonPress = () => {
     if (editable) {
-        // Reset the text input values to the current user data
-        if (newName !== userName || newLastName !== userLastName || newEmail !== userEmail) {
-          setNewName(userName);
-          setNewLastName(userLastName);
-          setNewEmail(userEmail);
-        }
+      // Reset the text input values to the current user data
+      if (newName !== userName || newLastName !== userLastName || newEmail !== userEmail) {
+        setNewName(userName);
+        setNewLastName(userLastName);
+        setNewEmail(userEmail);
       }
-    
+    }
+
     setEditable(!editable);
 
   };
 
   const handleSaveChanges = async () => {
+    setIsSubmitting(true);
     if (newName === "" || newLastName === "" || newEmail === "") {
       Toast.show({
         type: "error",
@@ -66,6 +77,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
     } else {
       try {
+        setIsLoading(true);
         // Call the updateUser mutation with the updated user data
         await updateUser({
           variables: {
@@ -75,13 +87,11 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             email: newEmail,
           },
         });
-
         // Update the user data in your local state
-        useUserStore.setState({
-            userName: newName,
-            userLastName: newLastName,
-            userEmail: newEmail,
-          });
+        setUserName(newName);
+        setUserLastName(newLastName);
+        setUserEmail(newEmail);
+        setIsLoading(false);
         Toast.show({
           type: "success",
           text1: "Datos actualizados",
@@ -92,16 +102,19 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
 
         // Disable editability after saving changes
+        setIsSubmitting(false);
         setEditable(false);
       } catch (e) {
+        setIsSubmitting(false);
+        setIsLoading(false);
         Toast.show({
-              type: "error",
-              text1: "Error al actualizar datos",
-              text2: "Ingrese un correo válido",
-              position: "bottom",
-              visibilityTime: 3000, // Duration in milliseconds
-              autoHide: true,
-            });
+          type: "error",
+          text1: "Error al actualizar datos",
+          text2: e.message,
+          position: "bottom",
+          visibilityTime: 3000, // Duration in milliseconds
+          autoHide: true,
+        });
       }
     }
   };
@@ -120,12 +133,13 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 1.5,
-            left: -Spacing,
-            zIndex: 1,
-          }}
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 1,
+              left: -Spacing,
+              zIndex: 1,
+            }}
             onPress={() => navigate("Dashboard")}
           >
             <Icon
@@ -133,7 +147,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
               size={25}
               name='arrow-back'
               type='Ionicons'
-              color={Colors.primary}/>
+              color={Colors.primary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -146,20 +160,20 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             Tu perfil
           </Text>
           <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 1,
-            right: -Spacing,
-            zIndex: 1,
-          }}
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 1,
+              right: -Spacing,
+              zIndex: 1,
+            }}
             onPress={() => navigate("DeleteUser")}
           >
             <Icon
               raised
-
               name='trash'
               type='font-awesome-5'
-              color='black'/>
+              color='black' />
           </TouchableOpacity>
         </View>
         <View>
@@ -174,7 +188,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Nombre
           </Text>
-          <AppTextInput placeholder="Nombre" value={newName} editable={editable} onChangeText={setNewName}/>
+          <AppTextInput placeholder="Nombre" value={newName} editable={editable} onChangeText={setNewName} />
           <Text
             style={{
               fontFamily: Font["poppins-semiBold"],
@@ -186,7 +200,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Apellido
           </Text>
-          <AppTextInput placeholder="Apellido" value={newLastName} editable={editable} onChangeText={setNewLastName}/>
+          <AppTextInput placeholder="Apellido" value={newLastName} editable={editable} onChangeText={setNewLastName} />
           <Text
             style={{
               fontFamily: Font["poppins-semiBold"],
@@ -198,10 +212,11 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Correo
           </Text>
-          <AppTextInput placeholder="Nombre" value={newEmail} editable={editable} onChangeText={setNewEmail}/>
+          <AppTextInput placeholder="Nombre" value={newEmail} editable={editable} onChangeText={setNewEmail} />
         </View>
 
         <TouchableOpacity
+          disabled={isLoading || isSubmitting}
           onPress={handleButtonPress}
           style={{
             padding: Spacing * 1,
@@ -228,13 +243,14 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             {editable ? "Cancelar" : "Editar Datos"}
           </Text>
         </TouchableOpacity>
-        
+
         {editable && (
           <TouchableOpacity
+            disabled={isLoading || isSubmitting}
             onPress={handleSaveChanges}
             style={{
               padding: Spacing * 1,
-              backgroundColor: Colors.primary,
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
               marginVertical: Spacing * 1,
               borderRadius: Spacing,
               shadowColor: Colors.primary,
@@ -246,20 +262,25 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
               shadowRadius: Spacing,
             }}
           >
-            <Text
-              style={{
-                fontFamily: Font["poppins-bold"],
-                color: Colors.onPrimary,
-                textAlign: "center",
-                fontSize: FontSize.large,
-              }}
-            >
-              Guardar
-            </Text>
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Guardar
+              </Text>
+            )}
           </TouchableOpacity>
         )}
 
         <TouchableOpacity
+          disabled={isLoading || isSubmitting}
           onPress={() => navigate("ChangePassword")}
           style={{
             padding: Spacing * 1,
@@ -290,7 +311,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
       </View>
     </SafeAreaView>
   );
-  
+
 };
 
 export default UserProfile;

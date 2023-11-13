@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -16,21 +17,43 @@ import AppTextInput from "../../components/AppTextInput";
 import { useUserStore } from "../../stores/useUserStore";
 import { CHANGEPASSRECOVERY } from "../../graphql/mutations";
 import { useMutation } from "@apollo/client";
+import { Icon } from "@rneui/themed";
+import Toast from "react-native-toast-message";
+import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePass">;
 
 const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const { recoveryPass, setRecoveryPass } = useUserStore();
 
   const [changePassRecovery, { data, loading }] = useMutation(CHANGEPASSRECOVERY);
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1000,
+    isSubmitting
+  );
+
   const handleChangePass = async (password: string, password2: string) => {
+    setIsSubmitting(true);
     if (password === "" || password2 === "") {
-      alert("Todos los campos deben estar llenos");
+      Toast.show({
+        type: 'error',
+        text1: 'Debe llenar todos los campos',
+        text2: 'Intente nuevamente',
+        position: 'bottom', // Display at the bottom
+        visibilityTime: 1000, // Duration in milliseconds
+        autoHide: true,
+      });
     } else {
       if (password === password2) {
+        setIsLoading(true);
         try {
           const { data } = await changePassRecovery({
             variables: {
@@ -38,17 +61,42 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               recoveryPass,
             },
           });
+          setIsLoading(false);
           if (data && data.changePassRecovery) {
-            alert("Contraseña cambiada con exito");
+            Toast.show({
+              type: "success",
+              text1: "Contraseña cambiada",
+              text2: "Inicie sesión",
+              position: "bottom",
+              visibilityTime: 1250, // Duration in milliseconds
+              autoHide: true,
+            });
             setRecoveryPass(0);
             navigate("Login");
           }
         } catch (e) {
-          alert("Contraseña ya utilizada");
-          console.log(e);
+          setIsSubmitting(false);
+          setIsLoading(false);
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: e.message,
+            position: 'bottom', // Display at the bottom
+            visibilityTime: 1000, // Duration in milliseconds
+            autoHide: true,
+          });
         }
       } else {
-        alert("Las contraseñas no coinciden");
+        setIsSubmitting(false);
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Las contraseñas no coinciden',
+          text2: 'Intente nuevamente',
+          position: 'bottom', // Display at the bottom
+          visibilityTime: 1000, // Duration in milliseconds
+          autoHide: true,
+        });
       }
     }
   };
@@ -65,6 +113,23 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 2,
+              left: -Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("Login")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xLarge,
@@ -80,7 +145,6 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             style={{
               fontFamily: Font["poppins-semiBold"],
               fontSize: FontSize.large,
-              maxWidth: "60%",
               textAlign: "center",
             }}
           >
@@ -113,10 +177,11 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         </View>
 
         <TouchableOpacity
+          disabled={isLoading || isSubmitting}
           onPress={() => handleChangePass(password, password2)}
           style={{
             padding: Spacing * 2,
-            backgroundColor: Colors.primary,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
             marginVertical: Spacing * 7,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
@@ -128,34 +193,20 @@ const ChangePassScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             shadowRadius: Spacing,
           }}
         >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Cambiar contraseña
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigate("Login")}
-          onPressIn={() => setRecoveryPass(0)}
-          style={{
-            padding: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.text,
-              textAlign: "center",
-              fontSize: FontSize.medium,
-            }}
-          >
-            Volver
-          </Text>
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Cambiar contraseña
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -58,27 +58,12 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
         setIsLoading(false);
         if (data && data.recovery) {
-          Toast.show({
-            type: "success",
-            text1: "Correo enviado",
-            text2: "Se ha enviado el código de recuperación a tu correo",
-            position: "bottom",
-            visibilityTime: 3000, // Duration in milliseconds
-            autoHide: true,
-          });
           navigate("PassVal");
         }
       }catch(e){
         setIsSubmitting(false);
         setIsLoading(false);
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "Ingrese sus datos correctamente",
-          position: "bottom",
-          visibilityTime: 3000, // Duration in milliseconds
-          autoHide: true,
-        });
+        navigate("PassVal");
       }
     }
   }
@@ -96,6 +81,7 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <TouchableOpacity
+          disabled={isLoading || isSubmitting}
           style={{
             position: "absolute",
             top: Spacing * 2,
@@ -126,7 +112,6 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             style={{
               fontFamily: Font["poppins-semiBold"],
               fontSize: FontSize.large,
-              maxWidth: "60%",
               textAlign: "center",
             }}
           >

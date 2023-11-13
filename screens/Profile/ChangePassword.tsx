@@ -50,7 +50,7 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
     } else {
       if (newPassword === repeatNewPassword) {
-        try{
+        try {
           setIsLoading(true);
           const { data } = await changePassword({
             variables: {
@@ -59,7 +59,7 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
               newPassword: newPassword,
             },
           });
-          setIsLoading(false);          
+          setIsLoading(false);
           if (data && data.changePassword) {
             Toast.show({
               type: "success",
@@ -70,20 +70,21 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
               autoHide: true,
             });
             navigate("UserProfile");
-          }
-          else{
+          } else {
+            setIsSubmitting(false);
+            setIsLoading(false);
             Toast.show({
-              type: "success",
-              text1: "Contraseña incorrecta",
-              text2: "Intente nuevamente",
+              type: "error",
+              text1: "Error",
+              text2: "Contraseña incorrecta",
               position: "bottom",
               visibilityTime: 3000, // Duration in milliseconds
               autoHide: true,
             });
           }
-        
+
         }
-        catch(e){
+        catch (e) {
           setIsSubmitting(false);
           setIsLoading(false);
           Toast.show({
@@ -95,8 +96,9 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
             autoHide: true,
           });
         }
-      }
-      else{
+      } else {
+        setIsSubmitting(false);
+        setIsLoading(false);
         Toast.show({
           type: "error",
           text1: "Error",
@@ -109,12 +111,11 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
     }
   };
 
-  
-
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <TouchableOpacity
+        disabled={isLoading || isSubmitting}
           style={{
             position: "absolute",
             top: Spacing * 5,
