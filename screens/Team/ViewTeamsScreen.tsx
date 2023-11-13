@@ -21,6 +21,7 @@ import { useQuery } from "@apollo/client";
 import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import { Icon } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 
@@ -65,6 +66,22 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
             paddingTop: Spacing * 6,
           }}
         >
+          <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: Spacing * 5,
+            left: Spacing,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("Dashboard")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xxLarge,
