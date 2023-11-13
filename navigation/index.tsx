@@ -21,6 +21,7 @@ import AddUserScreen from "../screens/Team/User/AddUserScreen";
 import UserDetailsScreen from "../screens/Team/User/UserDetailsScreen";
 import AddRolesScreen from "../screens/Team/Role/AddRolesScreen";
 import ProjectCreationScreen from "../screens/Project/ProjectCreationScreen";
+import ViewProjectsScreen from "../screens/Project/ViewProjectsScreen";
 
 
 const theme = {
@@ -66,6 +67,7 @@ function RootNavigator() {
       <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
       <Stack.Screen name="AddRoles" component={AddRolesScreen} />
       <Stack.Screen name="ProjectCreation" component={ProjectCreationScreen} />
+      <Stack.Screen name="ViewProjects" component={ViewProjectsScreen} />
 
     </Stack.Navigator>
   );

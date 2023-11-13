@@ -60,7 +60,7 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
     {
       label: 'Ver Proyectos',
       icon: 'list',
-      onPress: () => navigate('ViewTeams'),
+      onPress: () => navigate('ViewProjects'),
     },
     {
       label: 'Crear Proyectos',

@@ -26,6 +26,7 @@ export type RootStackParamList = {
   UserDetails: undefined;
   AddRoles: undefined;
   ProjectCreation: undefined;
+  ViewProjects: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

@@ -10,6 +10,7 @@ export type UseUserStoreT = {
   userEmail?: string;
   teamId?: number;
   userId?: number;
+  projectId?: any;
   setRecoveryPass: (recoveryPass: number) => void;
   setAccessToken: (accessToken: string) => void;
   removeAccessToken: () => void;
@@ -18,6 +19,7 @@ export type UseUserStoreT = {
   setUserEmail: (userEmail: string) => void;
   setTeamId: (teamId: number) => void;
   setUserId: (userId: number) => void;
+  setProjectId: (projectId: number) => void;
 };
 
 export const useUserStore = create<UseUserStoreT>()(
@@ -31,6 +33,7 @@ export const useUserStore = create<UseUserStoreT>()(
         userEmail: undefined,
         teamId: undefined,
         userId: undefined,
+        projectId: undefined,
         setRecoveryPass: (recoveryPass: number) => set(() => ({ recoveryPass })),
         setAccessToken: (accessToken: string) => set(() => ({ accessToken })),
         removeAccessToken: () => set(() => ({ accessToken: undefined })),
@@ -39,6 +42,7 @@ export const useUserStore = create<UseUserStoreT>()(
         setUserEmail: (userEmail: string) => set(() => ({ userEmail })),
         setTeamId: (teamId: number) => set(() => ({ teamId })),
         setUserId: (userId: number) => set(() => ({ userId })),
+        setProjectId: (projectId: number) => set(() => ({ projectId })),
       }),
       {
         name: 'user-storage',

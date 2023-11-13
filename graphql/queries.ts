@@ -68,3 +68,13 @@ export const FINDTEAMSBYCREATORID = gql`
         }
     }
 `;
+
+export const PROJECTSBYTEAMS = gql`
+    query ProjectsByTeams($teamIds: [Int!]!) {
+        projectsByTeams(teamIds: $teamIds) {
+            id
+            name
+            description
+        }
+    }
+`;

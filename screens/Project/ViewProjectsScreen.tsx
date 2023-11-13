@@ -18,45 +18,46 @@ import { RootStackParamList } from "../../types";
 const { height } = Dimensions.get("window");
 import { useUserStore } from '../../stores/useUserStore';
 import { useQuery } from "@apollo/client";
-import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../../graphql/queries";
+import { GETTEAMDETAILS, GETUSERIDBYEMAIL, PROJECTSBYTEAMS } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import { Icon } from "@rneui/themed";
 
-type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
+type Props = NativeStackScreenProps<RootStackParamList, "ViewProjects">;
 
-const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
+const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userId } = useUserStore();
-  const [teams, setTeams] = useState([]);
-  const { teamId, setTeamId } = useUserStore();
+  const [projects, setProjects] = useState([]);
+  const [teamIds, setTeamIds] = useState([]);
+  const { projectId, setProjectId } = useUserStore();
 
-  const { refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
+  const { data: teamData, refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
     variables: {
       id: userId,
     },
   });
 
-  useEffect(() => {
-    refetchTeams()
-      .then(({ data }) => {
-        setTeams(data?.teamsByUserId || []);
-      })
-      .catch((error) => {
-        console.log("Error al cargar equipos:", error);
-      });
-  }, [userId]);
+  const { data: projectData, refetch: refetchProjects } = useQuery(PROJECTSBYTEAMS, {
+    variables: {
+      teamIds,
+    },
+  });
 
-  useFocusEffect(
-    React.useCallback(() => {
-      refetchTeams()
+  useEffect(() => {
+    if (teamData) {
+      const teams = teamData?.teamsByUserId || [];
+      const ids = teams.map((team) => team.id);
+      console.log("ids", ids);
+      setTeamIds(ids);
+      refetchProjects()
         .then(({ data }) => {
-          setTeams(data?.teamsByUserId || []);
+          setProjects(data?.projectsByTeams || []);
         })
         .catch((error) => {
           console.log("Error al cargar equipos:", error);
         });
-    }, [userId])
-  );
+    }
+  }, [teamData, projectData]);
 
   return (
     <SafeAreaView>
@@ -67,12 +68,12 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 5,
-            left: Spacing,
-            zIndex: 1,
-          }}
+            style={{
+              position: "absolute",
+              top: Spacing * 5,
+              left: Spacing,
+              zIndex: 1,
+            }}
             onPress={() => navigate("Dashboard")}
           >
             <Icon
@@ -80,7 +81,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               size={25}
               name='arrow-back'
               type='Ionicons'
-              color={Colors.primary}/>
+              color={Colors.primary} />
           </TouchableOpacity>
           <Text
             style={{
@@ -90,16 +91,16 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               textAlign: "center",
             }}
           >
-            Equipos
+            Proyectos
           </Text>
         </View>
       </View>
 
-      <ScrollView style={{ maxHeight: 600 }}>
-        {teams &&
-          teams.map((team) => (
+      <ScrollView style={{ maxHeight: 447 }}>
+        {projects &&
+          projects.map((project) => (
             <View
-              key={team.id}
+              key={project.id}
               style={{
                 paddingHorizontal: Spacing * 2,
                 paddingTop: Spacing * 2,
@@ -109,8 +110,8 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  setTeamId(team.id);
-                  navigate("TeamDetails");
+                  setProjectId(project.id);
+                  navigate("Dashboard");
                 }}
                 style={{
                   backgroundColor: Colors.primary,
@@ -130,14 +131,6 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                   justifyContent: "flex-start",
                 }}
               >
-                {userId === team.idCreator && ( // Condición para mostrar la corona
-                  <FontAwesome
-                    style={{ marginRight: 5 }}
-                    name={'crown'}
-                    size={20}
-                    color={Colors.onPrimary}
-                  />
-                )}
                 <Text
                   style={{
                     fontFamily: Font["poppins-bold"],
@@ -145,23 +138,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                     fontSize: FontSize.large,
                   }}
                 >
-                  {team.name}
-                </Text>
-                <FontAwesome
-                  style={{ marginLeft: 170 }}
-                  name={'users'}
-                  size={20}
-                  color={Colors.onPrimary}
-                />
-                <Text
-                  style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    fontSize: FontSize.medium,
-                    paddingHorizontal: Spacing * 1,
-                  }}
-                >
-                  {team.idUsers.length}
+                  {project.name}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -173,6 +150,6 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
 
 };
 
-export default ViewTeams;
+export default ViewProjects;
 
 const styles = StyleSheet.create({});
