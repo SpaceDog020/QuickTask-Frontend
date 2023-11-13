@@ -27,21 +27,6 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { setUserId } = useUserStore();
   const isFocused = useIsFocused();
 
-
-  useEffect(() => {
-    const backAction = () => {
-      if (isFocused) { // Utiliza isFocused para verificar si la pantalla está enfocada
-        logout();
-        return true;
-      }
-      return false;
-    };
-
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-    return () => backHandler.remove();
-  }, [useIsFocused]);
-
-
   const logout = async () => {
     await removeAccessToken();
     setUserName('');
@@ -95,12 +80,16 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   useEffect(() => {
     const backAction = () => {
-      logout();
-      return true;
+      if (isFocused) { // Utiliza isFocused para verificar si la pantalla está enfocada
+        logout();
+        return true;
+      }
+      return false;
     };
+
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
-  }, []);
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
