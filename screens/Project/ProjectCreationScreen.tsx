@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Spacing from "../../constants/Spacing";
 import FontSize from "../../constants/FontSize";
 import Colors from "../../constants/Colors";
@@ -30,7 +30,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: teamsData } = useQuery(GETTEAMS);
+  const { data: teamsData, refetch: refetchTeams } = useQuery(GETTEAMS);
 
   const [createProject, { data }] = useMutation(CREATEPROJECT);
 
@@ -41,6 +41,10 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
     1500,
     isSubmitting
   );
+
+  useEffect(() => {
+    refetchTeams();
+  }, []);
 
   const handleProjectCreation = async () => {
     setIsSubmitting(true);
@@ -103,6 +107,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <TouchableOpacity
+            disabled={isLoading || isSubmitting}
             style={{
               position: "absolute",
               top: Spacing * 2,

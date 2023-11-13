@@ -75,6 +75,7 @@ export const PROJECTSBYTEAMS = gql`
             id
             name
             description
+            idTeams
         }
     }
 `;

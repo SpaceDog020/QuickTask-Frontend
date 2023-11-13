@@ -16,6 +16,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useUserStore } from '../stores/useUserStore';
 import { useIsFocused } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -33,6 +34,14 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
     setUserLastName('');
     setUserEmail('');
     setUserId(-1);
+    Toast.show({
+      type: "success",
+      text1: "Sesión cerrada exitosamente",
+      text2: "Regresando a la pantalla de bienvenida",
+      position: "bottom",
+      visibilityTime: 1500, // Duration in milliseconds
+      autoHide: true,
+    });
     navigate('Welcome');
   };
 

@@ -30,6 +30,9 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [projects, setProjects] = useState([]);
   const [teamIds, setTeamIds] = useState([]);
   const { projectId, setProjectId } = useUserStore();
+  const { projectName, setProjectName } = useUserStore();
+  const { projectDescription, setProjectDescription } = useUserStore();
+  const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
 
   const { data: teamData, refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
     variables: {
@@ -47,7 +50,6 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
     if (teamData) {
       const teams = teamData?.teamsByUserId || [];
       const ids = teams.map((team) => team.id);
-      console.log("ids", ids);
       setTeamIds(ids);
       refetchProjects()
         .then(({ data }) => {
@@ -96,7 +98,7 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
         </View>
       </View>
 
-      <ScrollView style={{ maxHeight: 447 }}>
+      <ScrollView style={{ maxHeight: 600 }}>
         {projects &&
           projects.map((project) => (
             <View
@@ -111,7 +113,10 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
               <TouchableOpacity
                 onPress={() => {
                   setProjectId(project.id);
-                  navigate("Dashboard");
+                  setProjectName(project.name);
+                  setProjectDescription(project.description);
+                  setProjectTeamsIds(project.teamsIds);
+                  navigate("ProjectDetails");
                 }}
                 style={{
                   backgroundColor: Colors.primary,

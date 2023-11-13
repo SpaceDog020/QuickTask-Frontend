@@ -3,7 +3,6 @@ import { Button } from "react-native";
 import {
   Dimensions,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,12 +14,12 @@ import Colors from "../../constants/Colors";
 import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types";
-const { height } = Dimensions.get("window");
 import { useUserStore } from "../../stores/useUserStore";
 import { useQuery } from "@apollo/client";
 import { GETTEAMBYID } from "../../graphql/queries";
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { useFocusEffect } from "@react-navigation/native";
+import { Icon } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeamDetails">;
 
@@ -46,7 +45,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
   useEffect(() => {
     checkUserIsCreator();
   }, [userId, teamData]);
-  
+
   useFocusEffect(
     React.useCallback(() => {
       checkUserIsCreator();
@@ -78,6 +77,12 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     },
   ];
 
+  const buttonColors = {
+    'Ver Usuarios': 'blue',
+    'Agregar Usuario': 'blue',
+    'Editar Equipo': 'royalblue',
+  };
+
   return (
     <SafeAreaView>
       <View>
@@ -86,6 +91,22 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
             paddingTop: Spacing * 6,
           }}
         >
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: Spacing * 5,
+              left: Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("ViewProjects")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
           {teamData && teamData.team ? (
             <>
               <Text
@@ -114,7 +135,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           )}
         </View>
       </View>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 4, }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 2 }}>
         {userIsCreator ? (
           // Si el usuario es el creador, muestra todos los botones
           [...commonButtons, ...creatorButtons].map((button, index) => (
@@ -122,10 +143,13 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               key={index}
               onPress={button.onPress}
               style={{
+                width: 160,
+                height: 120,
                 margin: Spacing / 2,
-                backgroundColor: Colors.primary,
-                padding: Spacing * 1.5,
+                backgroundColor: buttonColors[button.label],
                 borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
                 shadowColor: Colors.primary,
                 shadowOffset: {
                   width: 0,
@@ -136,9 +160,17 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}>
               <FontAwesome
                 name={button.icon}
-                size={30}
+                size={50}
                 color={Colors.onPrimary}
               />
+              <Text
+                style={{
+                  color: Colors.onPrimary,
+                  fontFamily: Font['poppins-bold'],
+                  textAlign: 'center',
+                }}>
+                {button.label}
+              </Text>
             </TouchableOpacity>
           ))
         ) : (
@@ -148,10 +180,13 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               key={index}
               onPress={button.onPress}
               style={{
+                width: 160,
+                height: 120,
                 margin: Spacing / 2,
-                backgroundColor: Colors.primary,
-                padding: Spacing * 1.5,
+                backgroundColor: buttonColors[button.label],
                 borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
                 shadowColor: Colors.primary,
                 shadowOffset: {
                   width: 0,
@@ -162,9 +197,17 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}>
               <FontAwesome
                 name={button.icon}
-                size={30}
+                size={50}
                 color={Colors.onPrimary}
               />
+              <Text
+                style={{
+                  color: Colors.onPrimary,
+                  fontFamily: Font['poppins-bold'],
+                  textAlign: 'center',
+                }}>
+                {button.label}
+              </Text>
             </TouchableOpacity>
           ))
         )}
@@ -176,35 +219,6 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigate("ViewTeams")}
-          style={{
-            marginLeft: 90,
-            backgroundColor: Colors.primary,
-            paddingVertical: Spacing * 1.5,
-            paddingHorizontal: Spacing * 2,
-            width: "48%",
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              fontSize: FontSize.large,
-              textAlign: "center",
-            }}
-          >
-            Volver
-          </Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
