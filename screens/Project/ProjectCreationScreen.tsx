@@ -27,6 +27,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [idTeam, setIdTeam] = useState(null);
+  
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 

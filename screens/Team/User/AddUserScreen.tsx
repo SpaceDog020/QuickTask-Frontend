@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   SafeAreaView,
   Text,
   TouchableOpacity,
@@ -16,12 +17,18 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ADDUSERS } from '../../../graphql/mutations';
 import { useUserStore } from "../../../stores/useUserStore";
 import { GETUSERIDBYEMAIL } from "../../../graphql/queries";
+import { Icon } from "@rneui/themed";
+import useButtonTimeout from "../../../hooks/useButtonTimeout";
+import Toast from "react-native-toast-message";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AddUser">;
 
 const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [userEmail, setEmail] = useState('');
   const { teamId, setTeamId } = useUserStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [addUsers, { data }] = useMutation(ADDUSERS);
 
@@ -31,10 +38,27 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
     },
   });
 
+  useButtonTimeout(
+    () => {
+      setIsSubmitting(false);
+    },
+    1500,
+    isSubmitting
+  );
+
   const handleAddUser = async () => {
+    setIsSubmitting(true);
     if (userEmail === '') {
-      alert('Todos los campos deben estar llenos');
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Todos los campos deben estar llenos",
+        position: "bottom",
+        visibilityTime: 1500, // Duration in milliseconds
+        autoHide: true,
+      });
     } else {
+      setIsLoading(true);
       refetch()
         .then(() => {
           if (userIdData && userIdData.email) {
@@ -46,15 +70,42 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
               },
             })
               .then(() => {
-                alert('Usuario agregado');
+                setIsSubmitting(false);
+                setIsLoading(false);
+                Toast.show({
+                  type: "success",
+                  text1: "Usuario agregado",
+                  text2: "El usuario ha sido agregado al equipo",
+                  position: "bottom",
+                  visibilityTime: 1500, // Duration in milliseconds
+                  autoHide: true,
+                });
               })
               .catch((error) => {
-                console.error(error);
+                setIsSubmitting(false);
+                setIsLoading(false);
+                Toast.show({
+                  type: "error",
+                  text1: "Error",
+                  text2: error.message,
+                  position: "bottom",
+                  visibilityTime: 3000, // Duration in milliseconds
+                  autoHide: true,
+                });
               });
           }
         })
         .catch((error) => {
-          console.error(error);
+          setIsSubmitting(false);
+          setIsLoading(false);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.message,
+            position: "bottom",
+            visibilityTime: 3000, // Duration in milliseconds
+            autoHide: true,
+          });
         });
     }
   };
@@ -71,12 +122,31 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
             alignItems: "center",
           }}
         >
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 2,
+              left: -Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("TeamDetails")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: FontSize.xLarge,
               color: Colors.primary,
               fontFamily: Font["poppins-bold"],
               marginVertical: Spacing * 3,
+              marginHorizontal: Spacing * 4,
+              textAlign: "center",
             }}
           >
             Agregar Usuario al Equipo
@@ -91,10 +161,11 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
         </View>
 
         <TouchableOpacity
+          disabled={isLoading || isSubmitting}
           onPress={handleAddUser}
           style={{
             padding: Spacing * 2,
-            backgroundColor: Colors.primary,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
             marginVertical: Spacing * 1,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
@@ -106,16 +177,20 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
             shadowRadius: Spacing,
           }}
         >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Agregar Usuario
-          </Text>
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Agregar Usuario
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

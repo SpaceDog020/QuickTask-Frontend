@@ -98,7 +98,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               left: Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("ViewProjects")}
+            onPress={() => navigate("ViewTeams")}
           >
             <Icon
               raised

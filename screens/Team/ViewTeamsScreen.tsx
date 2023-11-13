@@ -132,7 +132,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               >
                 {userId === team.idCreator && ( // Condición para mostrar la corona
                   <FontAwesome
-                    style={{ marginRight: 5 }}
+                    style={{ marginRight: 5, marginBottom: 8 }}
                     name={'crown'}
                     size={20}
                     color={Colors.onPrimary}
