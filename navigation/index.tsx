@@ -19,7 +19,7 @@ import TeamDetailsScreen from "../screens/Team/TeamDetailsScreen";
 import EditTeamScreen from "../screens/Team/EditTeamScreen";
 import AddUserScreen from "../screens/Team/User/AddUserScreen";
 import UserDetailsScreen from "../screens/Team/User/UserDetailsScreen";
-import AddRolesScreen from "../screens/Team/Role/AddRolesScreen";
+import AddRolesScreen from "../screens/Project/Role/AddRolesScreen";
 import ProjectCreationScreen from "../screens/Project/ProjectCreationScreen";
 import ViewProjectsScreen from "../screens/Project/ViewProjectsScreen";
 
