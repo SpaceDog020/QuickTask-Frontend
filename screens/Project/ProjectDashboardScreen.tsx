@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "react-native";
+import React from "react";
 import {
-    Dimensions,
     SafeAreaView,
     StyleSheet,
     Text,
@@ -15,17 +13,12 @@ import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types";
 import { useUserStore } from "../../stores/useUserStore";
-import { useQuery } from "@apollo/client";
-import { GETTEAMBYID } from "../../graphql/queries";
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProjectDashboard">;
 
 const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
-    const { teamId, setTeamId } = useUserStore();
-    const { projectId, setProjectId } = useUserStore();
     const { projectName, setProjectName } = useUserStore();
     const { projectDescription, setProjectDescription } = useUserStore();
 
