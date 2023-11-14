@@ -9,6 +9,8 @@ export type UseUserStoreT = {
   userLastName?: string;
   userEmail?: string;
   teamId?: number;
+  teamName?: string;
+  teamDescription?: string;
   userId?: number;
   projectId?: number;
   projectName?: string;
@@ -21,6 +23,8 @@ export type UseUserStoreT = {
   setUserLastName: (userLastName: string) => void;
   setUserEmail: (userEmail: string) => void;
   setTeamId: (teamId: number) => void;
+  setTeamName: (teamName: string) => void;
+  setTeamDescription: (teamDescription: string) => void;
   setUserId: (userId: number) => void;
   setProjectId: (projectId: number) => void;
   setProjectName: (projectName: string) => void;
@@ -38,6 +42,8 @@ export const useUserStore = create<UseUserStoreT>()(
         userLastName: undefined,
         userEmail: undefined,
         teamId: undefined,
+        teamName: undefined,
+        teamDescription: undefined,
         userId: undefined,
         projectId: undefined,
         projectName: undefined,
@@ -50,6 +56,8 @@ export const useUserStore = create<UseUserStoreT>()(
         setUserLastName: (userLastName: string) => set(() => ({ userLastName })),
         setUserEmail: (userEmail: string) => set(() => ({ userEmail })),
         setTeamId: (teamId: number) => set(() => ({ teamId })),
+        setTeamName: (teamName: string) => set(() => ({ teamName })),
+        setTeamDescription: (teamDescription: string) => set(() => ({ teamDescription })),
         setUserId: (userId: number) => set(() => ({ userId })),
         setProjectId: (projectId: number) => set(() => ({ projectId })),
         setProjectName: (projectName: string) => set(() => ({ projectName })),

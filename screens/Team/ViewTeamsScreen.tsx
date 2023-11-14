@@ -29,6 +29,8 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userId } = useUserStore();
   const [teams, setTeams] = useState([]);
   const { teamId, setTeamId } = useUserStore();
+  const { teamName, setTeamName } = useUserStore();
+  const { teamDescription, setTeamDescription } = useUserStore();
 
   const { refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
     variables: {
@@ -110,6 +112,8 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               <TouchableOpacity
                 onPress={() => {
                   setTeamId(team.id);
+                  setTeamName(team.name);
+                  setTeamDescription(team.description);
                   navigate("TeamDetails");
                 }}
                 style={{

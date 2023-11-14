@@ -36,7 +36,6 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const checkUserIsCreator = () => {
     if (teamData && teamData.team) {
-      console.log("userId:", userId, "idCreator:", teamData.team.idCreator);
       if (userId === teamData.team.idCreator) {
         setUserIsCreator(true);
         return;
@@ -80,7 +79,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     {
       label: 'Editar Equipo',
       icon: 'users-cog',
-      onPress: () => navigate('Dashboard'),
+      onPress: () => navigate('EditTeam'),
     },
   ];
 
