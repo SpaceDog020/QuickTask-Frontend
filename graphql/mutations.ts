@@ -205,3 +205,16 @@ export const CHANGECREATOR = gql`
         }
     }
 `;
+
+export const DELETETEAM = gql`
+    mutation DeleteTeam($idTeam: Int!, $idCreator: Int!) {
+        deleteTeam(deleteTeamInput: {
+            idTeam: $idTeam,
+            idCreator: $idCreator
+        }) {
+            
+            response
+
+        }
+    }
+`;
