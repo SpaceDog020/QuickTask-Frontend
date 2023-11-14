@@ -18,7 +18,7 @@ import { RootStackParamList } from "../../types";
 const { height } = Dimensions.get("window");
 import { useUserStore } from '../../stores/useUserStore';
 import { useQuery } from "@apollo/client";
-import { GETTEAMDETAILS, GETUSERIDBYEMAIL, PROJECTSBYTEAMS } from "../../graphql/queries";
+import { GETPROJECTS } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import { Icon } from "@rneui/themed";
@@ -26,40 +26,23 @@ import { Icon } from "@rneui/themed";
 type Props = NativeStackScreenProps<RootStackParamList, "ViewProjects">;
 
 const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const { userId } = useUserStore();
   const [projects, setProjects] = useState([]);
-  const [teamIds, setTeamIds] = useState([]);
   const { projectId, setProjectId } = useUserStore();
   const { projectName, setProjectName } = useUserStore();
   const { projectDescription, setProjectDescription } = useUserStore();
   const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
 
-  const { data: teamData, refetch: refetchTeams } = useQuery(GETTEAMDETAILS, {
-    variables: {
-      id: userId,
-    },
-  });
-
-  const { data: projectData, refetch: refetchProjects } = useQuery(PROJECTSBYTEAMS, {
-    variables: {
-      teamIds,
-    },
-  });
+  const { data: projectData, refetch: refetchProjects } = useQuery(GETPROJECTS);
 
   useEffect(() => {
-    if (teamData) {
-      const teams = teamData?.teamsByUserId || [];
-      const ids = teams.map((team) => team.id);
-      setTeamIds(ids);
-      refetchProjects()
-        .then(({ data }) => {
-          setProjects(data?.projectsByTeams || []);
-        })
-        .catch((error) => {
-          console.log("Error al cargar equipos:", error);
-        });
-    }
-  }, [teamData, projectData]);
+    refetchProjects()
+      .then(({ data }) => {
+        setProjects(data?.projects || []);
+      })
+      .catch((error) => {
+        console.log("Error al cargar equipos:", error);
+      });
+  }, [projectData]);
 
   return (
     <SafeAreaView>

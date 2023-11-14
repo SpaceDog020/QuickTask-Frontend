@@ -69,9 +69,9 @@ export const FINDTEAMSBYCREATORID = gql`
     }
 `;
 
-export const PROJECTSBYTEAMS = gql`
-    query ProjectsByTeams($teamIds: [Int!]!) {
-        projectsByTeams(teamIds: $teamIds) {
+export const GETPROJECTS = gql`
+    query Projects {
+        projects {
             id
             name
             description
