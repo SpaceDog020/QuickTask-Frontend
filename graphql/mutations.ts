@@ -178,3 +178,30 @@ export const CREATEPROJECT = gql`
         }
     }
 `;
+
+export const KICKUSER = gql`
+    mutation KickUser($idTeam: Int!, $idUser: Int!) {
+        kickUser(kickUserInput: {
+            idTeam: $idTeam,
+            idUser: $idUser
+        }) {
+            
+            response
+
+        }
+    }
+`;
+
+export const CHANGECREATOR = gql`
+    mutation ChangeCreator($idTeam: Int!, $idUser: Int!, $idNewCreator: Int!) {
+        changeCreator(changeCreatorInput: {
+            idTeam: $idTeam,
+            idUser: $idUser,
+            idNewCreator: $idNewCreator
+        }) {
+            
+            response
+
+        }
+    }
+`;
