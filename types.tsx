@@ -20,14 +20,14 @@ export type RootStackParamList = {
   TeamCreation: undefined;
   ViewTeams: undefined;
   DeleteUser: undefined;
-  TeamDetails: undefined;
+  TeamDashboard: undefined;
   EditTeam: undefined;
   AddUser: undefined;
   UserDetails: undefined;
   AddRoles: undefined;
   ProjectCreation: undefined;
   ViewProjects: undefined;
-  ProjectDetails: undefined;
+  ProjectDashboard: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

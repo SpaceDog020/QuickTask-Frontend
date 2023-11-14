@@ -21,9 +21,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 
-type Props = NativeStackScreenProps<RootStackParamList, "ProjectDetails">;
+type Props = NativeStackScreenProps<RootStackParamList, "ProjectDashboard">;
 
-const ProjectDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
+const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
     const { teamId, setTeamId } = useUserStore();
     const { projectId, setProjectId } = useUserStore();
     const { projectName, setProjectName } = useUserStore();
@@ -141,7 +141,7 @@ const ProjectDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     );
 };
 
-export default ProjectDetails;
+export default ProjectDashboard;
 
 const styles = StyleSheet.create({});
 

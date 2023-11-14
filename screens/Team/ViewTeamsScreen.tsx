@@ -114,7 +114,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                   setTeamId(team.id);
                   setTeamName(team.name);
                   setTeamDescription(team.description);
-                  navigate("TeamDetails");
+                  navigate("TeamDashboard");
                 }}
                 style={{
                   backgroundColor: Colors.primary,

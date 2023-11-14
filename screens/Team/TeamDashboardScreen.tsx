@@ -21,9 +21,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 
-type Props = NativeStackScreenProps<RootStackParamList, "TeamDetails">;
+type Props = NativeStackScreenProps<RootStackParamList, "TeamDashboard">;
 
-const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
+const TeamDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { teamId, setTeamId } = useUserStore();
   const { userId, setUserId } = useUserStore();
   const [userIsCreator, setUserIsCreator] = useState(false);
@@ -230,7 +230,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
   );
 };
 
-export default TeamDetails;
+export default TeamDashboard;
 
 const styles = StyleSheet.create({});
 

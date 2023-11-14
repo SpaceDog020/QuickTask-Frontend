@@ -15,14 +15,14 @@ import ChangePassword from "../screens/Profile/ChangePassword";
 import TeamCreationScreen from "../screens/Team/TeamCreationScreen";
 import ViewTeamsScreen from "../screens/Team/ViewTeamsScreen";
 import DeleteUserScreen from "../screens/Profile/DeleteUserScreen";
-import TeamDetailsScreen from "../screens/Team/TeamDetailsScreen";
+import TeamDashboardScreen from "../screens/Team/TeamDashboardScreen";
 import EditTeamScreen from "../screens/Team/EditTeamScreen";
 import AddUserScreen from "../screens/Team/User/AddUserScreen";
 import UserDetailsScreen from "../screens/Team/User/UserDetailsScreen";
 import AddRolesScreen from "../screens/Project/Role/AddRolesScreen";
 import ProjectCreationScreen from "../screens/Project/ProjectCreationScreen";
 import ViewProjectsScreen from "../screens/Project/ViewProjectsScreen";
-import ProjectDetailsScreen from "../screens/Project/ProjectDetailsScreen";
+import ProjectDashboardScreen from "../screens/Project/ProjectDashboardScreen";
 
 
 const theme = {
@@ -62,14 +62,14 @@ function RootNavigator() {
       <Stack.Screen name="ViewTeams" component={ViewTeamsScreen} />
       <Stack.Screen name="TeamCreation" component={TeamCreationScreen} />
       <Stack.Screen name="DeleteUser" component={DeleteUserScreen} />
-      <Stack.Screen name="TeamDetails" component={TeamDetailsScreen} />
+      <Stack.Screen name="TeamDashboard" component={TeamDashboardScreen} />
       <Stack.Screen name="EditTeam" component={EditTeamScreen} />
       <Stack.Screen name="AddUser" component={AddUserScreen} />
       <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
       <Stack.Screen name="AddRoles" component={AddRolesScreen} />
       <Stack.Screen name="ProjectCreation" component={ProjectCreationScreen} />
       <Stack.Screen name="ViewProjects" component={ViewProjectsScreen} />
-      <Stack.Screen name="ProjectDetails" component={ProjectDetailsScreen} />
+      <Stack.Screen name="ProjectDashboard" component={ProjectDashboardScreen} />
 
     </Stack.Navigator>
   );

@@ -130,7 +130,7 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
               left: -Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("TeamDetails")}
+            onPress={() => navigate("TeamDashboard")}
           >
             <Icon
               raised

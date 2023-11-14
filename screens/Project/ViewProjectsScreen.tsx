@@ -99,7 +99,7 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
                   setProjectName(project.name);
                   setProjectDescription(project.description);
                   setProjectTeamsIds(project.teamsIds);
-                  navigate("ProjectDetails");
+                  navigate("ProjectDashboard");
                 }}
                 style={{
                   backgroundColor: Colors.primary,
