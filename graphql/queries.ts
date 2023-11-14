@@ -40,6 +40,17 @@ export const GETTEAMBYID = gql`
     }
 `;
 
+export const GETTEAMSBYIDS = gql`
+    query TeamsByIds($ids: [Int!]!) {
+        teamsByIds(ids: $ids) {
+            id
+            name
+            description
+            idUsers
+        }
+    }
+`;
+
 export const GETUSERSBYTEAMID = gql`
     query TeamUserIds($id: Int!) {
         teamUserIds(id: $id) {

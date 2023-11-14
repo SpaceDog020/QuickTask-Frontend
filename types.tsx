@@ -28,6 +28,7 @@ export type RootStackParamList = {
   ProjectCreation: undefined;
   ViewProjects: undefined;
   ProjectDashboard: undefined;
+  TeamDetails: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

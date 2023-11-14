@@ -33,7 +33,7 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         {
             label: 'Ver Equipos',
             icon: 'users',
-            onPress: () => navigate('Dashboard'),
+            onPress: () => navigate('TeamDetails'),
         },
         {
             label: 'Agregar Equipos',
@@ -45,12 +45,18 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
             icon: 'stream',
             onPress: () => navigate('Dashboard'),
         },
+        {
+            label: 'Editar Proyecto',
+            icon: 'sliders-h',
+            onPress: () => navigate('Dashboard'),
+        },
     ];
 
     const buttonColors = {
         'Ver Equipos': 'blue',
         'Agregar Equipos': 'blue',
         'Ver Backlog': 'royalblue',
+        'Editar Proyecto': 'royalblue',
     };
 
     return (

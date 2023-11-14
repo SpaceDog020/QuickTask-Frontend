@@ -98,7 +98,7 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
                   setProjectId(project.id);
                   setProjectName(project.name);
                   setProjectDescription(project.description);
-                  setProjectTeamsIds(project.teamsIds);
+                  setProjectTeamsIds(project.idTeams);
                   navigate("ProjectDashboard");
                 }}
                 style={{
