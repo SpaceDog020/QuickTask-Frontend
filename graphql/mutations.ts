@@ -218,3 +218,27 @@ export const DELETETEAM = gql`
         }
     }
 `;
+
+export const DELETEPROJECT = gql`
+    mutation DeleteProject($id: Int!) {
+        deleteProject(id: $id) {
+            
+            response
+
+        }
+    }
+`;
+
+export const UPDATEPROJECT = gql`
+    mutation UpdateProject($id: Int!, $name: String!, $description: String!) {
+        updateProject(updateProjectInput: {
+            id: $id,
+            name: $name,
+            description: $description
+        }) {
+            
+            response
+
+        }
+    }
+`;
