@@ -25,6 +25,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "TeamDashboard">;
 
 const TeamDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { teamId, setTeamId } = useUserStore();
+  const { teamCreatorId, setTeamCreatorId } = useUserStore();
   const { userId, setUserId } = useUserStore();
   const [userIsCreator, setUserIsCreator] = useState(false);
 
@@ -36,6 +37,7 @@ const TeamDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const checkUserIsCreator = () => {
     if (teamData && teamData.team) {
+      setTeamCreatorId(teamData.team.idCreator);
       if (userId === teamData.team.idCreator) {
         setUserIsCreator(true);
         return;

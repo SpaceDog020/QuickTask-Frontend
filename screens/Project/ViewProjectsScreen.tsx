@@ -44,6 +44,18 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
   }, [projectData]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      refetchProjects()
+      .then(({ data }) => {
+        setProjects(data?.projects || []);
+      })
+      .catch((error) => {
+        console.log("Error al cargar equipos:", error);
+      });
+    }, [projectData])
+  );
+
   return (
     <SafeAreaView>
       <View>

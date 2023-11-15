@@ -10,7 +10,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../types";
 import { useUserStore } from '../../../stores/useUserStore';
 import { useMutation, useQuery } from "@apollo/client";
-import { GETTEAMBYID, GETUSERSBYIDS } from "../../../graphql/queries";
+import { GETUSERSBYTEAMID } from "../../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import Spacing from "../../../constants/Spacing";
@@ -27,7 +27,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "UserDetails">;
 const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userId } = useUserStore();
   const [users, setUsers] = useState([]);
-  const [idCreator, setIdCreator] = useState();
+  const { teamCreatorId, setTeamCreatorId } = useUserStore();
   const { teamId } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
@@ -40,19 +40,17 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     isSubmitting
   );
 
-  const { data: teamData, refetch: refetchTeams } = useQuery(GETTEAMBYID, {
-    variables: {
-      id: teamId,
-    },
-  });
-
-  const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSBYIDS, {
+  const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSBYTEAMID, {
     skip: true,
   });
 
   const [kickUserMutation, { data }] = useMutation(KICKUSER);
 
   const [changeCreator, { data: changeCreatorData }] = useMutation(CHANGECREATOR);
+
+  useEffect(() => {
+    refreshUserList();
+  }, [usersData]);
 
   const orderUsers = (users, idCreator) => {
     const usersOrdered = [];
@@ -67,19 +65,15 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     return;
   };
 
-  useEffect(() => {
-    if (teamData && teamData.team) {
-      setIdCreator(teamData.team.idCreator);
-      const ids = teamData.team.idUsers;
-      refetchUsers({ ids })
-        .then(({ data: usersData }) => {
-          orderUsers(usersData.usersByIds, idCreator);
-        })
-        .catch((error) => {
-          console.error("Error al cargar equipos:", error);
-        });
-    }
-  }, [teamData, usersData, idCreator]);
+  const refreshUserList = async () => {
+    refetchUsers({ id: teamId })
+      .then(({ data: usersData }) => {
+        orderUsers(usersData.usersByTeamId, teamCreatorId);
+      })
+      .catch((error) => {
+        console.error("Error al cargar los usuarios:", error);
+      });
+  };
 
   const makeLeader = async (newCreatorId) => {
     setIsSubmitting(true);
@@ -138,8 +132,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           visibilityTime: 1500, // Duration in milliseconds
           autoHide: true,
         });
-        refetchTeams();
-        refetchUsers();
+        refreshUserList();
         setIsSubmitting(false);
       }
     } catch (error) {
@@ -226,7 +219,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                   justifyContent: "space-between",
                 }}
               >
-                {user.id === idCreator && (
+                {user.id === teamCreatorId && (
                   <FontAwesome
                     style={{ marginRight: 5, marginBottom: 8 }}
                     name={'crown'}
@@ -243,9 +236,9 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                 >
                   {user.name} {user.lastName}
                 </Text>
-                {user.id !== idCreator && (
+                {user.id !== teamCreatorId && (
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', width: '50%' }}>
-                    {userId === idCreator && (
+                    {userId === teamCreatorId && (
                       <TouchableOpacity
                         disabled={isLoading || isSubmitting}
                         onPress={() => makeLeader(user.id)}
@@ -270,7 +263,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                         />
                       </TouchableOpacity>
                     )}
-                    {userId === idCreator && (
+                    {userId === teamCreatorId && (
                       <TouchableOpacity
                         disabled={isLoading || isSubmitting}
                         onPress={() => kickUser(user.id)}

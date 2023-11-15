@@ -11,6 +11,7 @@ export type UseUserStoreT = {
   teamId?: number;
   teamName?: string;
   teamDescription?: string;
+  teamCreatorId?: number;
   userId?: number;
   projectId?: number;
   projectName?: string;
@@ -25,11 +26,14 @@ export type UseUserStoreT = {
   setTeamId: (teamId: number) => void;
   setTeamName: (teamName: string) => void;
   setTeamDescription: (teamDescription: string) => void;
+  setTeamCreatorId: (teamCreatorId: number) => void;
   setUserId: (userId: number) => void;
   setProjectId: (projectId: number) => void;
   setProjectName: (projectName: string) => void;
   setProjectDescription: (projectDescription: string) => void;
   setProjectTeamsIds: (projectTeamsIds: number[]) => void;
+  removeTeamDetails: () => void;
+  removeProjectDetails: () => void;
 };
 
 export const useUserStore = create<UseUserStoreT>()(
@@ -44,6 +48,7 @@ export const useUserStore = create<UseUserStoreT>()(
         teamId: undefined,
         teamName: undefined,
         teamDescription: undefined,
+        teamCreatorId: undefined,
         userId: undefined,
         projectId: undefined,
         projectName: undefined,
@@ -58,11 +63,14 @@ export const useUserStore = create<UseUserStoreT>()(
         setTeamId: (teamId: number) => set(() => ({ teamId })),
         setTeamName: (teamName: string) => set(() => ({ teamName })),
         setTeamDescription: (teamDescription: string) => set(() => ({ teamDescription })),
+        setTeamCreatorId: (teamCreatorId: number) => set(() => ({ teamCreatorId })),
         setUserId: (userId: number) => set(() => ({ userId })),
         setProjectId: (projectId: number) => set(() => ({ projectId })),
         setProjectName: (projectName: string) => set(() => ({ projectName })),
         setProjectDescription: (projectDescription: string) => set(() => ({ projectDescription })),
         setProjectTeamsIds: (projectTeamsIds: number[]) => set(() => ({ projectTeamsIds })),
+        removeTeamDetails: () => set(() => ({ teamId: undefined, teamName: undefined, teamDescription: undefined, teamCreatorId: undefined })),
+        removeProjectDetails: () => set(() => ({ projectId: undefined, projectName: undefined, projectDescription: undefined, projectTeamsIds: undefined })),
 
       }),
       {

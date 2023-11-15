@@ -140,10 +140,10 @@ export const ADDTEAM = gql`
 `;
 
 export const ADDUSERS = gql`
-    mutation AddUsers($idTeam: Int!, $idUser: Int!) {
+    mutation AddUsers($idTeam: Int!, $email: String!) {
         addUsers(addUsersInput: {
             idTeam: $idTeam,
-            idUser: $idUser
+            email: $email
         }) {
             
             response

@@ -15,7 +15,7 @@ import Font from '../constants/Font';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useUserStore } from '../stores/useUserStore';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
@@ -25,6 +25,8 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { setUserLastName } = useUserStore();
   const { setUserEmail } = useUserStore();
   const { removeAccessToken } = useUserStore();
+  const { removeTeamDetails } = useUserStore();
+  const { removeProjectDetails } = useUserStore();
   const { setUserId } = useUserStore();
   const isFocused = useIsFocused();
 
@@ -99,6 +101,13 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
   }, [isFocused]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      removeTeamDetails();
+      removeProjectDetails();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

@@ -32,12 +32,6 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const [addUsers, { data }] = useMutation(ADDUSERS);
 
-  const { data: userIdData, error, refetch } = useQuery(GETUSERIDBYEMAIL, {
-    variables: {
-      email: userEmail,
-    },
-  });
-
   useButtonTimeout(
     () => {
       setIsSubmitting(false);
@@ -59,41 +53,23 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
       });
     } else {
       setIsLoading(true);
-      refetch()
+      addUsers({
+        variables: {
+          idTeam: teamId,
+          email: userEmail
+        },
+      })
         .then(() => {
-          if (userIdData && userIdData.email) {
-            const idUser = userIdData.email.id;
-            addUsers({
-              variables: {
-                idTeam: teamId,
-                idUser,
-              },
-            })
-              .then(() => {
-                setIsSubmitting(false);
-                setIsLoading(false);
-                Toast.show({
-                  type: "success",
-                  text1: "Usuario agregado",
-                  text2: "El usuario ha sido agregado al equipo",
-                  position: "bottom",
-                  visibilityTime: 1500, // Duration in milliseconds
-                  autoHide: true,
-                });
-              })
-              .catch((error) => {
-                setIsSubmitting(false);
-                setIsLoading(false);
-                Toast.show({
-                  type: "error",
-                  text1: "Error",
-                  text2: error.message,
-                  position: "bottom",
-                  visibilityTime: 3000, // Duration in milliseconds
-                  autoHide: true,
-                });
-              });
-          }
+          setIsSubmitting(false);
+          setIsLoading(false);
+          Toast.show({
+            type: "success",
+            text1: "Usuario agregado",
+            text2: "El usuario ha sido agregado al equipo",
+            position: "bottom",
+            visibilityTime: 1500, // Duration in milliseconds
+            autoHide: true,
+          });
         })
         .catch((error) => {
           setIsSubmitting(false);
@@ -108,7 +84,7 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
           });
         });
     }
-  };
+  }
 
   return (
     <SafeAreaView>

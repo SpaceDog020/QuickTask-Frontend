@@ -51,14 +51,6 @@ export const GETTEAMSBYIDS = gql`
     }
 `;
 
-export const GETUSERSBYTEAMID = gql`
-    query TeamUserIds($id: Int!) {
-        teamUserIds(id: $id) {
-            userIds
-        }
-    }
-`;
-
 export const GETUSERSBYIDS = gql`
     query UsersByIds($ids: [Int!]!) {
         usersByIds(ids: $ids) {
@@ -87,6 +79,16 @@ export const GETPROJECTS = gql`
             name
             description
             idTeams
+        }
+    }
+`;
+
+export const GETUSERSBYTEAMID = gql`
+    query UsersByTeamId($id: Int!) {
+        usersByTeamId(teamId: $id) {
+            id
+            name
+            lastName
         }
     }
 `;
