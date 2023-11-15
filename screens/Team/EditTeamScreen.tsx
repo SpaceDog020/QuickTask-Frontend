@@ -170,7 +170,7 @@ const EditTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
               left: -Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("TeamDetails")}
+            onPress={() => navigate("TeamDashboard")}
           >
             <Icon
               raised
@@ -230,7 +230,7 @@ const EditTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Descripcion
           </Text>
-          <AppTextInput placeholder="Apellido" value={newTeamDescription} editable={editable} onChangeText={setNewTeamDescription} />
+          <AppTextInput placeholder="Descripción" value={newTeamDescription} editable={editable} onChangeText={setNewTeamDescription} />
         </View>
 
         <TouchableOpacity

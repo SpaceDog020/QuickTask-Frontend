@@ -27,10 +27,10 @@ type Props = NativeStackScreenProps<RootStackParamList, "ViewProjects">;
 
 const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [projects, setProjects] = useState([]);
-  const { projectId, setProjectId } = useUserStore();
-  const { projectName, setProjectName } = useUserStore();
-  const { projectDescription, setProjectDescription } = useUserStore();
-  const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
+  const { setProjectId } = useUserStore();
+  const { setProjectName } = useUserStore();
+  const { setProjectDescription } = useUserStore();
+  const { setProjectTeamsIds } = useUserStore();
 
   const { data: projectData, refetch: refetchProjects } = useQuery(GETPROJECTS);
 
@@ -82,7 +82,20 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
       </View>
 
       <ScrollView style={{ maxHeight: 600 }}>
-        {projects &&
+        {projects.length === 0 ? (
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 2,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
+              No hay proyectos disponibles.
+            </Text>
+          </View>
+        ) : (
           projects.map((project) => (
             <View
               key={project.id}
@@ -131,7 +144,7 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
               </TouchableOpacity>
             </View>
           ))
-        }
+        )}
       </ScrollView>
     </SafeAreaView>
   );

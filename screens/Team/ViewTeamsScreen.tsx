@@ -69,12 +69,12 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
           }}
         >
           <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: Spacing * 5,
-            left: Spacing,
-            zIndex: 1,
-          }}
+            style={{
+              position: "absolute",
+              top: Spacing * 5,
+              left: Spacing,
+              zIndex: 1,
+            }}
             onPress={() => navigate("Dashboard")}
           >
             <Icon
@@ -82,7 +82,8 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               size={25}
               name='arrow-back'
               type='Ionicons'
-              color={Colors.primary}/>
+              color={Colors.primary}
+            />
           </TouchableOpacity>
           <Text
             style={{
@@ -98,7 +99,20 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
       </View>
 
       <ScrollView style={{ maxHeight: 600 }}>
-        {teams &&
+        {teams.length === 0 ? (
+          <View
+            style={{
+              paddingHorizontal: Spacing * 2,
+              paddingTop: Spacing * 2,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
+              No hay equipos disponibles.
+            </Text>
+          </View>
+        ) : (
           teams.map((team) => (
             <View
               key={team.id}
@@ -170,7 +184,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
               </TouchableOpacity>
             </View>
           ))
-        }
+        )}
       </ScrollView>
     </SafeAreaView>
   );

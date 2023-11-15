@@ -145,7 +145,7 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
               color: Colors.primary,
               fontFamily: Font["poppins-bold"],
               marginVertical: Spacing * 3,
-              marginHorizontal: Spacing * 4,
+              marginHorizontal: Spacing * 5,
               textAlign: "center",
             }}
           >

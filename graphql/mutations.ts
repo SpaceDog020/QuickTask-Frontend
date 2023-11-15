@@ -221,11 +221,13 @@ export const DELETETEAM = gql`
 
 export const DELETEPROJECT = gql`
     mutation DeleteProject($id: Int!) {
-        deleteProject(id: $id) {
-            
+        deleteProject(deleteProjectInput: {
+            id: $id
+        }) {
+
             response
 
-        }
+          }
     }
 `;
 

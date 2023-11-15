@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   SafeAreaView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -18,7 +16,7 @@ import { useUserStore } from "../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
 import AppTextInput from "../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
-import { DELETEPROJECT, DELETETEAM, UPDATEPROJECT, UPDATETEAM } from "../../graphql/mutations";
+import { DELETEPROJECT, UPDATEPROJECT } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import Modal from "react-native-modal";
@@ -167,7 +165,7 @@ const EditProject: React.FC<Props> = ({ navigation: { navigate } }) => {
               left: -Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("TeamDetails")}
+            onPress={() => navigate("ProjectDashboard")}
           >
             <Icon
               raised
@@ -184,7 +182,7 @@ const EditProject: React.FC<Props> = ({ navigation: { navigate } }) => {
               marginVertical: Spacing * 2,
             }}
           >
-            Editar Equipo
+            Editar Proyecto
           </Text>
           <TouchableOpacity
             disabled={isLoading || isSubmitting}
@@ -227,7 +225,7 @@ const EditProject: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Descripcion
           </Text>
-          <AppTextInput placeholder="Apellido" value={newProjectDescription} editable={editable} onChangeText={setNewProjectDescription} />
+          <AppTextInput placeholder="Descripción" value={newProjectDescription} editable={editable} onChangeText={setNewProjectDescription} />
         </View>
 
         <TouchableOpacity

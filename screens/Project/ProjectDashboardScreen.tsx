@@ -41,7 +41,7 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         {
             label: 'Editar Proyecto',
             icon: 'sliders-h',
-            onPress: () => navigate('Dashboard'),
+            onPress: () => navigate('EditProject'),
         },
     ];
 
