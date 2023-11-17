@@ -47,22 +47,14 @@ const AddTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
   );
 
   const refetchTeamsData = async () => {
-    await refetchTeams().then(() => {
-      console.log(projectTeamsIds);
-      const filteredTeams = teamsData?.teams.filter((team) => !projectTeamsIds.includes(team.id));
-      setFilteredTeams(filteredTeams);
-    });
+    await refetchTeams();
+    const filteredTeams = teamsData?.teams.filter((team) => !projectTeamsIds.includes(team.id));
+    setFilteredTeams(filteredTeams);
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      refetchTeamsData();
-    }, [])
-  );
 
   useEffect(() => {
     refetchTeamsData();
-  }, [rerender]);
+  }, [rerender, teamsData, projectTeamsIds]);
 
   const handleAddTeam = async () => {
     setIsSubmitting(true);
@@ -97,7 +89,6 @@ const AddTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
         refetchTeamsData();
         setRerender(prevState => !prevState);
         setIsSubmitting(false);
-        console.log("termino de agregar");
       }).catch((error) => {
         setIsLoading(false);
         setIsSubmitting(false);

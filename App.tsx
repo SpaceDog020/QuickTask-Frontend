@@ -9,7 +9,7 @@ import CustomToast from './components/CustomToast';
 import { API_GATEWAY_URL } from '@env';
 
 const client = new ApolloClient({
-  uri: API_GATEWAY_URL,
+  uri: 'http://10.162.163.46:3000/graphql',
   cache: new InMemoryCache(),
 });
 
