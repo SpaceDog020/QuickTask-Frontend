@@ -11,15 +11,14 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../types";
 import { useUserStore } from '../../../stores/useUserStore';
 import { useMutation, useQuery } from "@apollo/client";
-import { GETTEAMBYID, GETTEAMSBYIDS, GETUSERSBYIDS } from "../../../graphql/queries";
-import { useFocusEffect } from "@react-navigation/native";
+import { GETTEAMSBYIDS, GETUSERSBYIDS } from "../../../graphql/queries";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import Spacing from "../../../constants/Spacing";
 import Colors from "../../../constants/Colors";
 import Font from "../../../constants/Font";
 import FontSize from "../../../constants/FontSize";
 import { Icon } from "@rneui/themed";
-import { CHANGECREATOR, KICKUSER } from "../../../graphql/mutations";
+import { REMOVETEAMPROJECT } from "../../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../../hooks/useButtonTimeout";
 
@@ -28,7 +27,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "TeamDetails">;
 const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     const [teams, setTeams] = useState([]);
     const { projectId } = useUserStore();
-    const { projectTeamsIds } = useUserStore();
+    const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
     const [modalVisible, setModalVisible] = useState(false);  // Nuevo estado para controlar la visibilidad del modal
     const [modalUsers, setModalUsers] = useState([]);
 
@@ -53,6 +52,8 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
         skip: true,
     });
 
+    const [removeTeamProjectMutation, { data }] = useMutation(REMOVETEAMPROJECT);
+
     const handleViewUsers = async (teamId) => {
         const team = teams.find((team) => team.id === teamId);
 
@@ -64,6 +65,45 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                 })
         }
     };
+
+    const kickTeam = async (idProject, idTeam, idUsers) => {
+        setIsSubmitting(true);
+        try {
+          setIsLoading(true);
+          const { data } = await removeTeamProjectMutation({
+            variables: {
+                idProject: idProject,
+                idTeam: idTeam,
+                idUsers: idUsers
+            },
+          });
+          setIsLoading(false);
+          if (data && data.removeTeamProject) {
+            Toast.show({
+              type: "success",
+              text1: "Éxito",
+              text2: "Equipo expulsado",
+              position: "bottom",
+              visibilityTime: 1500, // Duration in milliseconds
+              autoHide: true,
+            });
+            refetchTeams();
+            setProjectTeamsIds(projectTeamsIds.filter((teamId) => teamId !== idTeam));
+            setIsSubmitting(false);
+          }
+        } catch (error) {
+          setIsSubmitting(false);
+          setIsLoading(false);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: error.message,
+            position: "bottom",
+            visibilityTime: 1500, // Duration in milliseconds
+            autoHide: true,
+          });
+        }
+      };
 
     useEffect(() => {
         refetchTeams();
@@ -146,15 +186,43 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                                 }}
                                 onPress={() => handleViewUsers(team.id)}
                             >
-                                <Text
-                                    style={{
-                                        fontFamily: Font["poppins-bold"],
-                                        color: Colors.onPrimary,
-                                        fontSize: FontSize.large,
-                                    }}
-                                >
-                                    {team.name} {team.lastName}
-                                </Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
+                                    <Text
+                                        style={{
+                                            fontFamily: Font["poppins-bold"],
+                                            color: Colors.onPrimary,
+                                            fontSize: FontSize.large,
+                                        }}
+                                    >
+                                        {team.name} {team.lastName}
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', width: '50%' }}>
+                                    <TouchableOpacity
+                                        disabled={isLoading || isSubmitting}
+                                        onPress={() => kickTeam(projectId, team.id, team.idUsers)}
+                                        style={{
+                                            backgroundColor: Colors.error,
+                                            paddingVertical: Spacing * 1,
+                                            paddingHorizontal: Spacing * 2,
+                                            borderRadius: Spacing,
+                                            shadowColor: Colors.error,
+                                            shadowOffset: {
+                                                width: 0,
+                                                height: Spacing,
+                                            },
+                                            shadowOpacity: 0.3,
+                                            shadowRadius: Spacing,
+                                            marginLeft: Spacing,
+                                        }}
+                                    >
+                                        <FontAwesome
+                                            name={'user-minus'}
+                                            size={20}
+                                            color={Colors.onPrimaryToast}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     ))
