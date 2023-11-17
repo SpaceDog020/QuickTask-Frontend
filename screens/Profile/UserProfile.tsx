@@ -66,6 +66,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleSaveChanges = async () => {
     setIsSubmitting(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (newName === "" || newLastName === "" || newEmail === "") {
       Toast.show({
         type: "error",
@@ -76,6 +77,18 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         autoHide: true,
       });
     } else {
+      if (!emailRegex.test(newEmail)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Correo electrónico no válido',
+          text2: 'Intente nuevamente',
+          position: 'bottom',
+          visibilityTime: 1500,
+          autoHide: true,
+        });
+        setIsSubmitting(false);
+        return;
+      }
       try {
         setIsLoading(true);
         // Call the updateUser mutation with the updated user data

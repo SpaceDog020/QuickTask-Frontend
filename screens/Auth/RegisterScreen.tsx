@@ -41,6 +41,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleRegister = async () => {
     setIsSubmitting(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (name === "" || lastName === "" || email === "" || password === "") {
       Toast.show({
         type: "error",
@@ -51,6 +52,18 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         autoHide: true,
       });
     } else {
+      if (!emailRegex.test(email)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Correo electrónico no válido',
+          text2: 'Intente nuevamente',
+          position: 'bottom',
+          visibilityTime: 1500,
+          autoHide: true,
+        });
+        setIsSubmitting(false);
+        return;
+      }
       try {
         setIsLoading(true);
         const { data } = await register({
@@ -157,6 +170,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           <AppTextInput
             placeholder="Correo"
             keyboardType="email-address"
+            autoComplete="email"
             value={email}
             onChangeText={setEmail}
           />

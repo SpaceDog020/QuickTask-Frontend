@@ -48,6 +48,7 @@ import {
   
     const handleAddUser = async () => {
       setIsSubmitting(true);
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (userEmail === '') {
         Toast.show({
           type: "error",
@@ -58,6 +59,18 @@ import {
           autoHide: true,
         });
       } else {
+        if (!emailRegex.test(userEmail)) {
+          Toast.show({
+            type: 'error',
+            text1: 'Correo electrónico no válido',
+            text2: 'Intente nuevamente',
+            position: 'bottom',
+            visibilityTime: 1500,
+            autoHide: true,
+          });
+          setIsSubmitting(false);
+          return;
+        }
         setIsLoading(true);
         refetch()
           .then(() => {
