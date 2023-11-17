@@ -46,6 +46,9 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleLogin = async (email: string, password: string) => {
     setIsSubmitting(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    
     if (email === '' || password === '') {
       Toast.show({
         type: 'error',
@@ -56,6 +59,18 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         autoHide: true,
       });
     } else {
+      if (!emailRegex.test(email)) {
+        Toast.show({
+          type: 'error',
+          text1: 'Correo electrónico no válido',
+          text2: 'Intente nuevamente',
+          position: 'bottom',
+          visibilityTime: 1500,
+          autoHide: true,
+        });
+        setIsSubmitting(false);
+        return;
+      }
       try {
         setIsLoading(true);
         const { data } = await login({
@@ -153,7 +168,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             marginVertical: Spacing * 3,
           }}
         >
-          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} onChangeText={setEmail} />
+          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} autoComplete="email" onChangeText={setEmail} />
           <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
         </View>
 
