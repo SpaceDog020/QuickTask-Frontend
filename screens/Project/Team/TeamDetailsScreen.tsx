@@ -1,4 +1,5 @@
 import {
+    Modal,
     SafeAreaView,
     ScrollView,
     Text,
@@ -28,6 +29,9 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     const [teams, setTeams] = useState([]);
     const { projectId } = useUserStore();
     const { projectTeamsIds } = useUserStore();
+    const [modalVisible, setModalVisible] = useState(false);  // Nuevo estado para controlar la visibilidad del modal
+    const [modalUsers, setModalUsers] = useState([]);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
 
@@ -45,7 +49,24 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
         },
     });
 
+    const { data: userData, refetch: refetchUsers } = useQuery(GETUSERSBYIDS, {
+        skip: true,
+    });
+
+    const handleViewUsers = async (teamId) => {
+        const team = teams.find((team) => team.id === teamId);
+
+        if (team && team.idUsers) {
+            await refetchUsers({ ids: team.idUsers })
+                .then((res) => {
+                    setModalUsers(res.data.usersByIds);
+                    setModalVisible(true);
+                })
+        }
+    };
+
     useEffect(() => {
+        refetchTeams();
         if (teamData && teamData.teamsByIds) {
             setTeams(teamData.teamsByIds);
         }
@@ -74,13 +95,13 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                             size={25}
                             name='arrow-back'
                             type='Ionicons'
-                            color={Colors.primary} // Utiliza tu color primario
+                            color={Colors.primary}
                         />
                     </TouchableOpacity>
                     <Text
                         style={{
                             fontSize: FontSize.xxLarge,
-                            color: Colors.primary, // Utiliza tu color primario
+                            color: Colors.primary,
                             fontFamily: Font["poppins-bold"],
                             textAlign: "center",
                         }}
@@ -91,40 +112,44 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
             </View>
 
             <ScrollView style={{ maxHeight: 600 }}>
-                {teams &&
+                {teams.length === 0 ? (
+                    <View
+                        style={{
+                            paddingHorizontal: Spacing * 2,
+                            paddingTop: Spacing * 2,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
+                            No hay equipos disponibles.
+                        </Text>
+                    </View>
+                ) : (
                     teams.map((team) => (
-                        <View
-                            key={team.id}
-                            style={{
-                                paddingHorizontal: Spacing * 2,
-                                paddingTop: Spacing * 2,
-                                flexDirection: "row",
-                            }}
-                        >
+                        <View key={team.id} style={{ paddingHorizontal: Spacing * 2, paddingTop: Spacing * 2 }}>
                             <TouchableOpacity
-                                disabled={true}
+                                disabled={isLoading || isSubmitting}
                                 style={{
-                                    backgroundColor: Colors.primary, // Utiliza tu color primario
+                                    backgroundColor: Colors.primary,
                                     paddingVertical: Spacing * 1,
                                     paddingHorizontal: Spacing * 2,
                                     width: "100%",
                                     borderRadius: Spacing,
-                                    shadowColor: Colors.primary, // Utiliza tu color primario
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: Spacing,
-                                    },
+                                    shadowColor: Colors.primary,
+                                    shadowOffset: { width: 0, height: Spacing },
                                     shadowOpacity: 0.3,
                                     shadowRadius: Spacing,
                                     flexDirection: "row",
                                     alignItems: "center",
                                     justifyContent: "space-between",
                                 }}
+                                onPress={() => handleViewUsers(team.id)}
                             >
                                 <Text
                                     style={{
                                         fontFamily: Font["poppins-bold"],
-                                        color: Colors.onPrimary, // Utiliza tu color para texto en el fondo primario
+                                        color: Colors.onPrimary,
                                         fontSize: FontSize.large,
                                     }}
                                 >
@@ -133,8 +158,55 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                             </TouchableOpacity>
                         </View>
                     ))
-                }
+                )}
             </ScrollView>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                    <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, elevation: 5, width: '80%', maxHeight: '80%' }}>
+                        {modalUsers.map((user) => (
+                            <TouchableOpacity
+                                key={user.id}
+                                style={{
+                                    backgroundColor: Colors.primary,
+                                    paddingVertical: Spacing * 1,
+                                    paddingHorizontal: Spacing * 2,
+                                    marginTop: Spacing,
+                                    borderRadius: Spacing,
+                                    shadowColor: Colors.primary,
+                                    shadowOffset: { width: 0, height: Spacing },
+                                    shadowOpacity: 0.3,
+                                    shadowRadius: Spacing,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontFamily: Font["poppins-bold"],
+                                        color: Colors.onPrimary,
+                                        fontSize: FontSize.large,
+                                    }}
+                                >
+                                    {user.name} {user.lastName}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                        <TouchableOpacity
+                            onPress={() => setModalVisible(!modalVisible)}
+                            style={{ marginTop: Spacing * 2 }}
+                        >
+                            <Text style={{ color: Colors.primary, fontSize: FontSize.large }}>Cerrar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
         </SafeAreaView>
     );
 };

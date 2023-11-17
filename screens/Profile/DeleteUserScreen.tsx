@@ -33,33 +33,6 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const [deleteUser] = useMutation(DELETEUSER);
 
-  const { data: creatorData, refetch: refetchCreator } = useQuery(FINDTEAMSBYCREATORID, {
-    variables: {
-      id: userId,
-    },
-  });
-
-  const checkUserIsCreator = () => {
-    if (creatorData && creatorData.findTeamsByCreatorId) {
-      {
-        setUserIsCreator(creatorData.findTeamsByCreatorId.response);
-      }
-    };
-  };
-
-  useEffect(() => {
-    checkUserIsCreator();
-  }, [userId, creatorData]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      checkUserIsCreator();
-      refetchCreator().catch((error) => {
-        console.error("Error al cargar CreatorData:", error);
-      });
-    }, [userId, creatorData])
-  );
-
   useButtonTimeout(
     () => {
       setIsSubmitting(false);
