@@ -131,11 +131,13 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             placeholder="Nombre del equipo"
             value={teamName}
             onChangeText={setTeamName}
+            maxLength={20}
           />
           <AppTextInput
             placeholder="Descripción del equipo."
             value={teamDescription}
             onChangeText={setTeamDescription}
+            maxLength={30}
           />
         </View>
 

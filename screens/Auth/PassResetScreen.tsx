@@ -53,7 +53,7 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         setIsLoading(true);
         const { data } = await recovery({
           variables: {
-            email,
+            email: email.toLowerCase(),
           },
         });
         setIsLoading(false);

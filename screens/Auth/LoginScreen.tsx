@@ -75,7 +75,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         setIsLoading(true);
         const { data } = await login({
           variables: {
-            email,
+            email: email.toLowerCase(),
             password,
           },
         });
@@ -168,7 +168,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             marginVertical: Spacing * 3,
           }}
         >
-          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email} autoComplete="email" onChangeText={setEmail} />
+          <AppTextInput placeholder="Correo" keyboardType="email-address" value={email.toLowerCase()} autoComplete="email" onChangeText={setEmail} />
           <AppTextInput placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
         </View>
 

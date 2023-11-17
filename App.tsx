@@ -6,11 +6,10 @@ import Navigation from './navigation';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Toast from 'react-native-toast-message';
 import CustomToast from './components/CustomToast';
-import { API_GATEWAY_URL } from '@env';
 
 const client = new ApolloClient({
-  uri: 'http://10.162.163.46:3000/graphql',
-  cache: new InMemoryCache(),
+  uri: 'http://10.151.26.208:3000/graphql',
+  cache: new InMemoryCache()
 });
 
 export default function App() {

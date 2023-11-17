@@ -147,11 +147,13 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             placeholder="Nombre del proyecto"
             value={projectName}
             onChangeText={setProjectName}
+            maxLength={20}
           />
           <AppTextInput
             placeholder="Descripción del proyecto"
             value={projectDescription}
             onChangeText={setProjectDescription}
+            maxLength={30}
           />
 
           <Picker

@@ -21,6 +21,11 @@ import { Icon } from "@rneui/themed";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
+const capitalizeFirstLetter = (str: string) => {
+  const lowercasedStr = str.toLowerCase();
+  return lowercasedStr.charAt(0).toUpperCase() + lowercasedStr.slice(1);
+};
+
 const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [name, setName] = useState("");
   const [lastName, setlastName] = useState("");
@@ -70,7 +75,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           variables: {
             name,
             lastName,
-            email,
+            email: email.toLowerCase(),
             password,
           },
         });
@@ -159,26 +164,30 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
         <View>
           <AppTextInput
             placeholder="Nombre"
-            value={name}
+            value={capitalizeFirstLetter(name)}
             onChangeText={setName}
+            maxLength={20}
           />
           <AppTextInput
             placeholder="Apellido"
-            value={lastName}
+            value={capitalizeFirstLetter(lastName)}
             onChangeText={setlastName}
+            maxLength={20}
           />
           <AppTextInput
             placeholder="Correo"
             keyboardType="email-address"
             autoComplete="email"
-            value={email}
+            value={email.toLowerCase()}
             onChangeText={setEmail}
+            maxLength={40}
           />
           <AppTextInput
             placeholder="Contraseña"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            maxLength={20}
           />
         </View>
 

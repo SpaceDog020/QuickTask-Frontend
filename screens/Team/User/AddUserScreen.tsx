@@ -56,7 +56,7 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
       addUsers({
         variables: {
           idTeam: teamId,
-          email: userEmail
+          email: userEmail.toLowerCase()
         },
       })
         .then(() => {
@@ -133,7 +133,7 @@ const AddUser: React.FC<Props> = ({ navigation: { navigate } }) => {
             marginVertical: Spacing * 1,
           }}
         >
-          <AppTextInput placeholder="Correo" keyboardType="email-address" value={userEmail} onChangeText={setEmail} />
+          <AppTextInput placeholder="Correo" keyboardType="email-address" value={userEmail} onChangeText={setEmail} maxLength={40} />
         </View>
 
         <TouchableOpacity

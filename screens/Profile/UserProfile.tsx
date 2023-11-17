@@ -23,6 +23,11 @@ import useButtonTimeout from "../../hooks/useButtonTimeout";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
+const capitalizeFirstLetter = (str: string) => {
+  const lowercasedStr = str.toLowerCase();
+  return lowercasedStr.charAt(0).toUpperCase() + lowercasedStr.slice(1);
+};
+
 const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName: initialUserName, setUserName: setInitialUserName } = useUserStore();
   const { userLastName: initialUserLastName, setUserLastName: setInitialUserLastName} = useUserStore();
@@ -31,7 +36,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
   const [userLastName, setUserLastName] = useState(initialUserLastName);
-  const [userEmail, setUserEmail] = useState(initialUserEmail);
+  const [userEmail, setUserEmail] = useState(initialUserEmail.toLowerCase());
   const [editable, setEditable] = useState(false); // Initialize the editability state
   const [updateUser] = useMutation(UPDATEUSER);
   const [newName, setNewName] = useState(userName);
@@ -49,10 +54,10 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const handleButtonPress = () => {
     if (editable) {
       // Reset the text input values to the current user data
-      if (newName !== userName || newLastName !== userLastName || newEmail !== userEmail) {
+      if (newName !== userName || newLastName !== userLastName || newEmail.toLowerCase() !== userEmail.toLowerCase()) {
         setNewName(userName);
         setNewLastName(userLastName);
-        setNewEmail(userEmail);
+        setNewEmail(userEmail.toLowerCase());
       }
     }
 
@@ -90,10 +95,10 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         // Call the updateUser mutation with the updated user data
         await updateUser({
           variables: {
-            oldEmail: userEmail,
+            oldEmail: userEmail.toLowerCase(),
             name: newName,
             lastName: newLastName,
-            email: newEmail,
+            email: newEmail.toLowerCase(),
           },
         });
         // Update the user data in your local state
@@ -101,8 +106,8 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         setInitialUserName(newName);
         setUserLastName(newLastName);
         setInitialUserLastName(newLastName);
-        setUserEmail(newEmail);
-        setInitialUserEmail(newEmail);
+        setUserEmail(newEmail.toLowerCase());
+        setInitialUserEmail(newEmail.toLowerCase());
         setIsLoading(false);
         Toast.show({
           type: "success",
@@ -200,7 +205,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Nombre
           </Text>
-          <AppTextInput placeholder="Nombre" value={newName} editable={editable} onChangeText={setNewName} />
+          <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newName)} editable={editable} onChangeText={setNewName} />
           <Text
             style={{
               fontFamily: Font["poppins-semiBold"],
@@ -212,7 +217,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Apellido
           </Text>
-          <AppTextInput placeholder="Apellido" value={newLastName} editable={editable} onChangeText={setNewLastName} />
+          <AppTextInput placeholder="Apellido" value={capitalizeFirstLetter(newLastName)} editable={editable} onChangeText={setNewLastName} />
           <Text
             style={{
               fontFamily: Font["poppins-semiBold"],
@@ -224,7 +229,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Correo
           </Text>
-          <AppTextInput placeholder="Nombre" value={newEmail} editable={editable} onChangeText={setNewEmail} />
+          <AppTextInput placeholder="Correo" value={newEmail.toLowerCase()} editable={editable} onChangeText={setNewEmail} />
         </View>
 
         <TouchableOpacity
