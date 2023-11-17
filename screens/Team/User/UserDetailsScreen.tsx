@@ -202,12 +202,12 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               <TouchableOpacity
                 disabled={true}
                 style={{
-                  backgroundColor: Colors.primary, // Utiliza tu color primario
+                  backgroundColor: Colors.primary,
                   paddingVertical: Spacing * 1,
                   paddingHorizontal: Spacing * 2,
                   width: "100%",
                   borderRadius: Spacing,
-                  shadowColor: Colors.primary, // Utiliza tu color primario
+                  shadowColor: Colors.primary,
                   shadowOffset: {
                     width: 0,
                     height: Spacing,
@@ -219,23 +219,26 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                   justifyContent: "space-between",
                 }}
               >
-                {user.id === teamCreatorId && (
-                  <FontAwesome
-                    style={{ marginRight: 5, marginBottom: 8 }}
-                    name={'crown'}
-                    size={20}
-                    color={Colors.onPrimary} // Utiliza tu color para texto en el fondo primario
-                  />
-                )}
-                <Text
-                  style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary, // Utiliza tu color para texto en el fondo primario
-                    fontSize: FontSize.large,
-                  }}
-                >
-                  {user.name} {user.lastName}
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
+                  {user.id === teamCreatorId && (
+                    <FontAwesome
+                      style={{ marginRight: 5, marginBottom: 8 }}
+                      name={'crown'}
+                      size={20}
+                      color={Colors.onPrimary}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.large,
+                      marginLeft: user.id === teamCreatorId ? 5 : 0,
+                    }}
+                  >
+                    {user.name} {user.lastName}
+                  </Text>
+                </View>
                 {user.id !== teamCreatorId && (
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', width: '50%' }}>
                     {userId === teamCreatorId && (
