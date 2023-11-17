@@ -244,3 +244,16 @@ export const UPDATEPROJECT = gql`
         }
     }
 `;
+
+export const ADDTEAMPROJECT = gql`
+    mutation AddTeamProject($idProject: Int!, $idTeam: Int!) {
+        addTeamProject(addTeamProjectInput: {
+            idProject: $idProject,
+            idTeam: $idTeam
+        }) {
+            
+            response
+
+        }
+    }
+`;

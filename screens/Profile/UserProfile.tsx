@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -14,7 +13,6 @@ import Colors from "../../constants/Colors";
 import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types";
-const { height } = Dimensions.get("window");
 import { useUserStore } from "../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
 import AppTextInput from "../../components/AppTextInput";
@@ -26,11 +24,9 @@ import useButtonTimeout from "../../hooks/useButtonTimeout";
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
 const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const {
-    userName: initialUserName,
-    userLastName: initialUserLastName,
-    userEmail: initialUserEmail,
-  } = useUserStore();
+  const { userName: initialUserName, setUserName: setInitialUserName } = useUserStore();
+  const { userLastName: initialUserLastName, setUserLastName: setInitialUserLastName} = useUserStore();
+  const { userEmail: initialUserEmail, setUserEmail: setInitialUserEmail } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
@@ -102,8 +98,11 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
         // Update the user data in your local state
         setUserName(newName);
+        setInitialUserName(newName);
         setUserLastName(newLastName);
+        setInitialUserLastName(newLastName);
         setUserEmail(newEmail);
+        setInitialUserEmail(newEmail);
         setIsLoading(false);
         Toast.show({
           type: "success",

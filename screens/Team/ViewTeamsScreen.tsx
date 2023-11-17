@@ -27,7 +27,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 
 const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userId } = useUserStore();
-  const [teams, setTeams] = useState([]);
+  const [ teams, setTeams] = useState([]);
+  const [ sortedTeams, setSortedTeams] = useState([]);
   const { teamId, setTeamId } = useUserStore();
   const { teamName, setTeamName } = useUserStore();
   const { teamDescription, setTeamDescription } = useUserStore();
@@ -42,6 +43,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
     refetchTeams()
       .then(({ data }) => {
         setTeams(data?.teamsByUserId || []);
+        setSortedTeams(orderTeams(data?.teamsByUserId, userId));
       })
       .catch((error) => {
         console.log("Error al cargar equipos:", error);
@@ -59,6 +61,18 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
     }, [userId])
   );
+
+  const orderTeams = (teams, userId) => {
+    return teams.sort((a, b) => {
+      if (a.idCreator === userId && b.idCreator !== userId) {
+        return -1;
+      } else if (a.idCreator !== userId && b.idCreator === userId) {
+        return 1;
+      } else {
+        return a.name.localeCompare(b.name);
+      }
+    });
+  };
 
   return (
     <SafeAreaView>
@@ -113,7 +127,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
             </Text>
           </View>
         ) : (
-          teams.map((team) => (
+          sortedTeams.map((team) => (
             <View
               key={team.id}
               style={{
@@ -145,42 +159,45 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                   shadowRadius: Spacing,
                   flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: "space-between", // Cambiado para distribuir el contenido
                 }}
               >
-                {userId === team.idCreator && ( // Condición para mostrar la corona
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  {userId === team.idCreator && (
+                    <FontAwesome
+                      style={{ marginRight: 5, marginBottom: 8 }}
+                      name={'crown'}
+                      size={20}
+                      color={Colors.onPrimary}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.large,
+                    }}
+                  >
+                    {team.name}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <FontAwesome
-                    style={{ marginRight: 5, marginBottom: 8 }}
-                    name={'crown'}
-                    size={20}
+                    style={{ marginRight: Spacing }}
+                    name={'users'}
+                    size={25}
                     color={Colors.onPrimary}
                   />
-                )}
-                <Text
-                  style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    fontSize: FontSize.large,
-                  }}
-                >
-                  {team.name}
-                </Text>
-                <FontAwesome
-                  style={{ marginLeft: 170 }}
-                  name={'users'}
-                  size={20}
-                  color={Colors.onPrimary}
-                />
-                <Text
-                  style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    fontSize: FontSize.medium,
-                    paddingHorizontal: Spacing * 1,
-                  }}
-                >
-                  {team.idUsers.length}
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.medium,
+                    }}
+                  >
+                    {team.idUsers.length}
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
           ))

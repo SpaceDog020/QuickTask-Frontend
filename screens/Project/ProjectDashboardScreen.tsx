@@ -31,7 +31,7 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         {
             label: 'Agregar Equipos',
             icon: 'user-plus',
-            onPress: () => navigate('Dashboard'),
+            onPress: () => navigate('AddTeam'),
         },
         {
             label: 'Ver Backlog',

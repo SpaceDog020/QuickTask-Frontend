@@ -20,6 +20,7 @@ import { CREATEPROJECT } from "../../graphql/mutations";
 import { Icon } from "@rneui/themed";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import Toast from "react-native-toast-message";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProjectCreation">;
 
@@ -43,9 +44,9 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
     isSubmitting
   );
 
-  useEffect(() => {
+  useFocusEffect(() => {
     refetchTeams();
-  }, []);
+  });
 
   const handleProjectCreation = async () => {
     setIsSubmitting(true);
