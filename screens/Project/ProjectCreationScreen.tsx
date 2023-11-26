@@ -21,14 +21,15 @@ import { Icon } from "@rneui/themed";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import Toast from "react-native-toast-message";
 import { useFocusEffect } from "@react-navigation/native";
+import MultiSelect from 'react-native-multiple-select';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProjectCreation">;
 
 const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
-  const [idTeam, setIdTeam] = useState(null);
-  
+  const [selectedTeams, setSelectedTeams] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -50,7 +51,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleProjectCreation = async () => {
     setIsSubmitting(true);
-    if (projectName === '' || projectDescription === '' || idTeam === null) {
+    if (projectName === '' || projectDescription === '') {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -66,7 +67,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           variables: {
             name: projectName,
             description: projectDescription,
-            idTeam: idTeam,
+            idTeams: selectedTeams,
           },
         });
         setIsLoading(false);
@@ -155,24 +156,28 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             onChangeText={setProjectDescription}
             maxLength={30}
           />
-
-          <Picker
-            style={{
-              fontFamily: Font["poppins-regular"],
-              fontSize: FontSize.small,
-              padding: Spacing * 2,
-              backgroundColor: Colors.lightPrimary,
-              borderRadius: Spacing,
-              marginVertical: Spacing,
-            }}
-            selectedValue={idTeam}
-            onValueChange={(itemValue, itemIndex) => setIdTeam(itemValue)}
-          >
-            <Picker.Item style={{ fontFamily: Font["poppins-regular"] }} label="Selecciona un equipo" value={null} />
-            {teamsData?.teams.map((team) => (
-              <Picker.Item key={team.id} label={team.name} value={team.id} />
-            ))}
-          </Picker>
+          <MultiSelect
+            hideTags
+            items={teamsData?.teams || []} // Utiliza los datos de los equipos
+            uniqueKey="id"
+            ref={(component) => {  }}
+            onSelectedItemsChange={(items) => setSelectedTeams(items)} // Guarda las IDs seleccionadas
+            selectedItems={selectedTeams}
+            selectText="Escoger Equipos (Opcional)"
+            searchInputPlaceholderText="Buscar Equipos..."
+            tagRemoveIconColor="#CCC"
+            tagBorderColor="#CCC"
+            tagTextColor="#CCC"
+            selectedItemTextColor="#CCC"
+            selectedItemIconColor="#CCC"
+            itemTextColor="#000"
+            displayKey="name"
+            searchInputStyle={{ color: '#CCC' }}
+            submitButtonColor="#CCC"
+            submitButtonText="Guardar Lista"
+            noItemsText="No se encontraron equipos"
+            selectedText="seleccionado/s"  
+          />
 
         </View>
 

@@ -26,7 +26,10 @@ export const LOGIN = gql`
             lastName
             email
             accessToken
-
+            role{
+                id
+                name
+            }
         }
     }
 `;
@@ -166,11 +169,11 @@ export const DELETEUSER = gql`
 `;
 
 export const CREATEPROJECT = gql`
-    mutation CreateProject($name: String!, $description: String!, $idTeam: Int!) {
+    mutation CreateProject($name: String!, $description: String!, $idTeams: [Int!]!) {
         createProject(createProjectInput: {
             name: $name,
             description: $description,
-            idTeam: $idTeam
+            idTeams: $idTeams
         }) {
             
             id

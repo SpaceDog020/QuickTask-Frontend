@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Spacing from '../constants/Spacing';
 import FontSize from '../constants/FontSize';
 import Colors from '../constants/Colors';
@@ -54,8 +54,8 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
       onPress: () => navigate('UserProfile'),
     },
     {
-      label: 'Cerrar Sesión',
-      icon: 'sign-out',
+      label: 'Editar Rol',
+      icon: 'tag',
       onPress: logout,
     },
     {
@@ -78,15 +78,21 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
       icon: 'plus',
       onPress: () => navigate('ProjectCreation'),
     },
+    {
+      label: 'Cerrar Sesión',
+      icon: 'sign-out-alt',
+      onPress: logout,
+    },
   ];
 
   const buttonColors = {
     'Tu Perfil': 'blue',
-    'Cerrar Sesión': 'blue',
+    'Editar Rol': 'blue',
     'Ver Equipos': 'royalblue',
     'Crear Equipo': 'royalblue',
     'Ver Proyectos': 'dodgerblue',
     'Crear Proyectos': 'dodgerblue',
+    'Cerrar Sesión': 'red'
   };
 
   useEffect(() => {

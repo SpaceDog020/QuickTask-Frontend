@@ -236,7 +236,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                       marginLeft: user.id === teamCreatorId ? 5 : 0,
                     }}
                   >
-                    {user.name} {user.lastName}
+                    {user.name} {user.lastName} {user.idRole}
                   </Text>
                 </View>
                 {user.id !== teamCreatorId && (

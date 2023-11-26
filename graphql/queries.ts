@@ -58,6 +58,10 @@ export const GETUSERSBYIDS = gql`
             name
             lastName
             email
+            role{
+                id
+                name
+            }
         }
     }
 `;
@@ -89,6 +93,10 @@ export const GETUSERSBYTEAMID = gql`
             id
             name
             lastName
+            role{
+                id
+                name
+            }
         }
     }
 `;
