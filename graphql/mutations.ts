@@ -274,3 +274,23 @@ export const REMOVETEAMPROJECT = gql`
         }
     }
 `;
+
+export const CREATETASK = gql`
+    mutation CreateTask($idCreator: Int!, $idTeamCreator: Int!, $idProject: Int!, $idUser: Int, $idTeamUser: Int, $name: String!, $description: String!, $startDate: String, $finishDate: String) {
+        createTask(createTaskInput: {
+            idCreator: $idCreator,
+            idTeamCreator: $idTeamCreator,
+            idProject: $idProject,
+            idUser: $idUser,
+            idTeamUser: $idTeamUser,
+            name: $name,
+            description: $description,
+            startDate: $startDate,
+            finishDate: $finishDate
+        }) {
+            
+            id
+    
+        }
+    }
+`;

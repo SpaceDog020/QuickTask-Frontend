@@ -43,6 +43,11 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
             icon: 'sliders-h',
             onPress: () => navigate('EditProject'),
         },
+        {
+            label: 'Agregar Tarea',
+            icon: 'tasks',
+            onPress: () => navigate('TaskCreation'),
+        },
     ];
 
     const buttonColors = {
@@ -50,6 +55,7 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         'Agregar Equipos': 'blue',
         'Ver Backlog': 'royalblue',
         'Editar Proyecto': 'royalblue',
+        'Agregar Tarea': 'dodgerblue',
     };
 
     return (

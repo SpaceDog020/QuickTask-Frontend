@@ -31,6 +31,8 @@ export type RootStackParamList = {
   TeamDetails: undefined;
   EditProject: undefined;
   AddTeam: undefined;
+  AddTask: undefined;
+  TaskCreation: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

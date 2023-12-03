@@ -100,3 +100,13 @@ export const GETUSERSBYTEAMID = gql`
         }
     }
 `;
+
+export const GETUSERSTEAMSIDS = gql`
+    query usersByTeamIds($teamIds: [Int!]!) {
+        usersByTeamIds(teamIds: $teamIds) {
+            id
+            name
+        }
+    }
+`;
+    
