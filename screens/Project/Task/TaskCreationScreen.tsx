@@ -25,9 +25,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [taskDescription, setTaskDescription] = useState("");
   const [idUser, setIdUser] = useState(null);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [rerender, setRerender] = useState(false);
   const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
-  console.log("dsgdsg",projectTeamsIds);
   const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSTEAMSIDS, {
     variables: {
       teamIds: projectTeamsIds,
@@ -37,7 +35,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [createTeam, { data }] = useMutation(CREATETASK);
+  const [createTask, { data }] = useMutation(CREATETASK);
 
   useButtonTimeout(
     () => {
@@ -46,8 +44,6 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
     1500,
     isSubmitting
   );
-
-  
 
   const refetchUsersData = async () => {
     await refetchUsers();
@@ -74,12 +70,17 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
     } else {
       try {
         setIsLoading(true);
-        const { data } = await createTeam({
+        const { data } = await createTask({
           variables: {
+            idCreator: userId,
+            idTeamCreator: 99, //<----------- this needs to be changed
+            idProject: projectId,
+            idUser: idUser,
+            idTeamUser: null,
             name: taskName,
             description: taskDescription,
-            idUser: userId,
-
+            startDate: new Date(),
+            finishDate: null
           },
         });
         setIsLoading(false);

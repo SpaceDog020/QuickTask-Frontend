@@ -36,7 +36,7 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         {
             label: 'Ver Backlog',
             icon: 'stream',
-            onPress: () => navigate('Dashboard'),
+            onPress: () => navigate('ViewTasks'),
         },
         {
             label: 'Editar Proyecto',

@@ -109,4 +109,20 @@ export const GETUSERSTEAMSIDS = gql`
         }
     }
 `;
-    
+
+export const GETTASKSBYPROJECTID = gql`
+  query TasksByProjectId($projectId: Int!) {
+    tasksByProjectId(projectId: $projectId) {
+      id
+      idCreator
+      idTeamCreator
+      idProject
+      idUser
+      idTeamUser
+      name
+      description
+      startDate
+      finishDate
+    }
+  }
+`;
