@@ -29,19 +29,27 @@ const capitalizeFirstLetter = (str: string) => {
 };
 
 const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const { userName: initialUserName, setUserName: setInitialUserName } = useUserStore();
-  const { userLastName: initialUserLastName, setUserLastName: setInitialUserLastName} = useUserStore();
-  const { userEmail: initialUserEmail, setUserEmail: setInitialUserEmail } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userName, setUserName] = useState(initialUserName);
-  const [userLastName, setUserLastName] = useState(initialUserLastName);
-  const [userEmail, setUserEmail] = useState(initialUserEmail.toLowerCase());
-  const [editable, setEditable] = useState(false); // Initialize the editability state
-  const [updateUser] = useMutation(UPDATEUSER);
-  const [newName, setNewName] = useState(userName);
-  const [newLastName, setNewLastName] = useState(userLastName);
-  const [newEmail, setNewEmail] = useState(userEmail);
+  const [editable, setEditable] = useState(false);
+
+  const {taskId} = useUserStore();
+  const {taskIdCreator} = useUserStore();
+  const { taskName: initialTaskName , setTaskName: setInitialTaskName} = useUserStore();
+  const { taskDescription: initialTaskDescription, setTaskDescription: setInitialTaskDescription } = useUserStore();
+  const { taskIdUserResponsable: initialIdUserInCharge, setTaskIdUserResponsable: setInitialIdUserInCharge } = useUserStore();
+
+  
+  const [taskName, setTaskName] = useState(initialTaskName);
+  const [taskDescription, setTaskDescription] = useState(initialTaskDescription);
+  const [taskIdUserResponsable, setTaskIdUserResponsable] = useState(initialIdUserInCharge);
+
+  const [newTaskName, setNewTaskName] = useState(taskName);
+  const [newTaskDescription, setNewTaskDescription] = useState(taskDescription);
+  const [newTaskIdUserResponsable, setNewTaskIdUserResponsable] = useState(taskIdUserResponsable);
+  //const [updateTask] = useMutation(UPDATETASK);
+
+  
 
   useButtonTimeout(
     () => {
@@ -53,22 +61,22 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleButtonPress = () => {
     if (editable) {
-      // Reset the text input values to the current user data
-      if (newName !== userName || newLastName !== userLastName || newEmail.toLowerCase() !== userEmail.toLowerCase()) {
-        setNewName(userName);
-        setNewLastName(userLastName);
-        setNewEmail(userEmail.toLowerCase());
+      // Reset the text input values to the current task data
+      if (newTaskName !== taskName || newTaskDescription !== taskDescription || newTaskIdUserResponsable !== taskIdUserResponsable) {
+        setNewTaskName(taskName);
+        setNewTaskDescription(taskDescription);
+        setNewTaskIdUserResponsable(taskIdUserResponsable);
+
       }
     }
 
     setEditable(!editable);
-
+    
   };
 
   const handleSaveChanges = async () => {
     setIsSubmitting(true);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (newName === "" || newLastName === "" || newEmail === "") {
+    if (newTaskName === "" || newTaskDescription === "") {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -78,36 +86,15 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
         autoHide: true,
       });
     } else {
-      if (!emailRegex.test(newEmail)) {
-        Toast.show({
-          type: 'error',
-          text1: 'Correo electrónico no válido',
-          text2: 'Intente nuevamente',
-          position: 'bottom',
-          visibilityTime: 1500,
-          autoHide: true,
-        });
-        setIsSubmitting(false);
-        return;
-      }
       try {
         setIsLoading(true);
         // Call the updateUser mutation with the updated user data
-        await updateUser({
-          variables: {
-            oldEmail: userEmail.toLowerCase(),
-            name: newName,
-            lastName: newLastName,
-            email: newEmail.toLowerCase(),
-          },
-        });
+        
         // Update the user data in your local state
-        setUserName(newName);
-        setInitialUserName(newName);
-        setUserLastName(newLastName);
-        setInitialUserLastName(newLastName);
-        setUserEmail(newEmail.toLowerCase());
-        setInitialUserEmail(newEmail.toLowerCase());
+        setTaskName(newTaskName);
+        setTaskDescription(newTaskDescription);
+        setTaskIdUserResponsable(newTaskIdUserResponsable);
+
         setIsLoading(false);
         Toast.show({
           type: "success",
@@ -205,7 +192,7 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Nombre
           </Text>
-          <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newName)} editable={editable} onChangeText={setNewName} />
+          <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newTaskName)} editable={editable} onChangeText={setTaskName} />
           <Text
             style={{
               fontFamily: Font["poppins-semiBold"],
@@ -217,19 +204,8 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Apellido
           </Text>
-          <AppTextInput placeholder="Apellido" value={capitalizeFirstLetter(newLastName)} editable={editable} onChangeText={setNewLastName} />
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Correo
-          </Text>
-          <AppTextInput placeholder="Correo" value={newEmail.toLowerCase()} editable={editable} onChangeText={setNewEmail} />
+          <AppTextInput placeholder="Descripción" value={capitalizeFirstLetter(newTaskDescription)} editable={editable} onChangeText={setNewTaskDescription} />
+          
         </View>
 
         <TouchableOpacity

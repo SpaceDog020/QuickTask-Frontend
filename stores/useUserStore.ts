@@ -17,6 +17,11 @@ export type UseUserStoreT = {
   projectName?: string;
   projectDescription?: string;
   projectTeamsIds?: number[];
+  taskId?: number;
+  taskIdCreator?: number;
+  taskName?: string;
+  taskDescription?: string;
+  taskIdUserResponsable?: number;
   setRecoveryPass: (recoveryPass: number) => void;
   setAccessToken: (accessToken: string) => void;
   removeAccessToken: () => void;
@@ -29,9 +34,14 @@ export type UseUserStoreT = {
   setTeamCreatorId: (teamCreatorId: number) => void;
   setUserId: (userId: number) => void;
   setProjectId: (projectId: number) => void;
+  setTaskId: (userId: number) => void;
+  setTaskIdCreator: (userId: number) => void;
   setProjectName: (projectName: string) => void;
   setProjectDescription: (projectDescription: string) => void;
   setProjectTeamsIds: (projectTeamsIds: number[]) => void;
+  setTaskName: (taskName: string) => void;
+  setTaskDescription: (taskDescription: string) => void;
+  setTaskIdUserResponsable: (taskIdUserResposable: number) => void;
   removeTeamDetails: () => void;
   removeProjectDetails: () => void;
 };
@@ -51,9 +61,14 @@ export const useUserStore = create<UseUserStoreT>()(
         teamCreatorId: undefined,
         userId: undefined,
         projectId: undefined,
+        taskId: undefined,
+        taskIdCreator: undefined,
         projectName: undefined,
         projectDescription: undefined,
         projectTeamsIds: undefined,
+        taskName: undefined,
+        taskDescription: undefined,
+        taskIdUserResponsable: undefined,
         setRecoveryPass: (recoveryPass: number) => set(() => ({ recoveryPass })),
         setAccessToken: (accessToken: string) => set(() => ({ accessToken })),
         removeAccessToken: () => set(() => ({ accessToken: undefined })),
@@ -66,9 +81,14 @@ export const useUserStore = create<UseUserStoreT>()(
         setTeamCreatorId: (teamCreatorId: number) => set(() => ({ teamCreatorId })),
         setUserId: (userId: number) => set(() => ({ userId })),
         setProjectId: (projectId: number) => set(() => ({ projectId })),
+        setTaskId: (taskId: number) => set(() => ({ taskId })),
+        setTaskIdCreator: (taskIdCreator: number) => set(() => ({ taskIdCreator })),
         setProjectName: (projectName: string) => set(() => ({ projectName })),
         setProjectDescription: (projectDescription: string) => set(() => ({ projectDescription })),
         setProjectTeamsIds: (projectTeamsIds: number[]) => set(() => ({ projectTeamsIds })),
+        setTaskName: (taskName: string) => set(() => ({ taskName })),
+        setTaskDescription: (taskDescription: string) => set(() => ({ taskDescription })),
+        setTaskIdUserResponsable: (taskIdUserResponsable: number) => set(() => ({ taskIdUserResponsable })),
         removeTeamDetails: () => set(() => ({ teamId: undefined, teamName: undefined, teamDescription: undefined, teamCreatorId: undefined })),
         removeProjectDetails: () => set(() => ({ projectId: undefined, projectName: undefined, projectDescription: undefined, projectTeamsIds: undefined })),
 

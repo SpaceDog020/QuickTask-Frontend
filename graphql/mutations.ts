@@ -294,3 +294,16 @@ export const CREATETASK = gql`
         }
     }
 `;
+
+export const UPDATETASK = gql`
+    mutation UpdateTask($id: Int!, $idUser: Int, $name: String!, $description: String!) {
+        updateTask(updateProjectInput: {
+            id: $id,
+            idUser: $idUser,
+            name: $name,
+            description: $description
+        }) {
+            response
+        }
+    }
+`;

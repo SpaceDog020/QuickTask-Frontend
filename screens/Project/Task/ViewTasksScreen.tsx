@@ -31,6 +31,12 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [searchInput, setSearchInput] = useState("");
   const [showMyTasks, setShowMyTasks] = useState(false);
 
+  const { setTaskId } = useUserStore();
+  const { setTaskName } = useUserStore();
+  const { setTaskDescription } = useUserStore();
+  const { setTaskIdUserResponsable } = useUserStore();
+  const { setTaskIdCreator } = useUserStore();
+
   console.log(projectId);
 
   const { data: taskData, refetch: refetchTasks } = useQuery(GETTASKSBYPROJECTID, {
@@ -149,6 +155,14 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}
             >
               <TouchableOpacity
+                onPress={() => {
+                  setTaskId(task.id);
+                  setTaskIdCreator(task.idCreator);
+                  setTaskName(task.name);
+                  setTaskDescription(task.description);
+                  setTaskIdUserResponsable(task.idUser);
+                  navigate("TaskDetails");
+                }}
                 style={{
                   backgroundColor: Colors.primary,
                   paddingVertical: Spacing * 1,
