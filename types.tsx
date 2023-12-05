@@ -34,6 +34,7 @@ export type RootStackParamList = {
   AddTask: undefined;
   TaskCreation: undefined;
   ViewTasks: undefined;
+  TaskDetails: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

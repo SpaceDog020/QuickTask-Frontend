@@ -29,6 +29,7 @@ import AddTeamScreen from "../screens/Project/Team/AddTeamScreen";
 import AddTaskScreen from "../screens/Project/Task/AddTaskScreen";
 import TaskCreationScreen from "../screens/Project/Task/TaskCreationScreen";
 import ViewTasksScreen from "../screens/Project/Task/ViewTasksScreen";
+import TaskDetailsScreen from "../screens/Project/Task/TaskDetailsScreen";
 
 
 const theme = {
@@ -82,6 +83,7 @@ function RootNavigator() {
       <Stack.Screen name="AddTask" component={AddTaskScreen} />
       <Stack.Screen name="TaskCreation" component={TaskCreationScreen} />
       <Stack.Screen name="ViewTasks" component={ViewTasksScreen} />
+      <Stack.Screen name="TaskDetails" component={TaskDetailsScreen} />
 
 
     </Stack.Navigator>

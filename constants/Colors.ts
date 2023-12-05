@@ -9,7 +9,7 @@ const success = '#2ecc71';
 const error = '#e74c3c';
 const textToast = '#333';
 const onPrimaryToast = '#fff';
-const disabled = '#656a6b'
+const disabled = '#656a6b';
 
 export default {
   darkText: dark,

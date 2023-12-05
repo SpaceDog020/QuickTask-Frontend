@@ -56,7 +56,7 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
     {
       label: 'Editar Rol',
       icon: 'tag',
-      onPress: logout,
+      onPress: () => navigate('Dashboard'),
     },
     {
       label: 'Ver Equipos',
