@@ -30,18 +30,22 @@ const capitalizeFirstLetter = (str: string) => {
 
 const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { userName: initialUserName, setUserName: setInitialUserName } = useUserStore();
-  const { userLastName: initialUserLastName, setUserLastName: setInitialUserLastName} = useUserStore();
+  const { userLastName: initialUserLastName, setUserLastName: setInitialUserLastName } = useUserStore();
   const { userEmail: initialUserEmail, setUserEmail: setInitialUserEmail } = useUserStore();
+  const { role: initialRole, setRole: setInitialRole } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
   const [userLastName, setUserLastName] = useState(initialUserLastName);
   const [userEmail, setUserEmail] = useState(initialUserEmail.toLowerCase());
-  const [editable, setEditable] = useState(false); // Initialize the editability state
-  const [updateUser] = useMutation(UPDATEUSER);
+  const [role, setRole] = useState(initialRole);
   const [newName, setNewName] = useState(userName);
   const [newLastName, setNewLastName] = useState(userLastName);
   const [newEmail, setNewEmail] = useState(userEmail);
+  const [newRole, setNewRole] = useState(role);
+
+  const [editable, setEditable] = useState(false);
+  const [updateUser] = useMutation(UPDATEUSER);
 
   useButtonTimeout(
     () => {
@@ -53,11 +57,11 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleButtonPress = () => {
     if (editable) {
-      // Reset the text input values to the current user data
-      if (newName !== userName || newLastName !== userLastName || newEmail.toLowerCase() !== userEmail.toLowerCase()) {
+      if (newName !== userName || newLastName !== userLastName || newRole !== role || newEmail.toLowerCase() !== userEmail.toLowerCase()) {
         setNewName(userName);
         setNewLastName(userLastName);
         setNewEmail(userEmail.toLowerCase());
+        setNewRole(role);
       }
     }
 
@@ -68,7 +72,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   const handleSaveChanges = async () => {
     setIsSubmitting(true);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (newName === "" || newLastName === "" || newEmail === "") {
+    if (newName === "" || newLastName === "" || newEmail === "" || newRole === "") {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -99,6 +103,7 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             name: newName,
             lastName: newLastName,
             email: newEmail.toLowerCase(),
+            role: newRole,
           },
         });
         // Update the user data in your local state
@@ -108,6 +113,8 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
         setInitialUserLastName(newLastName);
         setUserEmail(newEmail.toLowerCase());
         setInitialUserEmail(newEmail.toLowerCase());
+        setRole(newRole);
+        setInitialRole(newRole);
         setIsLoading(false);
         Toast.show({
           type: "success",
@@ -230,6 +237,18 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
             Correo
           </Text>
           <AppTextInput placeholder="Correo" value={newEmail.toLowerCase()} editable={editable} onChangeText={setNewEmail} />
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Rol
+          </Text>
+          <AppTextInput placeholder="Rol" value={newRole} editable={editable} onChangeText={setNewRole} />
         </View>
 
         <TouchableOpacity
@@ -296,35 +315,36 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          onPress={() => navigate("ChangePassword")}
-          style={{
-            padding: Spacing * 1,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
+        {!editable && (
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            onPress={() => navigate("ChangePassword")}
             style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
+              padding: Spacing * 1,
+              backgroundColor: Colors.primary,
+              marginVertical: Spacing * 1,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
             }}
           >
-            Cambiar Contraseña
-          </Text>
-        </TouchableOpacity>
-
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Cambiar Contraseña
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

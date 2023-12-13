@@ -17,6 +17,7 @@ import { RootStackParamList } from '../types';
 import { useUserStore } from '../stores/useUserStore';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { Icon } from '@rneui/themed';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -49,14 +50,14 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const buttons = [
     {
-      label: 'Tu Perfil',
+      label: 'Perfil',
       icon: 'user',
       onPress: () => navigate('UserProfile'),
     },
     {
-      label: 'Editar Rol',
-      icon: 'tag',
-      onPress: () => navigate('Dashboard'),
+      label: 'Cerrar Sesion',
+      icon: 'sign-out-alt',
+      onPress: () => logout(),
     },
     {
       label: 'Ver Equipos',
@@ -78,21 +79,15 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
       icon: 'plus',
       onPress: () => navigate('ProjectCreation'),
     },
-    {
-      label: 'Cerrar Sesión',
-      icon: 'sign-out-alt',
-      onPress: logout,
-    },
   ];
 
   const buttonColors = {
-    'Tu Perfil': 'blue',
-    'Editar Rol': 'blue',
     'Ver Equipos': 'royalblue',
     'Crear Equipo': 'royalblue',
     'Ver Proyectos': 'dodgerblue',
     'Crear Proyectos': 'dodgerblue',
-    'Cerrar Sesión': 'red'
+    'Perfil': 'blue',
+    'Cerrar Sesion': 'red',
   };
 
   useEffect(() => {
@@ -117,70 +112,81 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ marginBottom: Spacing * 3 }}>
-        <Text
+      <View
+        style={{
+          padding: Spacing * 2,
+          marginTop: Spacing * 2,
+        }}
+      >
+        <View
           style={{
-            fontSize: FontSize.xxLarge,
-            color: Colors.primary,
-            fontFamily: Font['poppins-bold'],
-            textAlign: 'center',
-          }}>
-          Bienvenido
-        </Text>
-        <Text
-          style={{
-            fontSize: FontSize.large,
-            fontFamily: Font['poppins-bold'],
-            textAlign: 'center',
-          }}>
-          {userName}
-        </Text>
-        <Text
-          style={{
-            marginTop: Spacing * 5,
-            fontSize: FontSize.large,
-            fontFamily: Font['poppins-bold'],
-            textAlign: 'center',
-          }}>
-          ¿Qué deseas hacer hoy?
-        </Text>
-      </View>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 2 }}>
-        {buttons.map((button, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={button.onPress}
+            alignItems: "center",
+          }}
+        >
+          <Text
             style={{
-              width: 160,
-              height: 120,
-              margin: Spacing / 2,
-              backgroundColor: buttonColors[button.label],
-              borderRadius: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              shadowColor: Colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: Spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: Spacing,
+              fontSize: FontSize.xxLarge,
+              color: Colors.primary,
+              fontFamily: Font['poppins-bold'],
+              textAlign: 'center',
             }}>
-            <FontAwesome
-              name={button.icon}
-              size={50}
-              color={Colors.onPrimary}
-            />
-            <Text
+            Bienvenido
+          </Text>
+          <Text
+            style={{
+              fontSize: FontSize.large,
+              fontFamily: Font['poppins-bold'],
+              textAlign: 'center',
+            }}>
+            {userName}
+          </Text>
+          <Text
+            style={{
+              marginTop: Spacing * 5,
+              fontSize: FontSize.large,
+              fontFamily: Font['poppins-bold'],
+              textAlign: 'center',
+            }}>
+            ¿Qué deseas hacer hoy?
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 2 }}>
+          {buttons.map((button, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={button.onPress}
               style={{
-                color: Colors.onPrimary,
-                fontFamily: Font['poppins-bold'],
-                textAlign: 'center',
+                width: 160,
+                height: 120,
+                margin: Spacing / 2,
+                backgroundColor: buttonColors[button.label],
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
               }}>
-              {button.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <FontAwesome
+                name={button.icon}
+                size={50}
+                color={Colors.onPrimary}
+              />
+              <Text
+                style={{
+                  color: Colors.onPrimary,
+                  fontFamily: Font['poppins-bold'],
+                  textAlign: 'center',
+                }}>
+                {button.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </SafeAreaView>
   );

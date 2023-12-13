@@ -8,7 +8,7 @@ import Toast from 'react-native-toast-message';
 import CustomToast from './components/CustomToast';
 
 const client = new ApolloClient({
-  uri: process.env.GRAPHQL_URI,
+  uri: 'http://192.168.0.5:3000/graphql',
   cache: new InMemoryCache()
 });
 

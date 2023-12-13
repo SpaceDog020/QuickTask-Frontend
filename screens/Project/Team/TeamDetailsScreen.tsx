@@ -261,7 +261,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                                         fontSize: FontSize.large,
                                     }}
                                 >
-                                    {user.name} {user.lastName}
+                                    {user.name} {user.lastName} {user.role}
                                 </Text>
                             </TouchableOpacity>
                         ))}

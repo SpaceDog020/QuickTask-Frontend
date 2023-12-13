@@ -165,7 +165,7 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   {userId === team.idCreator && (
                     <FontAwesome
-                      style={{ marginRight: 5, marginBottom: 8 }}
+                      style={{ marginRight: 8, marginBottom: 8 }}
                       name={'crown'}
                       size={20}
                       color={Colors.onPrimary}

@@ -58,10 +58,7 @@ export const GETUSERSBYIDS = gql`
             name
             lastName
             email
-            role{
-                id
-                name
-            }
+            role
         }
     }
 `;
@@ -93,10 +90,7 @@ export const GETUSERSBYTEAMID = gql`
             id
             name
             lastName
-            role{
-                id
-                name
-            }
+            role
         }
     }
 `;
@@ -115,10 +109,8 @@ export const GETTASKSBYPROJECTID = gql`
     tasksByProjectId(projectId: $projectId) {
       id
       idCreator
-      idTeamCreator
       idProject
       idUser
-      idTeamUser
       name
       description
       startDate

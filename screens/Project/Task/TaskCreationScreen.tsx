@@ -48,13 +48,11 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const refetchUsersData = async () => {
     await refetchUsers();
     setFilteredUsers(usersData?.usersByTeamIds);
-    console.log(usersData?.usersByTeamIds);
   };
 
   useEffect(() => {
     refetchUsersData();
   }, [usersData]);
-
 
   const handleTeamCreation = async () => {
     setIsSubmitting(true);
@@ -73,10 +71,8 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
         const { data } = await createTask({
           variables: {
             idCreator: userId,
-            idTeamCreator: 99, //<----------- this needs to be changed
             idProject: projectId,
             idUser: idUser,
-            idTeamUser: null,
             name: taskName,
             description: taskDescription,
             startDate: new Date(),
@@ -129,7 +125,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               left: -Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("Dashboard")}
+            onPress={() => navigate("ProjectDashboard")}
           >
             <Icon
               raised

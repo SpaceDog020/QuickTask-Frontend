@@ -222,7 +222,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
                   {user.id === teamCreatorId && (
                     <FontAwesome
-                      style={{ marginRight: 5, marginBottom: 8 }}
+                      style={{ marginRight: 8, marginBottom: 8 }}
                       name={'crown'}
                       size={20}
                       color={Colors.onPrimary}
@@ -236,7 +236,7 @@ const UserDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                       marginLeft: user.id === teamCreatorId ? 5 : 0,
                     }}
                   >
-                    {user.name} {user.lastName} {user.idRole}
+                    {user.name} {user.lastName} {user.role}
                   </Text>
                 </View>
                 {user.id !== teamCreatorId && (

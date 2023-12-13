@@ -31,7 +31,6 @@ export type RootStackParamList = {
   TeamDetails: undefined;
   EditProject: undefined;
   AddTeam: undefined;
-  AddTask: undefined;
   TaskCreation: undefined;
   ViewTasks: undefined;
   TaskDetails: undefined;

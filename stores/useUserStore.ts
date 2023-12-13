@@ -8,6 +8,7 @@ export type UseUserStoreT = {
   userName?: string;
   userLastName?: string;
   userEmail?: string;
+  role?: string;
   teamId?: number;
   teamName?: string;
   teamDescription?: string;
@@ -28,6 +29,7 @@ export type UseUserStoreT = {
   setUserName: (userName: string) => void;
   setUserLastName: (userLastName: string) => void;
   setUserEmail: (userEmail: string) => void;
+  setRole: (role: string) => void;
   setTeamId: (teamId: number) => void;
   setTeamName: (teamName: string) => void;
   setTeamDescription: (teamDescription: string) => void;
@@ -55,6 +57,7 @@ export const useUserStore = create<UseUserStoreT>()(
         userName: undefined,
         userLastName: undefined,
         userEmail: undefined,
+        role: undefined,
         teamId: undefined,
         teamName: undefined,
         teamDescription: undefined,
@@ -75,6 +78,7 @@ export const useUserStore = create<UseUserStoreT>()(
         setUserName: (userName: string) => set(() => ({ userName })),
         setUserLastName: (userLastName: string) => set(() => ({ userLastName })),
         setUserEmail: (userEmail: string) => set(() => ({ userEmail })),
+        setRole: (role: string) => set(() => ({ role })),
         setTeamId: (teamId: number) => set(() => ({ teamId })),
         setTeamName: (teamName: string) => set(() => ({ teamName })),
         setTeamDescription: (teamDescription: string) => set(() => ({ teamDescription })),

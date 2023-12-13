@@ -8,9 +8,7 @@ export const REGISTER = gql`
             email: $email,
             password: $password
         }) {
-
             response
-
         }
     }
 `;
@@ -26,10 +24,7 @@ export const LOGIN = gql`
             lastName
             email
             accessToken
-            role{
-                id
-                name
-            }
+            role
         }
     }
 `;
@@ -39,9 +34,7 @@ export const RECOVERY = gql`
         recovery(recoveryInput: {
             email: $email
         }) {
-            
             response
-
         }
     }
 `;
@@ -51,9 +44,7 @@ export const VALIDATERECOVERY = gql`
       validateRecovery(validaterecoveryInput: {
           recoveryPass: $recoveryPass
       }) {
-          
           response
-
       }
   }
 `;
@@ -64,9 +55,7 @@ export const CHANGEPASSRECOVERY = gql`
           password: $password,
           recoveryPass: $recoveryPass
       }) {
-          
           response
-
       }
   }
 `;
@@ -78,24 +67,21 @@ export const CHANGEPASSWORD = gql`
             oldPassword: $oldPassword,
             newPassword: $newPassword
         }) {
-            
             response
-    
         }
     }
     `;
 
 export const UPDATEUSER = gql`
-  mutation UpdateUser($oldEmail: String!, $name: String!, $lastName: String!, $email: String!) {
+  mutation UpdateUser($oldEmail: String!, $name: String!, $lastName: String!, $email: String!, $role: String!) {
       updateUser(updateUserInput: {
           oldEmail: $oldEmail,
           name: $name,
           lastName: $lastName,
           email: $email
+          role: $role
       }) {
-          
           response
-
       }
   }
 `;
@@ -107,9 +93,7 @@ export const CREATETEAM = gql`
             description: $description,
             idUser: $idUser
         }) {
-            
             id
-    
         }
     }
 `;
@@ -122,9 +106,7 @@ export const UPDATETEAM = gql`
             name: $name,
             description: $description
         }) {
-            
             response
-
         }
     }
 `;
@@ -135,9 +117,7 @@ export const ADDTEAM = gql`
             idUser: $idUser,
             idTeam: $idTeam
         }) {
-            
             response
-
         }
     }
 `;
@@ -148,9 +128,7 @@ export const ADDUSERS = gql`
             idTeam: $idTeam,
             email: $email
         }) {
-            
             response
-
         }
     }
 `;
@@ -161,9 +139,7 @@ export const DELETEUSER = gql`
             idUser: $idUser
             password: $password
         }) {
-            
             response
-
         }
     }
 `;
@@ -175,9 +151,7 @@ export const CREATEPROJECT = gql`
             description: $description,
             idTeams: $idTeams
         }) {
-            
             id
-
         }
     }
 `;
@@ -188,9 +162,7 @@ export const KICKUSER = gql`
             idTeam: $idTeam,
             idUser: $idUser
         }) {
-            
             response
-
         }
     }
 `;
@@ -202,9 +174,7 @@ export const CHANGECREATOR = gql`
             idUser: $idUser,
             idNewCreator: $idNewCreator
         }) {
-            
             response
-
         }
     }
 `;
@@ -215,9 +185,7 @@ export const DELETETEAM = gql`
             idTeam: $idTeam,
             idCreator: $idCreator
         }) {
-            
             response
-
         }
     }
 `;
@@ -227,9 +195,7 @@ export const DELETEPROJECT = gql`
         deleteProject(deleteProjectInput: {
             id: $id
         }) {
-
             response
-
           }
     }
 `;
@@ -241,9 +207,7 @@ export const UPDATEPROJECT = gql`
             name: $name,
             description: $description
         }) {
-            
             response
-
         }
     }
 `;
@@ -254,9 +218,7 @@ export const ADDTEAMPROJECT = gql`
             idProject: $idProject,
             idTeam: $idTeam
         }) {
-            
             response
-
         }
     }
 `;
@@ -268,29 +230,23 @@ export const REMOVETEAMPROJECT = gql`
             idTeam: $idTeam,
             idUsers: $idUsers
         }) {
-            
             response
-
         }
     }
 `;
 
 export const CREATETASK = gql`
-    mutation CreateTask($idCreator: Int!, $idTeamCreator: Int!, $idProject: Int!, $idUser: Int, $idTeamUser: Int, $name: String!, $description: String!, $startDate: String, $finishDate: String) {
+    mutation CreateTask($idCreator: Int!, $idProject: Int!, $idUser: Int, $name: String!, $description: String!, $startDate: String, $finishDate: String) {
         createTask(createTaskInput: {
             idCreator: $idCreator,
-            idTeamCreator: $idTeamCreator,
             idProject: $idProject,
             idUser: $idUser,
-            idTeamUser: $idTeamUser,
             name: $name,
             description: $description,
             startDate: $startDate,
             finishDate: $finishDate
         }) {
-            
             id
-    
         }
     }
 `;
