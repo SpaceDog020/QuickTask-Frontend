@@ -89,7 +89,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             visibilityTime: 1500, // Duration in milliseconds
             autoHide: true,
           });
-          navigate("Dashboard");
+          navigate("ProjectDashboard");
         }
       } catch (e) {
         setIsSubmitting(false);
