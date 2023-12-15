@@ -252,12 +252,37 @@ export const CREATETASK = gql`
 `;
 
 export const UPDATETASK = gql`
-    mutation UpdateTask($id: Int!, $idUser: Int, $name: String!, $description: String!) {
-        updateTask(updateProjectInput: {
+    mutation UpdateTask($id: Int!, $idProject: Int!, $idUser: Int, $name: String!, $description: String!, $status: String!, $startDate: String, $finishDate: String) {
+        updateTask(updateTaskInput: {
             id: $id,
+            idProject: $idProject,
             idUser: $idUser,
             name: $name,
-            description: $description
+            description: $description,
+            status: $status,
+            startDate: $startDate,
+            finishDate: $finishDate
+        }) {
+            response
+        }
+    }
+`;
+
+export const DELETETASK = gql`
+    mutation DeleteTask($id: Int!) {
+        deleteTask(deleteTaskInput: {
+            id: $id
+        }) {
+            response
+        }
+    }
+`;
+
+export const ADDCOMMENT = gql`
+    mutation AddComment($idTask: Int!, $comment: String!) {
+        addComment(addCommentInput: {
+            idTask: $idTask,
+            comment: $comment
         }) {
             response
         }
