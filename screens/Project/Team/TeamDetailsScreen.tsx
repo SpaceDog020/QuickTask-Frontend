@@ -76,6 +76,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           idTeam: idTeam,
           idUsers: idUsers,
         },
+<<<<<<< HEAD
       });
       setIsLoading(false);
       if (data && data.removeTeamProject) {
@@ -87,6 +88,67 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           visibilityTime: 1500, // Duration in milliseconds
           autoHide: true,
         });
+=======
+    });
+
+    const { data: userData, refetch: refetchUsers } = useQuery(GETUSERSBYIDS, {
+        skip: true,
+    });
+
+    const [removeTeamProjectMutation, { data }] = useMutation(REMOVETEAMPROJECT);
+
+    const handleViewUsers = async (teamId) => {
+        const team = teams.find((team) => team.id === teamId);
+
+        if (team && team.idUsers) {
+            await refetchUsers({ ids: team.idUsers })
+                .then((res) => {
+                    setModalUsers(res.data.usersByIds);
+                    setModalVisible(true);
+                })
+        }
+    };
+
+    const kickTeam = async (idProject, idTeam, idUsers) => {
+        setIsSubmitting(true);
+        try {
+            setIsLoading(true);
+            const { data } = await removeTeamProjectMutation({
+                variables: {
+                    idProject: idProject,
+                    idTeam: idTeam,
+                },
+            });
+            setIsLoading(false);
+            if (data && data.removeTeamProject) {
+                Toast.show({
+                    type: "success",
+                    text1: "Éxito",
+                    text2: "Equipo expulsado",
+                    position: "bottom",
+                    visibilityTime: 1500, // Duration in milliseconds
+                    autoHide: true,
+                });
+                refetchTeams();
+                setProjectTeamsIds(projectTeamsIds.filter((teamId) => teamId !== idTeam));
+                setIsSubmitting(false);
+            }
+        } catch (error) {
+            setIsSubmitting(false);
+            setIsLoading(false);
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.message,
+                position: "bottom",
+                visibilityTime: 1500, // Duration in milliseconds
+                autoHide: true,
+            });
+        }
+    };
+
+    useEffect(() => {
+>>>>>>> 5b0300f530e0d0e29a80224d9b42eb613939ea0a
         refetchTeams();
         setProjectTeamsIds(
           projectTeamsIds.filter((teamId) => teamId !== idTeam)

@@ -144,7 +144,7 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ maxHeight: 550 }}>
+      <ScrollView style={{ maxHeight: 620 }}>
         {filteredMyTasks.length === 0 ? (
           <View
             style={{
@@ -298,15 +298,3 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
 export default ViewTasks;
 
 const styles = StyleSheet.create({});
-
-/*
-<Text
-  style={{
-    fontFamily: Font["poppins-bold"],
-    color: Colors.onPrimary,
-    fontSize: FontSize.large,
-  }}
->
-  {task.status}
-</Text>
-*/

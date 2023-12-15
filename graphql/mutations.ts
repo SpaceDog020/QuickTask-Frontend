@@ -224,11 +224,10 @@ export const ADDTEAMPROJECT = gql`
 `;
 
 export const REMOVETEAMPROJECT = gql`
-    mutation RemoveTeamProject($idProject: Int!, $idTeam: Int!, $idUsers: [Int!]!) {
+    mutation RemoveTeamProject($idProject: Int!, $idTeam: Int!) {
         removeTeamProject(removeTeamProjectInput: {
             idProject: $idProject,
             idTeam: $idTeam,
-            idUsers: $idUsers
         }) {
             response
         }
