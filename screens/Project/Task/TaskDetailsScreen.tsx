@@ -109,35 +109,6 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               type='Ionicons'
               color={Colors.primary} />
           </TouchableOpacity>
-<<<<<<< HEAD
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 2,
-            }}
-          >
-            Editar Equipo
-          </Text>
-          <TouchableOpacity
-            disabled={isLoading || isSubmitting}
-            style={{
-              position: "absolute",
-              top: Spacing * 1,
-              right: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => setDeleteModalVisible(true)}
-          >
-            <Icon
-              raised
-              name='trash'
-              type='font-awesome-5'
-              color={Colors.error} />
-          </TouchableOpacity>
-=======
->>>>>>> c67db729b98d26b2eebd9b91d54fbe5673544d27
         </View>
       </View>
 
