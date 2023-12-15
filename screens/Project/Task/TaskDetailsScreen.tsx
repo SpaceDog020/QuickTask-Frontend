@@ -203,7 +203,7 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               raised
               name='trash'
               type='font-awesome-5'
-              color='black' />
+              color={Colors.error} />
           </TouchableOpacity>
         </View>
         <View>

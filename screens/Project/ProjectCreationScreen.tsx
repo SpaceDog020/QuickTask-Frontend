@@ -115,7 +115,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               disabled={isLoading || isSubmitting}
               style={{
                 position: "absolute",
-                top: Spacing * 2,
+                top: Spacing * 3,
                 left: -Spacing,
                 zIndex: 1,
               }}
@@ -133,7 +133,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
                 fontSize: FontSize.xLarge,
                 color: Colors.primary,
                 fontFamily: Font["poppins-bold"],
-                marginVertical: Spacing * 3,
+                marginTop: Spacing * 5,
                 marginHorizontal: Spacing * 3,
                 textAlign: "center",
               }}
@@ -144,6 +144,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           <View
             style={{
               marginVertical: Spacing * 1,
+              
             }}
           >
             <AppTextInput
@@ -158,6 +159,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               onChangeText={setProjectDescription}
               maxLength={30}
             />
+            
             <MultiSelect
               hideTags
               items={teamsData?.teams || []} // Utiliza los datos de los equipos
@@ -174,7 +176,7 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               selectedItemIconColor="#CCC"
               itemTextColor="#000"
               displayKey="name"
-              searchInputStyle={{ color: '#CCC' }}
+              searchInputStyle={{  color: '#CCC' }}
               submitButtonColor="#CCC"
               submitButtonText="Guardar Lista"
               noItemsText="No se encontraron equipos"
