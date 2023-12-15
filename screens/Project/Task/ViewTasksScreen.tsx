@@ -63,6 +63,19 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const filteredMyTasks = showMyTasks ? filteredTasks?.filter((task) => task.idUser === userId) : filteredTasks;
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Pendiente":
+        return "#FFD700"; // Color amarillo para el estado Pendiente
+      case "En Proceso":
+        return Colors.primary; // Color azul para el estado En Proceso
+      case "Completado":
+        return "green"; // Color verde para el estado Completado
+      default:
+        return Colors.primary; // Color por defecto o para otros estados
+    }
+  };  
+
   return (
     <SafeAreaView>
       <View>
@@ -131,7 +144,7 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ maxHeight: 600 }}>
+      <ScrollView style={{ maxHeight: 550 }}>
         {filteredMyTasks.length === 0 ? (
           <View
             style={{
@@ -222,27 +235,25 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
                   navigate("TaskDetails");
                 }}
                 style={{
-                  flex: 1,
+                  backgroundColor: getStatusColor(task.status), // Usando una función para obtener el color
+                  paddingVertical: Spacing * 1,
+                  paddingHorizontal: Spacing * 2,
+                  width: "100%",
+                  borderRadius: Spacing,
+                  shadowColor: Colors.primary,
+                  shadowOffset: {
+                    width: 0,
+                    height: Spacing,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: Spacing,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
-                <View
-                  style={{
-                    backgroundColor: Colors.primary,
-                    paddingVertical: Spacing * 1,
-                    paddingHorizontal: Spacing * 2,
-                    borderRadius: Spacing,
-                    shadowColor: Colors.primary,
-                    shadowOffset: {
-                      width: 0,
-                      height: Spacing,
-                    },
-                    shadowOpacity: 0.3,
-                    shadowRadius: Spacing,
-                    flexDirection: "column",  // Cambiado de "row" a "column"
-                    alignItems: "flex-start", // Cambiado de "center" a "flex-start"
-                    justifyContent: "center",
-                  }}
-                >
+                <View>
+                  {/* Nombre de la tarea */}
                   <Text
                     style={{
                       fontFamily: Font["poppins-bold"],
@@ -252,15 +263,28 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
                   >
                     {task.name}
                   </Text>
-                  <Text style={{
-                    fontFamily: Font["poppins-bold"],
-                    fontSize: FontSize.medium,
-                    color: Colors.onPrimary,
-                  }}
+                  {/* Asignación de la tarea */}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.medium,
+                    }}
                   >
                     {task.idUser ? "Con Asignación" : "Sin Asignación"}
                   </Text>
-
+                </View>
+                <View>
+                  {/* Estado de la tarea */}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.medium,
+                    }}
+                  >
+                    {task.status}
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>
