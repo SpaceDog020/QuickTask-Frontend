@@ -39,14 +39,14 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
             onPress: () => navigate('ViewTasks'),
         },
         {
-            label: 'Editar Proyecto',
-            icon: 'sliders-h',
-            onPress: () => navigate('EditProject'),
-        },
-        {
             label: 'Agregar Tarea',
             icon: 'tasks',
             onPress: () => navigate('TaskCreation'),
+        },
+        {
+            label: 'Editar Proyecto',
+            icon: 'sliders-h',
+            onPress: () => navigate('EditProject'),
         },
     ];
 
@@ -54,8 +54,8 @@ const ProjectDashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         'Ver Equipos': 'blue',
         'Agregar Equipos': 'blue',
         'Ver Backlog': 'royalblue',
-        'Editar Proyecto': 'royalblue',
-        'Agregar Tarea': 'dodgerblue',
+        'Agregar Tarea': 'royalblue',
+        'Editar Proyecto': 'dodgerblue',
     };
 
     return (

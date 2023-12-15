@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -17,39 +18,28 @@ import { useUserStore } from "../../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
 import AppTextInput from "../../../components/AppTextInput";
 import { useMutation } from "@apollo/client";
-import { UPDATEUSER } from "../../../graphql/mutations";
+import { DELETETEAM, UPDATETEAM } from "../../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../../hooks/useButtonTimeout";
+import Modal from "react-native-modal";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetails">;
-
-const capitalizeFirstLetter = (str: string) => {
-  const lowercasedStr = str.toLowerCase();
-  return lowercasedStr.charAt(0).toUpperCase() + lowercasedStr.slice(1);
-};
 
 const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editable, setEditable] = useState(false);
+  const { teamId } = useUserStore();
+  const { teamName: oldTeamName, setTeamName: setOldTeamName } = useUserStore();
+  const [newTeamName, setNewTeamName] = useState(oldTeamName);
+  const { teamDescription: oldTeamDescription, setTeamDescription: setOldTeamDescription } = useUserStore();
+  const [newTeamDescription, setNewTeamDescription] = useState(oldTeamDescription);
+  const { userId } = useUserStore();
 
-  const {taskId} = useUserStore();
-  const {taskIdCreator} = useUserStore();
-  const { taskName: initialTaskName , setTaskName: setInitialTaskName} = useUserStore();
-  const { taskDescription: initialTaskDescription, setTaskDescription: setInitialTaskDescription } = useUserStore();
-  const { taskIdUserResponsable: initialIdUserInCharge, setTaskIdUserResponsable: setInitialIdUserInCharge } = useUserStore();
+  const [updateTeam] = useMutation(UPDATETEAM);
+  const [deleteTeam] = useMutation(DELETETEAM);
 
-  
-  const [taskName, setTaskName] = useState(initialTaskName);
-  const [taskDescription, setTaskDescription] = useState(initialTaskDescription);
-  const [taskIdUserResponsable, setTaskIdUserResponsable] = useState(initialIdUserInCharge);
-
-  const [newTaskName, setNewTaskName] = useState(taskName);
-  const [newTaskDescription, setNewTaskDescription] = useState(taskDescription);
-  const [newTaskIdUserResponsable, setNewTaskIdUserResponsable] = useState(taskIdUserResponsable);
-  //const [updateTask] = useMutation(UPDATETASK);
-
-  
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   useButtonTimeout(
     () => {
@@ -61,22 +51,53 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleButtonPress = () => {
     if (editable) {
-      // Reset the text input values to the current task data
-      if (newTaskName !== taskName || newTaskDescription !== taskDescription || newTaskIdUserResponsable !== taskIdUserResponsable) {
-        setNewTaskName(taskName);
-        setNewTaskDescription(taskDescription);
-        setNewTaskIdUserResponsable(taskIdUserResponsable);
-
+      // Reset the text input values to the current user data
+      if (newTeamName !== oldTeamName || newTeamDescription !== oldTeamDescription) {
+        setNewTeamName(oldTeamName);
+        setNewTeamDescription(oldTeamDescription);
       }
     }
 
     setEditable(!editable);
-    
+  };
+
+  const handleDeleteTeam = async () => {
+    try {
+      setIsLoading(true);
+      // Call the updateUser mutation with the updated user data
+      await deleteTeam({
+        variables: {
+          idTeam: teamId,
+          idCreator: userId,
+        },
+      });
+      // Update the user data in your local state
+      setIsLoading(false);
+      Toast.show({
+        type: "success",
+        text1: "Equipo eliminado",
+        text2: "Se ha eliminado el equipo correctamente",
+        position: "bottom",
+        visibilityTime: 3000, // Duration in milliseconds
+        autoHide: true,
+      });
+      navigate("Dashboard");
+    } catch (e) {
+      setIsLoading(false);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        position: "bottom",
+        visibilityTime: 3000, // Duration in milliseconds
+        autoHide: true,
+      });
+    }
   };
 
   const handleSaveChanges = async () => {
     setIsSubmitting(true);
-    if (newTaskName === "" || newTaskDescription === "") {
+    if (newTeamName === "" || newTeamDescription === "") {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -89,12 +110,17 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
       try {
         setIsLoading(true);
         // Call the updateUser mutation with the updated user data
-        
+        await updateTeam({
+          variables: {
+            idTeam: teamId,
+            idUser: userId,
+            name: newTeamName,
+            description: newTeamDescription,
+          },
+        });
         // Update the user data in your local state
-        setTaskName(newTaskName);
-        setTaskDescription(newTaskDescription);
-        setTaskIdUserResponsable(newTaskIdUserResponsable);
-
+        setOldTeamName(newTeamName);
+        setOldTeamDescription(newTeamDescription);
         setIsLoading(false);
         Toast.show({
           type: "success",
@@ -144,7 +170,7 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               left: -Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("Dashboard")}
+            onPress={() => navigate("TeamDashboard")}
           >
             <Icon
               raised
@@ -161,7 +187,7 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               marginVertical: Spacing * 2,
             }}
           >
-            Tu perfil
+            Editar Equipo
           </Text>
           <TouchableOpacity
             disabled={isLoading || isSubmitting}
@@ -171,7 +197,7 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               right: -Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("DeleteUser")}
+            onPress={() => setDeleteModalVisible(true)}
           >
             <Icon
               raised
@@ -192,7 +218,7 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           >
             Nombre
           </Text>
-          <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newTaskName)} editable={editable} onChangeText={setTaskName} />
+          <AppTextInput placeholder="Nombre" value={newTeamName} editable={editable} onChangeText={setNewTeamName} />
           <Text
             style={{
               fontFamily: Font["poppins-semiBold"],
@@ -202,10 +228,9 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               alignSelf: "flex-start",
             }}
           >
-            Apellido
+            Descripcion
           </Text>
-          <AppTextInput placeholder="Descripción" value={capitalizeFirstLetter(newTaskDescription)} editable={editable} onChangeText={setNewTaskDescription} />
-          
+          <AppTextInput placeholder="Descripción" value={newTeamDescription} editable={editable} onChangeText={setNewTeamDescription} />
         </View>
 
         <TouchableOpacity
@@ -272,41 +297,59 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          onPress={() => navigate("ChangePassword")}
-          style={{
-            padding: Spacing * 1,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
+        <Modal
+          isVisible={isDeleteModalVisible}
+          onBackdropPress={() => setDeleteModalVisible(false)}
         >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Cambiar Contraseña
-          </Text>
-        </TouchableOpacity>
-
+          <View style={{ backgroundColor: 'white', padding: 20 }}>
+            <Text style={{ fontSize: 20, fontFamily: Font["poppins-bold"], marginBottom: 20 }}>
+              ¿Estás seguro de que quieres eliminar el equipo?
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+              <TouchableOpacity
+                onPress={() => setDeleteModalVisible(false)}
+                style={{
+                  backgroundColor: Colors.primary,
+                  padding: Spacing * 1,
+                  borderRadius: Spacing,
+                  shadowColor: Colors.primary,
+                  shadowOffset: {
+                    width: 0,
+                    height: Spacing,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: Spacing,
+                }}
+              >
+                <Text style={{ fontFamily: Font["poppins-bold"], color: Colors.onPrimary, fontSize: FontSize.large }}>
+                  Cancelar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleDeleteTeam}
+                style={{
+                  backgroundColor: Colors.error,
+                  padding: Spacing * 1,
+                  borderRadius: Spacing,
+                  shadowColor: Colors.error,
+                  shadowOffset: {
+                    width: 0,
+                    height: Spacing,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: Spacing,
+                }}
+              >
+                <Text style={{ fontFamily: Font["poppins-bold"], color: Colors.onPrimary, fontSize: FontSize.large }}>
+                  Eliminar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
-
 };
 
 export default TaskDetails;
-
-const styles = StyleSheet.create({});

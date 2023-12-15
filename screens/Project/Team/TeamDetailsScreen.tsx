@@ -69,41 +69,41 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     const kickTeam = async (idProject, idTeam, idUsers) => {
         setIsSubmitting(true);
         try {
-          setIsLoading(true);
-          const { data } = await removeTeamProjectMutation({
-            variables: {
-                idProject: idProject,
-                idTeam: idTeam,
-                idUsers: idUsers
-            },
-          });
-          setIsLoading(false);
-          if (data && data.removeTeamProject) {
-            Toast.show({
-              type: "success",
-              text1: "Éxito",
-              text2: "Equipo expulsado",
-              position: "bottom",
-              visibilityTime: 1500, // Duration in milliseconds
-              autoHide: true,
+            setIsLoading(true);
+            const { data } = await removeTeamProjectMutation({
+                variables: {
+                    idProject: idProject,
+                    idTeam: idTeam,
+                    idUsers: idUsers
+                },
             });
-            refetchTeams();
-            setProjectTeamsIds(projectTeamsIds.filter((teamId) => teamId !== idTeam));
-            setIsSubmitting(false);
-          }
+            setIsLoading(false);
+            if (data && data.removeTeamProject) {
+                Toast.show({
+                    type: "success",
+                    text1: "Éxito",
+                    text2: "Equipo expulsado",
+                    position: "bottom",
+                    visibilityTime: 1500, // Duration in milliseconds
+                    autoHide: true,
+                });
+                refetchTeams();
+                setProjectTeamsIds(projectTeamsIds.filter((teamId) => teamId !== idTeam));
+                setIsSubmitting(false);
+            }
         } catch (error) {
-          setIsSubmitting(false);
-          setIsLoading(false);
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: error.message,
-            position: "bottom",
-            visibilityTime: 1500, // Duration in milliseconds
-            autoHide: true,
-          });
+            setIsSubmitting(false);
+            setIsLoading(false);
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.message,
+                position: "bottom",
+                visibilityTime: 1500, // Duration in milliseconds
+                autoHide: true,
+            });
         }
-      };
+    };
 
     useEffect(() => {
         refetchTeams();
@@ -241,6 +241,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                     <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, elevation: 5, width: '80%', maxHeight: '80%' }}>
                         {modalUsers.map((user) => (
                             <TouchableOpacity
+                                disabled={true}
                                 key={user.id}
                                 style={{
                                     backgroundColor: Colors.primary,
@@ -252,6 +253,9 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                                     shadowOffset: { width: 0, height: Spacing },
                                     shadowOpacity: 0.3,
                                     shadowRadius: Spacing,
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
                                 }}
                             >
                                 <Text

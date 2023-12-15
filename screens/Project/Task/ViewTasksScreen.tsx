@@ -37,8 +37,6 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { setTaskIdUserResponsable } = useUserStore();
   const { setTaskIdCreator } = useUserStore();
 
-  console.log(projectId);
-
   const { data: taskData, refetch: refetchTasks } = useQuery(GETTASKSBYPROJECTID, {
     variables: {
       projectId: projectId,
@@ -48,7 +46,6 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
   const refetchTasksData = async () => {
     await refetchTasks();
     setTasks(taskData?.tasksByProjectId);
-    console.log(taskData?.tasksByProjectID);
   };
 
   useEffect(() => {
