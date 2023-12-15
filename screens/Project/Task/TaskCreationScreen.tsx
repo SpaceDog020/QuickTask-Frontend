@@ -16,7 +16,6 @@ import { Icon } from "@rneui/themed";
 import { CREATETASK } from "../../../graphql/mutations";
 import { Picker } from "@react-native-picker/picker";
 import { GETUSERSTEAMSIDS } from "../../../graphql/queries";
-import GradientWrapper from "../../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskCreation">;
 
@@ -131,47 +130,63 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <GradientWrapper>
-      <SafeAreaView>
+    <SafeAreaView>
+      <View
+        style={{
+          padding: Spacing * 2,
+        }}
+      >
         <View
           style={{
-            padding: Spacing * 2,
+            alignItems: "center",
           }}
         >
-          <View
+          <TouchableOpacity
             style={{
-              alignItems: "center",
+              position: "absolute",
+              top: Spacing * 2,
+              left: -Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("ProjectDashboard")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: FontSize.xLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              marginVertical: Spacing * 3,
+              marginHorizontal: Spacing * 5,
+              textAlign: "center",
             }}
           >
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                top: Spacing * 2,
-                left: -Spacing,
-                zIndex: 1,
-              }}
-              onPress={() => navigate("ProjectDashboard")}
-            >
-              <Icon
-                raised
-                size={25}
-                name='arrow-back'
-                type='Ionicons'
-                color={Colors.primary} />
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: FontSize.xLarge,
-                color: Colors.primary,
-                fontFamily: Font["poppins-bold"],
-                marginVertical: Spacing * 3,
-                marginHorizontal: Spacing * 5,
-                textAlign: "center",
-              }}
-            >
-              Crea tu tarea
-            </Text>
-          </View>
+            Crea tu tarea
+          </Text>
+        </View>
+        <View
+          style={{
+            marginVertical: Spacing * 1,
+          }}
+        >
+          <AppTextInput
+            placeholder="Nombre de la tarea"
+            value={taskName}
+            onChangeText={setTaskName}
+            maxLength={20}
+          />
+          <AppTextInput
+            placeholder="Descripción de la tarea"
+            value={taskDescription}
+            onChangeText={setTaskDescription}
+            maxLength={30}
+          />
           <View
             style={{
               marginVertical: Spacing * 1,
@@ -265,42 +280,41 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             ))}
           </Picker>
         </View>
-        <View>
-          <TouchableOpacity
-            onPress={() => handleTeamCreation()}
-            disabled={isLoading || isSubmitting}
-            style={{
-              padding: Spacing * 2,
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-              marginVertical: Spacing * 1,
-              borderRadius: Spacing,
-              shadowColor: Colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: Spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: Spacing,
-            }}
-          >
-            {isLoading || isSubmitting ? (
-              <ActivityIndicator size="large" color={Colors.primary} />
-            ) : (
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  textAlign: "center",
-                  fontSize: FontSize.large,
-                }}
-              >
-                Crear Tarea
-              </Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </GradientWrapper>
+
+        <TouchableOpacity
+          onPress={() => handleTeamCreation()}
+          disabled={isLoading || isSubmitting}
+          style={{
+            padding: Spacing * 2,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+            marginVertical: Spacing * 1,
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Crear Tarea
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

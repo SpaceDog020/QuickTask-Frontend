@@ -1,14 +1,14 @@
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
-  ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  TextInput,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import Spacing from "../../../constants/Spacing";
 import FontSize from "../../../constants/FontSize";
 import Colors from "../../../constants/Colors";
@@ -26,29 +26,54 @@ import { Icon } from "@rneui/themed";
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTasks">;
 
 const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const { projectId } = useUserStore();
+  const { projectId, userId } = useUserStore();
   const [tasks, setTasks] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [showMyTasks, setShowMyTasks] = useState(false);
 
-  console.log(projectId);
+  const { setTaskId } = useUserStore();
+  const { setTaskName } = useUserStore();
+  const { setTaskDescription } = useUserStore();
+  const { setTaskIdUserResponsable } = useUserStore();
+  const { setTaskIdCreator } = useUserStore();
+  const { setTaskStatus } = useUserStore();
+  const { setTaskStartDate } = useUserStore();
+  const { setTaskFinishDate } = useUserStore();
+  const { setTaskComments } = useUserStore();
 
-  const { data: taskData , refetch : refetchTasks} = useQuery(GETTASKSBYPROJECTID, {
-      variables: {
-          projectId: projectId,
-      },
+  const { data: taskData, refetch: refetchTasks } = useQuery(GETTASKSBYPROJECTID, {
+    variables: {
+      projectId: projectId,
+    },
   });
-  
+
   const refetchTasksData = async () => {
-      await refetchTasks();
-      setTasks(taskData?.tasksByProjectId);
-      console.log(taskData?.tasksByProjectId);
-    };
-  
+    await refetchTasks();
+    setTasks(taskData?.tasksByProjectId);
+  };
+
   useEffect(() => {
-  refetchTasksData();
+    refetchTasksData();
   }, [taskData]);
 
-  
+  const filteredTasks = tasks?.filter((task) =>
+    task.name.toLowerCase().includes(searchInput.toLowerCase())
+  ) || [];
 
+  const filteredMyTasks = showMyTasks ? filteredTasks?.filter((task) => task.idUser === userId) : filteredTasks;
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Pendiente":
+        return "#FFD700"; // Color amarillo para el estado Pendiente
+      case "En Proceso":
+        return Colors.primary; // Color azul para el estado En Proceso
+      case "Completado":
+        return "green"; // Color verde para el estado Completado
+      default:
+        return Colors.primary; // Color por defecto o para otros estados
+    }
+  };  
 
   return (
     <SafeAreaView>
@@ -72,7 +97,8 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
               size={25}
               name='arrow-back'
               type='Ionicons'
-              color={Colors.primary} />
+              color={Colors.primary}
+            />
           </TouchableOpacity>
           <Text
             style={{
@@ -87,8 +113,38 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
         </View>
       </View>
 
-      <ScrollView style={{ maxHeight: 600 }}>
-        {tasks?.length === 0 ? (
+      <View style={{ flexDirection: "row", justifyContent: "space-between", padding: Spacing }}>
+        <TextInput
+          style={{
+            height: 40,
+            borderColor: Colors.primary,
+            borderWidth: 1,
+            borderRadius: Spacing,
+            paddingHorizontal: Spacing,
+            marginBottom: Spacing,
+            flex: 1,
+          }}
+          placeholder="Buscar tarea..."
+          value={searchInput}
+          onChangeText={(text) => setSearchInput(text)}
+        />
+
+        <TouchableOpacity
+          style={{
+            height: 40,
+            backgroundColor: showMyTasks ? Colors.disabled : Colors.primary,
+            borderRadius: Spacing,
+            padding: Spacing,
+            marginLeft: Spacing,
+          }}
+          onPress={() => setShowMyTasks(!showMyTasks)}
+        >
+          <Text style={{ color: Colors.onPrimary }}>Mis Tareas</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView style={{ maxHeight: 620 }}>
+        {filteredMyTasks.length === 0 ? (
           <View
             style={{
               paddingHorizontal: Spacing * 2,
@@ -102,7 +158,7 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
             </Text>
           </View>
         ) : (
-          tasks?.map((task) => (
+          filteredMyTasks.map((task) => (
             <View
               key={task.id}
               style={{
@@ -113,9 +169,20 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}
             >
               <TouchableOpacity
-                
+                onPress={() => {
+                  setTaskId(task.id);
+                  setTaskIdCreator(task.idCreator);
+                  setTaskName(task.name);
+                  setTaskDescription(task.description);
+                  setTaskIdUserResponsable(task.idUser);
+                  setTaskStatus(task.status);
+                  setTaskStartDate(task.startDate);
+                  setTaskFinishDate(task.finishDate);
+                  setTaskComments(task.comment);
+                  navigate("TaskDetails");
+                }}
                 style={{
-                  backgroundColor: Colors.primary,
+                  backgroundColor: getStatusColor(task.status), // Usando una función para obtener el color
                   paddingVertical: Spacing * 1,
                   paddingHorizontal: Spacing * 2,
                   width: "100%",
@@ -129,18 +196,43 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
                   shadowRadius: Spacing,
                   flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: "space-between",
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    fontSize: FontSize.large,
-                  }}
-                >
-                  {task.name}
-                </Text>
+                <View>
+                  {/* Nombre de la tarea */}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.large,
+                    }}
+                  >
+                    {task.name}
+                  </Text>
+                  {/* Asignación de la tarea */}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.medium,
+                    }}
+                  >
+                    {task.idUser ? "Con Asignación" : "Sin Asignación"}
+                  </Text>
+                </View>
+                <View>
+                  {/* Estado de la tarea */}
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.medium,
+                    }}
+                  >
+                    {task.status}
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
           ))
@@ -148,7 +240,6 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
       </ScrollView>
     </SafeAreaView>
   );
-
 };
 
 export default ViewTasks;

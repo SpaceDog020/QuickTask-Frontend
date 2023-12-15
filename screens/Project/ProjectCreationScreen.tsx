@@ -22,7 +22,6 @@ import useButtonTimeout from "../../hooks/useButtonTimeout";
 import Toast from "react-native-toast-message";
 import { useFocusEffect } from "@react-navigation/native";
 import MultiSelect from 'react-native-multiple-select';
-import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProjectCreation">;
 
@@ -99,127 +98,123 @@ const ProjectCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <GradientWrapper>
-      <SafeAreaView>
+    <SafeAreaView>
+      <View
+        style={{
+          padding: Spacing * 2,
+        }}
+      >
         <View
           style={{
-            padding: Spacing * 2,
+            alignItems: "center",
           }}
         >
-          <View
-            style={{
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
-              disabled={isLoading || isSubmitting}
-              style={{
-                position: "absolute",
-                top: Spacing * 3,
-                left: -Spacing,
-                zIndex: 1,
-              }}
-              onPress={() => navigate("Dashboard")}
-            >
-              <Icon
-                raised
-                size={25}
-                name='arrow-back'
-                type='Ionicons'
-                color={Colors.primary} />
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: FontSize.xLarge,
-                color: Colors.primary,
-                fontFamily: Font["poppins-bold"],
-                marginTop: Spacing * 5,
-                marginHorizontal: Spacing * 3,
-                textAlign: "center",
-              }}
-            >
-              Crea tu proyecto
-            </Text>
-          </View>
-          <View
-            style={{
-              marginVertical: Spacing * 1,
-              
-            }}
-          >
-            <AppTextInput
-              placeholder="Nombre del proyecto"
-              value={projectName}
-              onChangeText={setProjectName}
-              maxLength={20}
-            />
-            <AppTextInput
-              placeholder="Descripción del proyecto"
-              value={projectDescription}
-              onChangeText={setProjectDescription}
-              maxLength={30}
-            />
-            
-            <MultiSelect
-              hideTags
-              items={teamsData?.teams || []} // Utiliza los datos de los equipos
-              uniqueKey="id"
-              ref={(component) => {  }}
-              onSelectedItemsChange={(items) => setSelectedTeams(items)} // Guarda las IDs seleccionadas
-              selectedItems={selectedTeams}
-              selectText="Escoger Equipos (Opcional)"
-              searchInputPlaceholderText="Buscar Equipos..."
-              tagRemoveIconColor="#CCC"
-              tagBorderColor="#CCC"
-              tagTextColor="#CCC"
-              selectedItemTextColor="#CCC"
-              selectedItemIconColor="#CCC"
-              itemTextColor="#000"
-              displayKey="name"
-              searchInputStyle={{  color: '#CCC' }}
-              submitButtonColor="#CCC"
-              submitButtonText="Guardar Lista"
-              noItemsText="No se encontraron equipos"
-              selectedText="seleccionado/s"  
-            />
-
-          </View>
-
           <TouchableOpacity
-            onPress={() => handleProjectCreation()}
             disabled={isLoading || isSubmitting}
             style={{
-              padding: Spacing * 2,
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-              marginVertical: Spacing * 1,
-              borderRadius: Spacing,
-              shadowColor: Colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: Spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: Spacing,
+              position: "absolute",
+              top: Spacing * 2,
+              left: -Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("Dashboard")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: FontSize.xLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              marginVertical: Spacing * 3,
+              marginHorizontal: Spacing * 3,
+              textAlign: "center",
             }}
           >
-            {isLoading || isSubmitting ? (
-              <ActivityIndicator size="large" color={Colors.primary} />
-            ) : (
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  textAlign: "center",
-                  fontSize: FontSize.large,
-                }}
-              >
-                Crear Proyecto
-              </Text>
-            )}
-          </TouchableOpacity>
+            Crea tu proyecto
+          </Text>
         </View>
-      </SafeAreaView>
-    </GradientWrapper>
+        <View
+          style={{
+            marginVertical: Spacing * 1,
+          }}
+        >
+          <AppTextInput
+            placeholder="Nombre del proyecto"
+            value={projectName}
+            onChangeText={setProjectName}
+            maxLength={20}
+          />
+          <AppTextInput
+            placeholder="Descripción del proyecto"
+            value={projectDescription}
+            onChangeText={setProjectDescription}
+            maxLength={30}
+          />
+          <MultiSelect
+            hideTags
+            items={teamsData?.teams || []} // Utiliza los datos de los equipos
+            uniqueKey="id"
+            ref={(component) => {  }}
+            onSelectedItemsChange={(items) => setSelectedTeams(items)} // Guarda las IDs seleccionadas
+            selectedItems={selectedTeams}
+            selectText="Escoger Equipos (Opcional)"
+            searchInputPlaceholderText="Buscar Equipos..."
+            tagRemoveIconColor="#CCC"
+            tagBorderColor="#CCC"
+            tagTextColor="#CCC"
+            selectedItemTextColor="#CCC"
+            selectedItemIconColor="#CCC"
+            itemTextColor="#000"
+            displayKey="name"
+            searchInputStyle={{ color: '#CCC' }}
+            submitButtonColor="#CCC"
+            submitButtonText="Guardar Lista"
+            noItemsText="No se encontraron equipos"
+            selectedText="seleccionado/s"  
+          />
+
+        </View>
+
+        <TouchableOpacity
+          onPress={() => handleProjectCreation()}
+          disabled={isLoading || isSubmitting}
+          style={{
+            padding: Spacing * 2,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+            marginVertical: Spacing * 1,
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Crear Proyecto
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

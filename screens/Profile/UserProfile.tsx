@@ -20,7 +20,6 @@ import { useMutation } from "@apollo/client";
 import { UPDATEUSER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
-import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
@@ -145,117 +144,181 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <GradientWrapper>
-      <SafeAreaView>
+    <SafeAreaView>
+      <View
+        style={{
+          padding: Spacing * 2,
+          marginTop: Spacing * 2,
+        }}
+      >
         <View
           style={{
-            padding: Spacing * 2,
-            marginTop: Spacing * 2,
+            alignItems: "center",
           }}
         >
-          <View
-            style={{
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
-              disabled={isLoading || isSubmitting}
-              style={{
-                position: "absolute",
-                top: Spacing * 1,
-                left: -Spacing,
-                zIndex: 1,
-              }}
-              onPress={() => navigate("Dashboard")}
-            >
-              <Icon
-                raised
-                size={25}
-                name='arrow-back'
-                type='Ionicons'
-                color={Colors.primary} />
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: FontSize.xLarge,
-                color: Colors.primary,
-                fontFamily: Font["poppins-bold"],
-                marginVertical: Spacing * 2,
-              }}
-            >
-              Tu perfil
-            </Text>
-            <TouchableOpacity
-              disabled={isLoading || isSubmitting}
-              style={{
-                position: "absolute",
-                top: Spacing * 1,
-                right: -Spacing,
-                zIndex: 1,
-              }}
-              onPress={() => navigate("DeleteUser")}
-            >
-              <Icon
-                raised
-                name='trash'
-                type='font-awesome-5'
-                color={Colors.error} />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text
-              style={{
-                fontFamily: Font["poppins-semiBold"],
-                fontSize: FontSize.medium,
-                marginHorizontal: 5,
-                maxWidth: "60%",
-                alignSelf: "flex-start",
-              }}
-            >
-              Nombre
-            </Text>
-            <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newName)} maxLength={20} editable={editable} onChangeText={setNewName} />
-            <Text
-              style={{
-                fontFamily: Font["poppins-semiBold"],
-                fontSize: FontSize.medium,
-                marginHorizontal: 5,
-                maxWidth: "60%",
-                alignSelf: "flex-start",
-              }}
-            >
-              Apellido
-            </Text>
-            <AppTextInput placeholder="Apellido" value={capitalizeFirstLetter(newLastName)} maxLength={20} editable={editable} onChangeText={setNewLastName} />
-            <Text
-              style={{
-                fontFamily: Font["poppins-semiBold"],
-                fontSize: FontSize.medium,
-                marginHorizontal: 5,
-                maxWidth: "60%",
-                alignSelf: "flex-start",
-              }}
-            >
-              Correo
-            </Text>
-            <AppTextInput placeholder="Correo" value={newEmail.toLowerCase()} maxLength={40} editable={editable} onChangeText={setNewEmail} />
-            <Text
-              style={{
-                fontFamily: Font["poppins-semiBold"],
-                fontSize: FontSize.medium,
-                marginHorizontal: 5,
-                maxWidth: "60%",
-                alignSelf: "flex-start",
-              }}
-            >
-              Rol
-            </Text>
-            <AppTextInput placeholder="Ingrese su rol" value={newRole} maxLength={20} editable={editable} onChangeText={setNewRole} />
-          </View>
-
           <TouchableOpacity
             disabled={isLoading || isSubmitting}
-            onPress={handleButtonPress}
+            style={{
+              position: "absolute",
+              top: Spacing * 1,
+              left: -Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("Dashboard")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: FontSize.xLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              marginVertical: Spacing * 2,
+            }}
+          >
+            Tu perfil
+          </Text>
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 1,
+              right: -Spacing,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("DeleteUser")}
+          >
+            <Icon
+              raised
+              name='trash'
+              type='font-awesome-5'
+              color='black' />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Nombre
+          </Text>
+          <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newName)} editable={editable} onChangeText={setNewName} />
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Apellido
+          </Text>
+          <AppTextInput placeholder="Apellido" value={capitalizeFirstLetter(newLastName)} editable={editable} onChangeText={setNewLastName} />
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Correo
+          </Text>
+          <AppTextInput placeholder="Correo" value={newEmail.toLowerCase()} editable={editable} onChangeText={setNewEmail} />
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.medium,
+              marginHorizontal: 5,
+              maxWidth: "60%",
+              alignSelf: "flex-start",
+            }}
+          >
+            Rol
+          </Text>
+          <AppTextInput placeholder="Rol" value={newRole} editable={editable} onChangeText={setNewRole} />
+        </View>
+
+        <TouchableOpacity
+          disabled={isLoading || isSubmitting}
+          onPress={handleButtonPress}
+          style={{
+            padding: Spacing * 1,
+            backgroundColor: Colors.primary,
+            marginVertical: Spacing * 1,
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.onPrimary,
+              textAlign: "center",
+              fontSize: FontSize.large,
+            }}
+          >
+            {editable ? "Cancelar" : "Editar Datos"}
+          </Text>
+        </TouchableOpacity>
+
+        {editable && (
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            onPress={handleSaveChanges}
+            style={{
+              padding: Spacing * 1,
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+              marginVertical: Spacing * 1,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Guardar
+              </Text>
+            )}
+          </TouchableOpacity>
+        )}
+
+        {!editable && (
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            onPress={() => navigate("ChangePassword")}
             style={{
               padding: Spacing * 1,
               backgroundColor: Colors.primary,
@@ -278,78 +341,12 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
                 fontSize: FontSize.large,
               }}
             >
-              {editable ? "Cancelar" : "Editar Datos"}
+              Cambiar Contraseña
             </Text>
           </TouchableOpacity>
-
-          {editable && (
-            <TouchableOpacity
-              disabled={isLoading || isSubmitting}
-              onPress={handleSaveChanges}
-              style={{
-                padding: Spacing * 1,
-                backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-                marginVertical: Spacing * 1,
-                borderRadius: Spacing,
-                shadowColor: Colors.primary,
-                shadowOffset: {
-                  width: 0,
-                  height: Spacing,
-                },
-                shadowOpacity: 0.3,
-                shadowRadius: Spacing,
-              }}
-            >
-              {isLoading || isSubmitting ? (
-                <ActivityIndicator size="large" color={Colors.primary} />
-              ) : (
-                <Text
-                  style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    textAlign: "center",
-                    fontSize: FontSize.large,
-                  }}
-                >
-                  Guardar
-                </Text>
-              )}
-            </TouchableOpacity>
-          )}
-
-          {!editable && (
-            <TouchableOpacity
-              disabled={isLoading || isSubmitting}
-              onPress={() => navigate("ChangePassword")}
-              style={{
-                padding: Spacing * 1,
-                backgroundColor: Colors.primary,
-                marginVertical: Spacing * 1,
-                borderRadius: Spacing,
-                shadowColor: Colors.primary,
-                shadowOffset: {
-                  width: 0,
-                  height: Spacing,
-                },
-                shadowOpacity: 0.3,
-                shadowRadius: Spacing,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  textAlign: "center",
-                  fontSize: FontSize.large,
-                }}
-              >
-                Cambiar Contraseña
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </SafeAreaView>
-    </GradientWrapper>
+        )}
+      </View>
+    </SafeAreaView>
   );
 
 };

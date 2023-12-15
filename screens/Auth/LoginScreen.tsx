@@ -132,7 +132,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               disabled={isLoading || isSubmitting}
               style={{
                 position: "absolute",
-                top: Spacing * 2,
+                top: Spacing * 1.5,
                 left: -Spacing,
                 zIndex: 1,
               }}
@@ -154,7 +154,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                 textAlign: "center",
               }}
             >
-              Inicia Sesión
+              Inicia sesión
             </Text>
             <Text
               style={{

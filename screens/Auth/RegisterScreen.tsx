@@ -18,7 +18,6 @@ import { REGISTER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import { Icon } from "@rneui/themed";
-import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
@@ -122,131 +121,129 @@ const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <GradientWrapper>
-      <SafeAreaView>
+    <SafeAreaView>
+      <View
+        style={{
+          padding: Spacing * 2,
+        }}
+      >
         <View
           style={{
-            padding: Spacing * 2,
+            alignItems: "center",
           }}
         >
-          <View
-            style={{
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: Spacing * 2,
-              left: -Spacing,
-              zIndex: 1,
-            }}
-              onPress={() => navigate("Welcome")}
-            >
-              <Icon
-                raised
-                size={25}
-                name='arrow-back'
-                type='Ionicons'
-                color={Colors.primary}/>
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: FontSize.xLarge,
-                color: Colors.primary,
-                fontFamily: Font["poppins-bold"],
-                marginVertical: Spacing * 3,
-                marginHorizontal: Spacing * 5,
-                textAlign: "center",
-              }}
-            >
-              Crea tu nueva cuenta
-            </Text>
-          </View>
-          <View>
-            <AppTextInput
-              placeholder="Nombre"
-              value={capitalizeFirstLetter(name)}
-              onChangeText={setName}
-              maxLength={20}
-            />
-            <AppTextInput
-              placeholder="Apellido"
-              value={capitalizeFirstLetter(lastName)}
-              onChangeText={setlastName}
-              maxLength={20}
-            />
-            <AppTextInput
-              placeholder="Correo"
-              keyboardType="email-address"
-              autoComplete="email"
-              value={email.toLowerCase()}
-              onChangeText={setEmail}
-              maxLength={40}
-            />
-            <AppTextInput
-              placeholder="Contraseña"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              maxLength={20}
-            />
-          </View>
-
           <TouchableOpacity
-            onPress={handleRegister}
-            disabled={isLoading || isSubmitting}
-            style={{
-              padding: Spacing * 2,
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-              marginVertical: Spacing * 1,
-              borderRadius: Spacing,
-              shadowColor: Colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: Spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: Spacing,
-            }}
-            // Disable the button when submitting
+          style={{
+            position: "absolute",
+            top: Spacing * 2,
+            left: -Spacing,
+            zIndex: 1,
+          }}
+            onPress={() => navigate("Welcome")}
           >
-            {isLoading || isSubmitting ? (
-              <ActivityIndicator size="large" color={Colors.primary} />
-            ) : (
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  textAlign: "center",
-                  fontSize: FontSize.large,
-                }}
-              >
-                Crear Cuenta
-              </Text>
-            )}
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary}/>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigate("Login")}
-            disabled={isLoading || isSubmitting}
+          <Text
             style={{
-              padding: Spacing,
+              fontSize: FontSize.xLarge,
+              color: Colors.primary,
+              fontFamily: Font["poppins-bold"],
+              marginVertical: Spacing * 3,
+              marginHorizontal: Spacing * 5,
+              textAlign: "center",
             }}
           >
-            <Text
-              style={{
-                fontFamily: Font["poppins-bold"],
-                color: Colors.text,
-                textAlign: "center",
-                fontSize: FontSize.medium,
-              }}
-            >
-              Ya tengo una cuenta
-            </Text>
-          </TouchableOpacity>
+            Crea tu nueva cuenta
+          </Text>
         </View>
-      </SafeAreaView>
-    </GradientWrapper>
+        <View>
+          <AppTextInput
+            placeholder="Nombre"
+            value={capitalizeFirstLetter(name)}
+            onChangeText={setName}
+            maxLength={20}
+          />
+          <AppTextInput
+            placeholder="Apellido"
+            value={capitalizeFirstLetter(lastName)}
+            onChangeText={setlastName}
+            maxLength={20}
+          />
+          <AppTextInput
+            placeholder="Correo"
+            keyboardType="email-address"
+            autoComplete="email"
+            value={email.toLowerCase()}
+            onChangeText={setEmail}
+            maxLength={40}
+          />
+          <AppTextInput
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            maxLength={20}
+          />
+        </View>
+
+        <TouchableOpacity
+          onPress={handleRegister}
+          disabled={isLoading || isSubmitting}
+          style={{
+            padding: Spacing * 2,
+            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+            marginVertical: Spacing * 1,
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+          // Disable the button when submitting
+        >
+          {isLoading || isSubmitting ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Crear Cuenta
+            </Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigate("Login")}
+          disabled={isLoading || isSubmitting}
+          style={{
+            padding: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Font["poppins-bold"],
+              color: Colors.text,
+              textAlign: "center",
+              fontSize: FontSize.medium,
+            }}
+          >
+            Ya tengo una cuenta
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
