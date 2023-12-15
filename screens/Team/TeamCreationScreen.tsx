@@ -13,6 +13,7 @@ import { useUserStore } from "../../stores/useUserStore";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import { Icon } from "@rneui/themed";
+import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TeamCreation">;
 
@@ -82,99 +83,102 @@ const TeamCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-        }}
-      >
+    <GradientWrapper>
+      <SafeAreaView>
         <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: Spacing * 2,
-              left: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("Dashboard")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 3,
-              marginHorizontal: Spacing * 5,
-              textAlign: "center",
-            }}
-          >
-            Crea tu equipo
-          </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing * 1,
-          }}
-        >
-          <AppTextInput
-            placeholder="Nombre del equipo"
-            value={teamName}
-            onChangeText={setTeamName}
-            maxLength={20}
-          />
-          <AppTextInput
-            placeholder="Descripción del equipo."
-            value={teamDescription}
-            onChangeText={setTeamDescription}
-            maxLength={30}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={() => handleTeamCreation()}
-          disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing * 2,
-            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
           }}
         >
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                top: Spacing * 4,
+                left: -Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("Dashboard")}
+            >
+              <Icon
+                raised
+                size={25}
+                name='arrow-back'
+                type='Ionicons'
+                color={Colors.primary} />
+            </TouchableOpacity>
             <Text
               style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
                 fontFamily: Font["poppins-bold"],
-                color: Colors.onPrimary,
+                marginTop: Spacing * 5,
+                marginBottom: Spacing * 2,
+                marginHorizontal: Spacing * 5,
                 textAlign: "center",
-                fontSize: FontSize.large,
               }}
             >
-              Crear Equipo
+              Crea tu equipo
             </Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          </View>
+          <View
+            style={{
+              marginVertical: Spacing ,
+            }}
+          >
+            <AppTextInput
+              placeholder="Nombre del equipo"
+              value={teamName}
+              onChangeText={setTeamName}
+              maxLength={20}
+            />
+            <AppTextInput
+              placeholder="Descripción del equipo."
+              value={teamDescription}
+              onChangeText={setTeamDescription}
+              maxLength={40}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => handleTeamCreation()}
+            disabled={isLoading || isSubmitting}
+            style={{
+              padding: Spacing * 2,
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+              marginVertical: Spacing * 1,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Crear Equipo
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 

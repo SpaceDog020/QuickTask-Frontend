@@ -19,6 +19,7 @@ import { useMutation } from "@apollo/client";
 import { Icon } from "@rneui/themed";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
+import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "PassReset">;
 
@@ -69,103 +70,105 @@ const PassResetScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   }
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-        }}
-      >
+    <GradientWrapper>
+      <SafeAreaView>
         <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          style={{
-            position: "absolute",
-            top: Spacing * 2,
-            left: -Spacing,
-            zIndex: 1,
-          }}
-            onPress={() => navigate("Login")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary}/>
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 3,
-              textAlign: "center",
-            }}
-          >
-            Recuperar Contraseña
-          </Text>
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.large,
-              textAlign: "center",
-            }}
-          >
-            Ingresa el correo asociado a tu cuenta
-          </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing * 3,
-          }}
-        >
-          <AppTextInput
-            placeholder="Correo"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={() => handleRecovery(email)}
-          disabled={isSubmitting || isLoading}
           style={{
             padding: Spacing * 2,
-            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-            marginVertical: Spacing * 3,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
           }}
         >
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
-          <Text
+          <View
             style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
+              alignItems: "center",
             }}
           >
-            Recuperar contraseña
-          </Text>
-          )}
-        </TouchableOpacity>
-        
-      </View>
-    </SafeAreaView>
+            <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 2,
+              left: -Spacing,
+              zIndex: 1,
+            }}
+              onPress={() => navigate("Login")}
+            >
+              <Icon
+                raised
+                size={25}
+                name='arrow-back'
+                type='Ionicons'
+                color={Colors.primary}/>
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
+                fontFamily: Font["poppins-bold"],
+                marginVertical: Spacing * 3,
+                textAlign: "center",
+              }}
+            >
+              Recuperar{'\n'}Contraseña
+            </Text>
+            <Text
+              style={{
+                fontFamily: Font["poppins-semiBold"],
+                fontSize: FontSize.large,
+                textAlign: "center",
+              }}
+            >
+              Ingresa el correo asociado a tu cuenta
+            </Text>
+          </View>
+          <View
+            style={{
+              marginVertical: Spacing * 3,
+            }}
+          >
+            <AppTextInput
+              placeholder="Correo"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => handleRecovery(email)}
+            disabled={isSubmitting || isLoading}
+            style={{
+              padding: Spacing * 2,
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+              marginVertical: Spacing * 3,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+            <Text
+              style={{
+                fontFamily: Font["poppins-bold"],
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Recuperar contraseña
+            </Text>
+            )}
+          </TouchableOpacity>
+          
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 

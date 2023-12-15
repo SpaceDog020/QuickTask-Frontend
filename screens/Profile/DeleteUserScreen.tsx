@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import Toast from "react-native-toast-message";
+import GradientWrapper from "../../components/GradientWrapper";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "DeleteUser">;
@@ -119,71 +120,73 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          style={{
-            position: "absolute",
-            top: Spacing * 3.8,
-            left: Spacing * 0.3,
-            zIndex: 1,
-          }}
-          onPress={() => navigate("UserProfile")}
-        >
-          <Icon
-            raised
-            size={25}
-            name='arrow-back'
-            type='Ionicons'
-            color={Colors.primary} />
-        </TouchableOpacity>
-        <Text style={
-          styles.title
-        }>
-          Eliminar Usuario
-        </Text>
+    <GradientWrapper>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 5,
+              left: Spacing * 0.3,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("UserProfile")}
+          >
+            <Icon
+              raised
+              size={25}
+              name='arrow-back'
+              type='Ionicons'
+              color={Colors.primary} />
+          </TouchableOpacity>
+          <Text style={
+            styles.title
+          }>
+            Eliminar Usuario
+          </Text>
 
-        <Text
-          style={{
-            fontFamily: Font["poppins-semiBold"],
-            fontSize: FontSize.large,
-            textAlign: "center",
-            marginBottom: Spacing * 2
-          }}
-        >
-          ¿Estás seguro de que deseas eliminar tu cuenta de usuario?
-        </Text>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.large,
+              textAlign: "center",
+              marginBottom: Spacing * 2
+            }}
+          >
+            ¿Estás seguro de que deseas eliminar tu cuenta de usuario?
+          </Text>
 
-        <AppTextInput
-          placeholder="Contraseña actual"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <AppTextInput
+            placeholder="Contraseña actual"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-        <AppTextInput
-          placeholder="Repita la contraseña"
-          value={repeatPassword}
-          onChangeText={setRepeatPassword}
-          secureTextEntry
-        />
+          <AppTextInput
+            placeholder="Repita la contraseña"
+            value={repeatPassword}
+            onChangeText={setRepeatPassword}
+            secureTextEntry
+          />
 
-        <TouchableOpacity style={[
-          styles.button,
-          {
-            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-          },
-        ]}
-          onPress={handleDeleteUser} disabled={isLoading || isSubmitting}>
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
-            <Text style={styles.buttonText}>Eliminar Usuario</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <TouchableOpacity style={[
+            styles.button,
+            {
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+            },
+          ]}
+            onPress={handleDeleteUser} disabled={isLoading || isSubmitting}>
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text style={styles.buttonText}>Eliminar Usuario</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 
@@ -195,14 +198,14 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xLarge,
     color: Colors.primary,
     fontFamily: Font["poppins-bold"],
-    marginVertical: Spacing * 3,
+    marginVertical: Spacing * 4,
     marginHorizontal: Spacing * 4,
     textAlign: "center",
   },
   button: {
     backgroundColor: Colors.primary,
     padding: Spacing * 2,
-    marginVertical: Spacing * 7,
+    marginVertical: Spacing,
     borderRadius: Spacing,
   },
   buttonText: {

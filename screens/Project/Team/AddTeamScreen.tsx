@@ -21,6 +21,7 @@ import useButtonTimeout from "../../../hooks/useButtonTimeout";
 import Toast from "react-native-toast-message";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
+import GradientWrapper from "../../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AddTeam">;
 
@@ -105,105 +106,107 @@ const AddTeam: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-        }}
-      >
+    <GradientWrapper>
+      <SafeAreaView>
         <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            disabled={isLoading || isSubmitting}
-            style={{
-              position: "absolute",
-              top: Spacing * 2,
-              left: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("ProjectDashboard")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 3,
-              marginHorizontal: Spacing * 5,
-              textAlign: "center",
-            }}
-          >
-            Agregar Equipo al Proyecto
-          </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing * 1,
-          }}
-        >
-          <Picker
-            style={{
-              fontFamily: Font["poppins-regular"],
-              fontSize: FontSize.small,
-              padding: Spacing * 2,
-              backgroundColor: Colors.lightPrimary,
-              borderRadius: Spacing,
-              marginVertical: Spacing,
-            }}
-            selectedValue={idTeam}
-            onValueChange={(itemValue, itemIndex) => setIdTeam(itemValue)}
-          >
-            <Picker.Item style={{ fontFamily: Font["poppins-regular"] }} label="Selecciona un equipo" value={null} />
-            {filteredTeams?.map((team) => (
-              <Picker.Item key={team.id} label={team.name} value={team.id} />
-            ))}
-          </Picker>
-        </View>
-
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          onPress={handleAddTeam}
           style={{
             padding: Spacing * 2,
-            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
           }}
         >
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              disabled={isLoading || isSubmitting}
+              style={{
+                position: "absolute",
+                top: Spacing * 2,
+                left: -Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("ProjectDashboard")}
+            >
+              <Icon
+                raised
+                size={25}
+                name='arrow-back'
+                type='Ionicons'
+                color={Colors.primary} />
+            </TouchableOpacity>
             <Text
               style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
                 fontFamily: Font["poppins-bold"],
-                color: Colors.onPrimary,
+                marginVertical: Spacing * 3,
+                marginHorizontal: Spacing * 5,
                 textAlign: "center",
-                fontSize: FontSize.large,
               }}
             >
-              Agregar Equipo
+              Agregar Equipo al Proyecto
             </Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          </View>
+          <View
+            style={{
+              marginVertical: Spacing * 1,
+            }}
+          >
+            <Picker
+              style={{
+                fontFamily: Font["poppins-regular"],
+                fontSize: FontSize.small,
+                padding: Spacing * 2,
+                backgroundColor: Colors.lightPrimary,
+                borderRadius: Spacing,
+                marginVertical: Spacing,
+              }}
+              selectedValue={idTeam}
+              onValueChange={(itemValue, itemIndex) => setIdTeam(itemValue)}
+            >
+              <Picker.Item style={{ fontFamily: Font["poppins-regular"] }} label="Selecciona un equipo" value={null} />
+              {filteredTeams?.map((team) => (
+                <Picker.Item key={team.id} label={team.name} value={team.id} />
+              ))}
+            </Picker>
+          </View>
+
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            onPress={handleAddTeam}
+            style={{
+              padding: Spacing * 2,
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+              marginVertical: Spacing * 1,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Agregar Equipo
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 

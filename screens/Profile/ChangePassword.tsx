@@ -13,6 +13,7 @@ import { useUserStore } from "../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
+import GradientWrapper from "../../components/GradientWrapper";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, "ChangePassword">;
@@ -112,67 +113,69 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity
-        disabled={isLoading || isSubmitting}
-          style={{
-            position: "absolute",
-            top: Spacing * 5,
-            left: Spacing * 0.5,
-            zIndex: 1,
-          }}
-          onPress={() => navigate("UserProfile")}
-        >
-          <Icon
-            raised
-            size={25}
-            name="arrow-back"
-            type="Ionicons"
-            color={Colors.primary}
-          />
-        </TouchableOpacity>
-        <Text style={styles.title}>Cambio de Contraseña</Text>
-
-        <AppTextInput
-          placeholder="Contraseña actual"
-          value={currentPassword}
-          onChangeText={setCurrentPassword}
-          secureTextEntry
-        />
-
-        <AppTextInput
-          placeholder="Contraseña nueva"
-          value={newPassword}
-          onChangeText={setNewPassword}
-          secureTextEntry
-        />
-
-        <AppTextInput
-          placeholder="Repita la contraseña nueva"
-          value={repeatNewPassword}
-          onChangeText={setRepeatNewPassword}
-          secureTextEntry
-        />
-
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-            },
-          ]}
-          onPress={handleChangePassword}
+    <GradientWrapper>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <TouchableOpacity
           disabled={isLoading || isSubmitting}
-        >
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
-            <Text style={styles.buttonText}>Cambiar contraseña</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+            style={{
+              position: "absolute",
+              top: Spacing * 5,
+              left: Spacing * 0.5,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("UserProfile")}
+          >
+            <Icon
+              raised
+              size={25}
+              name="arrow-back"
+              type="Ionicons"
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
+          <Text style={styles.title}>Cambio de{'\n'}Contraseña</Text>
+
+          <AppTextInput
+            placeholder="Contraseña actual"
+            value={currentPassword}
+            onChangeText={setCurrentPassword}
+            secureTextEntry
+          />
+
+          <AppTextInput
+            placeholder="Contraseña nueva"
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry
+          />
+
+          <AppTextInput
+            placeholder="Repita la contraseña nueva"
+            value={repeatNewPassword}
+            onChangeText={setRepeatNewPassword}
+            secureTextEntry
+          />
+
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+              },
+            ]}
+            onPress={handleChangePassword}
+            disabled={isLoading || isSubmitting}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text style={styles.buttonText}>Cambiar contraseña</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 

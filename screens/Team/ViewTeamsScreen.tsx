@@ -22,6 +22,7 @@ import { GETTEAMDETAILS, GETUSERIDBYEMAIL } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import { Icon } from "@rneui/themed";
+import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ViewTeams">;
 
@@ -75,135 +76,137 @@ const ViewTeams: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View>
-        <View
-          style={{
-            paddingTop: Spacing * 6,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: Spacing * 5,
-              left: Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("Dashboard")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary}
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xxLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              textAlign: "center",
-            }}
-          >
-            Equipos
-          </Text>
-        </View>
-      </View>
-
-      <ScrollView style={{ maxHeight: 600 }}>
-        {teams.length === 0 ? (
+    <GradientWrapper>
+      <SafeAreaView>
+        <View>
           <View
             style={{
-              paddingHorizontal: Spacing * 2,
-              paddingTop: Spacing * 2,
-              justifyContent: "center",
-              alignItems: "center",
+              paddingTop: Spacing * 6,
             }}
           >
-            <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
-              No hay equipos disponibles.
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                top: Spacing * 5,
+                left: Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("Dashboard")}
+            >
+              <Icon
+                raised
+                size={25}
+                name='arrow-back'
+                type='Ionicons'
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: FontSize.xxLarge,
+                color: Colors.primary,
+                fontFamily: Font["poppins-bold"],
+                textAlign: "center",
+              }}
+            >
+              Equipos
             </Text>
           </View>
-        ) : (
-          sortedTeams.map((team) => (
+        </View>
+
+        <ScrollView style={{ maxHeight: 600 }}>
+          {teams.length === 0 ? (
             <View
-              key={team.id}
               style={{
                 paddingHorizontal: Spacing * 2,
                 paddingTop: Spacing * 2,
-                flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  setTeamId(team.id);
-                  setTeamName(team.name);
-                  setTeamDescription(team.description);
-                  navigate("TeamDashboard");
-                }}
+              <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
+                No hay equipos disponibles.
+              </Text>
+            </View>
+          ) : (
+            sortedTeams.map((team) => (
+              <View
+                key={team.id}
                 style={{
-                  backgroundColor: Colors.primary,
-                  paddingVertical: Spacing * 1,
                   paddingHorizontal: Spacing * 2,
-                  width: "100%",
-                  borderRadius: Spacing,
-                  shadowColor: Colors.primary,
-                  shadowOffset: {
-                    width: 0,
-                    height: Spacing,
-                  },
-                  shadowOpacity: 0.3,
-                  shadowRadius: Spacing,
+                  paddingTop: Spacing * 2,
                   flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between", // Cambiado para distribuir el contenido
+                  justifyContent: "space-between",
                 }}
               >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  {userId === team.idCreator && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setTeamId(team.id);
+                    setTeamName(team.name);
+                    setTeamDescription(team.description);
+                    navigate("TeamDashboard");
+                  }}
+                  style={{
+                    backgroundColor: Colors.primary,
+                    paddingVertical: Spacing * 1,
+                    paddingHorizontal: Spacing * 2,
+                    width: "100%",
+                    borderRadius: Spacing,
+                    shadowColor: Colors.primary,
+                    shadowOffset: {
+                      width: 0,
+                      height: Spacing,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: Spacing,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between", // Cambiado para distribuir el contenido
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    {userId === team.idCreator && (
+                      <FontAwesome
+                        style={{ marginRight: 8, marginBottom: 8 }}
+                        name={'crown'}
+                        size={20}
+                        color={Colors.onPrimary}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        fontFamily: Font["poppins-bold"],
+                        color: Colors.onPrimary,
+                        fontSize: FontSize.large,
+                      }}
+                    >
+                      {team.name}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <FontAwesome
-                      style={{ marginRight: 8, marginBottom: 8 }}
-                      name={'crown'}
-                      size={20}
+                      style={{ marginRight: Spacing }}
+                      name={'users'}
+                      size={25}
                       color={Colors.onPrimary}
                     />
-                  )}
-                  <Text
-                    style={{
-                      fontFamily: Font["poppins-bold"],
-                      color: Colors.onPrimary,
-                      fontSize: FontSize.large,
-                    }}
-                  >
-                    {team.name}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <FontAwesome
-                    style={{ marginRight: Spacing }}
-                    name={'users'}
-                    size={25}
-                    color={Colors.onPrimary}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: Font["poppins-bold"],
-                      color: Colors.onPrimary,
-                      fontSize: FontSize.medium,
-                    }}
-                  >
-                    {team.idUsers.length}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))
-        )}
-      </ScrollView>
-    </SafeAreaView>
+                    <Text
+                      style={{
+                        fontFamily: Font["poppins-bold"],
+                        color: Colors.onPrimary,
+                        fontSize: FontSize.medium,
+                      }}
+                    >
+                      {team.idUsers.length}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 
 };
