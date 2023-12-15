@@ -19,6 +19,7 @@ import { Icon } from "@rneui/themed";
 import { ADDCOMMENT } from "../../../graphql/mutations";
 import { useMutation, useQuery } from "@apollo/client";
 import { GETUSERSBYIDS } from "../../../graphql/queries";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetails">;
 
@@ -58,10 +59,12 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
       if (taskIdCreator !== null && taskIdUserResponsable === null) {
         await refetchUsers({ ids: [taskIdCreator] }).then((res) => {
           setCreator(res.data.usersByIds[0].name);
+          setUserResponsable('');
         });
       } else {
         if (taskIdCreator === null && taskIdUserResponsable !== null) {
           await refetchUsers({ ids: [taskIdUserResponsable] }).then((res) => {
+            setCreator('');
             setUserResponsable(res.data.usersByIds[0].name);
           });
         }
@@ -71,7 +74,13 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   useEffect(() => {
     refetchUsersData();
-  }, [userData]);
+  }, [userData, taskIdUserResponsable]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetchUsersData();
+    }, [userData, taskIdUserResponsable])
+  );
 
   return (
     <SafeAreaView>

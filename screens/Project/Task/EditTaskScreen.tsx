@@ -38,6 +38,7 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { taskDescription: oldTaskDescription, setTaskDescription: setOldTaskDescription } = useUserStore();
   const [newTaskDescription, setNewTaskDescription] = useState(oldTaskDescription);
   const { taskIdUserResponsable: oldTaskIdUserResponsable, setTaskIdUserResponsable: setOldTaskIdUserResponsable } = useUserStore();
+  const { taskIdUserResponsable, setTaskIdUserResponsable } = useUserStore();
   const [newTaskIdUserResponsable, setNewTaskIdUserResponsable] = useState(oldTaskIdUserResponsable);
   const [taskStatusOptions, setTaskStatusOptions] = useState(["Pendiente", "En Proceso", "Completado"]);
   const { taskStatus: oldTaskStatus, setTaskStatus: setOldTaskStatus } = useUserStore();
@@ -159,10 +160,24 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
         });
         setOldTaskName(newTaskName);
         setOldTaskDescription(newTaskDescription);
-        setOldTaskIdUserResponsable(newTaskIdUserResponsable);
+        if(newTaskIdUserResponsable === null){
+          setOldTaskIdUserResponsable(null);
+          setTaskIdUserResponsable(null);
+        }else{
+          setOldTaskIdUserResponsable(newTaskIdUserResponsable);
+          setTaskIdUserResponsable(newTaskIdUserResponsable);
+        }
         setOldTaskStatus(newTaskStatus);
-        setOldTaskStartDate(formatDate(newTaskStartDate));
-        setOldTaskFinishDate(formatDate(newTaskFinishDate));
+        if (newTaskStartDate){
+          setOldTaskStartDate(newTaskStartDate.toISOString().split('T')[0]);
+        }else{
+          setOldTaskStartDate(null);
+        }
+        if(newTaskFinishDate){
+          setOldTaskFinishDate(newTaskFinishDate.toISOString().split('T')[0]);
+        }else{
+          setOldTaskFinishDate(null);
+        }
         setIsLoading(false);
         Toast.show({
           type: "success",
