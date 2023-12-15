@@ -23,6 +23,10 @@ export type UseUserStoreT = {
   taskName?: string;
   taskDescription?: string;
   taskIdUserResponsable?: number;
+  taskStatus?: string;
+  taskStartDate?: string;
+  taskFinishDate?: string;
+  taskComments?: string[];
   setRecoveryPass: (recoveryPass: number) => void;
   setAccessToken: (accessToken: string) => void;
   removeAccessToken: () => void;
@@ -44,6 +48,10 @@ export type UseUserStoreT = {
   setTaskName: (taskName: string) => void;
   setTaskDescription: (taskDescription: string) => void;
   setTaskIdUserResponsable: (taskIdUserResposable: number) => void;
+  setTaskStatus: (taskStatus: string) => void;
+  setTaskStartDate: (taskStartDate: string) => void;
+  setTaskFinishDate: (taskFinishDate: string) => void;
+  setTaskComments: (taskComments: string[]) => void;
   removeTeamDetails: () => void;
   removeProjectDetails: () => void;
 };
@@ -72,6 +80,10 @@ export const useUserStore = create<UseUserStoreT>()(
         taskName: undefined,
         taskDescription: undefined,
         taskIdUserResponsable: undefined,
+        taskStatus: undefined,
+        taskStartDate: undefined,
+        taskFinishDate: undefined,
+        taskComments: undefined,
         setRecoveryPass: (recoveryPass: number) => set(() => ({ recoveryPass })),
         setAccessToken: (accessToken: string) => set(() => ({ accessToken })),
         removeAccessToken: () => set(() => ({ accessToken: undefined })),
@@ -93,9 +105,12 @@ export const useUserStore = create<UseUserStoreT>()(
         setTaskName: (taskName: string) => set(() => ({ taskName })),
         setTaskDescription: (taskDescription: string) => set(() => ({ taskDescription })),
         setTaskIdUserResponsable: (taskIdUserResponsable: number) => set(() => ({ taskIdUserResponsable })),
+        setTaskStatus: (taskStatus: string) => set(() => ({ taskStatus })),
+        setTaskStartDate: (taskStartDate: string) => set(() => ({ taskStartDate })),
+        setTaskFinishDate: (taskFinishDate: string) => set(() => ({ taskFinishDate })),
+        setTaskComments: (taskComments: string[]) => set(() => ({ taskComments })),
         removeTeamDetails: () => set(() => ({ teamId: undefined, teamName: undefined, teamDescription: undefined, teamCreatorId: undefined })),
         removeProjectDetails: () => set(() => ({ projectId: undefined, projectName: undefined, projectDescription: undefined, projectTeamsIds: undefined })),
-
       }),
       {
         name: 'user-storage',

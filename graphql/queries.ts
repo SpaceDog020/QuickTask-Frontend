@@ -113,8 +113,10 @@ export const GETTASKSBYPROJECTID = gql`
       idUser
       name
       description
+      status
       startDate
       finishDate
+      comment
     }
   }
 `;

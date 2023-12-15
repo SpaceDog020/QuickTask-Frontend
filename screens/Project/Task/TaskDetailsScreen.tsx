@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Dimensions,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -15,162 +13,94 @@ import Font from "../../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../types";
 import { useUserStore } from "../../../stores/useUserStore";
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { Icon } from "@rneui/themed";
-import AppTextInput from "../../../components/AppTextInput";
-import { useMutation } from "@apollo/client";
-import { DELETETEAM, UPDATETEAM } from "../../../graphql/mutations";
-import Toast from "react-native-toast-message";
-import useButtonTimeout from "../../../hooks/useButtonTimeout";
-import Modal from "react-native-modal";
+import { ADDCOMMENT } from "../../../graphql/mutations";
+import { useMutation, useQuery } from "@apollo/client";
+import { GETUSERSBYIDS } from "../../../graphql/queries";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskDetails">;
 
 const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [editable, setEditable] = useState(false);
-  const { teamId } = useUserStore();
-  const { teamName: oldTeamName, setTeamName: setOldTeamName } = useUserStore();
-  const [newTeamName, setNewTeamName] = useState(oldTeamName);
-  const { teamDescription: oldTeamDescription, setTeamDescription: setOldTeamDescription } = useUserStore();
-  const [newTeamDescription, setNewTeamDescription] = useState(oldTeamDescription);
-  const { userId } = useUserStore();
+  const { taskName } = useUserStore();
+  const { taskDescription } = useUserStore();
+  const { taskStatus } = useUserStore();
+  const { taskStartDate } = useUserStore();
+  const { taskFinishDate } = useUserStore();
+  const { taskComments } = useUserStore();
+  const { taskIdCreator } = useUserStore();
+  const { taskIdUserResponsable } = useUserStore();
+  const [creator, setCreator] = useState('');
+  const [userResponsable, setUserResponsable] = useState('');
+  const [comment, setComment] = useState('');
 
-  const [updateTeam] = useMutation(UPDATETEAM);
-  const [deleteTeam] = useMutation(DELETETEAM);
+  const [addComment, { data }] = useMutation(ADDCOMMENT);
 
-  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const { data: userData, refetch: refetchUsers } = useQuery(GETUSERSBYIDS, {
+    skip: true,
+  });
 
-  useButtonTimeout(
-    () => {
-      setIsSubmitting(false);
-    },
-    1000,
-    isSubmitting
-  );
-
-  const handleButtonPress = () => {
-    if (editable) {
-      // Reset the text input values to the current user data
-      if (newTeamName !== oldTeamName || newTeamDescription !== oldTeamDescription) {
-        setNewTeamName(oldTeamName);
-        setNewTeamDescription(oldTeamDescription);
+  const refetchUsersData = async () => {
+    if (taskIdCreator !== null && taskIdUserResponsable !== null) {
+      if (taskIdCreator === taskIdUserResponsable) {
+        await refetchUsers({ ids: [taskIdCreator] }).then((res) => {
+          setCreator(res.data.usersByIds[0].name);
+          setUserResponsable(res.data.usersByIds[0].name);
+        });
+      } else {
+        await refetchUsers({ ids: [taskIdCreator, taskIdUserResponsable] }).then((res) => {
+          setCreator(res.data.usersByIds[0].name);
+          setUserResponsable(res.data.usersByIds[1].name);
+        });
       }
-    }
-
-    setEditable(!editable);
-  };
-
-  const handleDeleteTeam = async () => {
-    try {
-      setIsLoading(true);
-      // Call the updateUser mutation with the updated user data
-      await deleteTeam({
-        variables: {
-          idTeam: teamId,
-          idCreator: userId,
-        },
-      });
-      // Update the user data in your local state
-      setIsLoading(false);
-      Toast.show({
-        type: "success",
-        text1: "Equipo eliminado",
-        text2: "Se ha eliminado el equipo correctamente",
-        position: "bottom",
-        visibilityTime: 3000, // Duration in milliseconds
-        autoHide: true,
-      });
-      navigate("Dashboard");
-    } catch (e) {
-      setIsLoading(false);
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: e.message,
-        position: "bottom",
-        visibilityTime: 3000, // Duration in milliseconds
-        autoHide: true,
-      });
-    }
-  };
-
-  const handleSaveChanges = async () => {
-    setIsSubmitting(true);
-    if (newTeamName === "" || newTeamDescription === "") {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Todos los campos deben estar llenos",
-        position: "bottom",
-        visibilityTime: 1500, // Duration in milliseconds
-        autoHide: true,
-      });
     } else {
-      try {
-        setIsLoading(true);
-        // Call the updateUser mutation with the updated user data
-        await updateTeam({
-          variables: {
-            idTeam: teamId,
-            idUser: userId,
-            name: newTeamName,
-            description: newTeamDescription,
-          },
+      if (taskIdCreator !== null && taskIdUserResponsable === null) {
+        await refetchUsers({ ids: [taskIdCreator] }).then((res) => {
+          setCreator(res.data.usersByIds[0].name);
         });
-        // Update the user data in your local state
-        setOldTeamName(newTeamName);
-        setOldTeamDescription(newTeamDescription);
-        setIsLoading(false);
-        Toast.show({
-          type: "success",
-          text1: "Datos actualizados",
-          text2: "Se han guardado los datos",
-          position: "bottom",
-          visibilityTime: 3000, // Duration in milliseconds
-          autoHide: true,
-        });
-
-        // Disable editability after saving changes
-        setIsSubmitting(false);
-        setEditable(false);
-      } catch (e) {
-        setIsSubmitting(false);
-        setIsLoading(false);
-        Toast.show({
-          type: "error",
-          text1: "Error al actualizar datos",
-          text2: e.message,
-          position: "bottom",
-          visibilityTime: 3000, // Duration in milliseconds
-          autoHide: true,
-        });
+      } else {
+        if (taskIdCreator === null && taskIdUserResponsable !== null) {
+          await refetchUsers({ ids: [taskIdUserResponsable] }).then((res) => {
+            setUserResponsable(res.data.usersByIds[0].name);
+          });
+        }
       }
     }
+  };
+
+  useEffect(() => {
+    refetchUsersData();
+  }, [userData]);
+
+  const Buttons = [
+    {
+      label: 'Editar Tarea',
+      icon: 'sliders-h',
+      onPress: () => navigate('EditTask'),
+    },
+  ];
+
+  const buttonColors = {
+    'Editar Tarea': 'dodgerblue',
   };
 
   return (
     <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-          marginTop: Spacing * 2,
-        }}
-      >
+      <View>
         <View
           style={{
-            alignItems: "center",
+            paddingTop: Spacing * 6,
+            flex: 1,
           }}
         >
           <TouchableOpacity
-            disabled={isLoading || isSubmitting}
             style={{
               position: "absolute",
-              top: Spacing * 1,
-              left: -Spacing,
+              top: Spacing * 5,
+              left: Spacing,
               zIndex: 1,
             }}
-            onPress={() => navigate("TeamDashboard")}
+            onPress={() => navigate("ViewTasks")}
           >
             <Icon
               raised
@@ -179,98 +109,58 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               type='Ionicons'
               color={Colors.primary} />
           </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 2,
-            }}
-          >
-            Editar Equipo
-          </Text>
-          <TouchableOpacity
-            disabled={isLoading || isSubmitting}
-            style={{
-              position: "absolute",
-              top: Spacing * 1,
-              right: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => setDeleteModalVisible(true)}
-          >
-            <Icon
-              raised
-              name='trash'
-              type='font-awesome-5'
-              color='black' />
-          </TouchableOpacity>
         </View>
-        <View>
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Nombre
-          </Text>
-          <AppTextInput placeholder="Nombre" value={newTeamName} editable={editable} onChangeText={setNewTeamName} />
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Descripcion
-          </Text>
-          <AppTextInput placeholder="Descripción" value={newTeamDescription} editable={editable} onChangeText={setNewTeamDescription} />
+      </View>
+
+      <Text style={{ marginTop: Spacing * 4, fontSize: FontSize.xxLarge, color: Colors.primary, fontFamily: Font["poppins-bold"], textAlign: "center" }}>{taskName}</Text>
+
+      <Text style={{ fontSize: FontSize.large, fontFamily: Font["poppins-bold"], textAlign: "center", color: Colors.text }}>{taskDescription}</Text>
+
+      <Text style={{ fontSize: FontSize.large, fontFamily: Font["poppins-bold"], textAlign: "center", color: Colors.text }}>{taskStatus}</Text>
+
+      {/* Fechas de Inicio y Finalización */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: Spacing }}>
+        <Text style={{ fontSize: FontSize.medium, fontFamily: Font["poppins-bold"], color: Colors.text }}>Inicio: {taskStartDate}</Text>
+        <Text style={{ fontSize: FontSize.medium, fontFamily: Font["poppins-bold"], color: Colors.text }}>Fin: {taskFinishDate}</Text>
+      </View>
+
+      {/* Mostrar creador y usuario responsable si están definidos */}
+      {creator && (
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: Spacing }}>
+          <FontAwesome name="user" size={20} color={Colors.primary} />
+          <Text style={{ fontSize: FontSize.medium, fontFamily: Font["poppins-bold"], color: Colors.text, marginLeft: Spacing / 2 }}>{creator}</Text>
         </View>
+      )}
 
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          onPress={handleButtonPress}
-          style={{
-            padding: Spacing * 1,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            {editable ? "Cancelar" : "Editar Datos"}
-          </Text>
-        </TouchableOpacity>
+      {userResponsable && (
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: Spacing }}>
+          <FontAwesome name="user" size={20} color={Colors.primary} />
+          <Text style={{ fontSize: FontSize.medium, fontFamily: Font["poppins-bold"], color: Colors.text, marginLeft: Spacing / 2 }}>{userResponsable}</Text>
+        </View>
+      )}
 
-        {editable && (
+      {/* Mostrar comentarios */}
+      <View style={{ marginTop: Spacing }}>
+        <Text style={{ fontSize: FontSize.large, fontFamily: Font["poppins-bold"], textAlign: "center", color: Colors.text }}>Comentarios:</Text>
+        {taskComments.map((comment, index) => (
+          <Text key={index} style={{ fontSize: FontSize.medium, textAlign: "center", color: Colors.text }}>{comment}</Text>
+        ))}
+      </View>
+
+      {/* Botones */}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', paddingTop: Spacing * 4, }}>
+        {Buttons.map((button, index) => (
           <TouchableOpacity
-            disabled={isLoading || isSubmitting}
-            onPress={handleSaveChanges}
+            key={index}
+            onPress={button.onPress}
             style={{
-              padding: Spacing * 1,
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-              marginVertical: Spacing * 1,
-              borderRadius: Spacing,
+              width: 160,
+              height: 120,
+              margin: Spacing / 2,
+              backgroundColor: buttonColors[button.label],
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
               shadowColor: Colors.primary,
               shadowOffset: {
                 width: 0,
@@ -278,78 +168,28 @@ const TaskDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
               },
               shadowOpacity: 0.3,
               shadowRadius: Spacing,
-            }}
-          >
-            {isLoading || isSubmitting ? (
-              <ActivityIndicator size="large" color={Colors.primary} />
-            ) : (
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  textAlign: "center",
-                  fontSize: FontSize.large,
-                }}
-              >
-                Guardar
-              </Text>
-            )}
-          </TouchableOpacity>
-        )}
-
-        <Modal
-          isVisible={isDeleteModalVisible}
-          onBackdropPress={() => setDeleteModalVisible(false)}
-        >
-          <View style={{ backgroundColor: 'white', padding: 20 }}>
-            <Text style={{ fontSize: 20, fontFamily: Font["poppins-bold"], marginBottom: 20 }}>
-              ¿Estás seguro de que quieres eliminar el equipo?
+            }}>
+            <FontAwesome
+              name={button.icon}
+              size={50}
+              color={Colors.onPrimary}
+            />
+            <Text
+              style={{
+                color: Colors.onPrimary,
+                fontFamily: Font['poppins-bold'],
+                textAlign: 'center',
+              }}>
+              {button.label}
             </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              <TouchableOpacity
-                onPress={() => setDeleteModalVisible(false)}
-                style={{
-                  backgroundColor: Colors.primary,
-                  padding: Spacing * 1,
-                  borderRadius: Spacing,
-                  shadowColor: Colors.primary,
-                  shadowOffset: {
-                    width: 0,
-                    height: Spacing,
-                  },
-                  shadowOpacity: 0.3,
-                  shadowRadius: Spacing,
-                }}
-              >
-                <Text style={{ fontFamily: Font["poppins-bold"], color: Colors.onPrimary, fontSize: FontSize.large }}>
-                  Cancelar
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleDeleteTeam}
-                style={{
-                  backgroundColor: Colors.error,
-                  padding: Spacing * 1,
-                  borderRadius: Spacing,
-                  shadowColor: Colors.error,
-                  shadowOffset: {
-                    width: 0,
-                    height: Spacing,
-                  },
-                  shadowOpacity: 0.3,
-                  shadowRadius: Spacing,
-                }}
-              >
-                <Text style={{ fontFamily: Font["poppins-bold"], color: Colors.onPrimary, fontSize: FontSize.large }}>
-                  Eliminar
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          </TouchableOpacity>
+        ))
+        }
       </View>
     </SafeAreaView>
   );
 };
 
 export default TaskDetails;
+
+const styles = StyleSheet.create({});

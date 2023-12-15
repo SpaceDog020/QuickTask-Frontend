@@ -36,6 +36,10 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
   const { setTaskDescription } = useUserStore();
   const { setTaskIdUserResponsable } = useUserStore();
   const { setTaskIdCreator } = useUserStore();
+  const { setTaskStatus } = useUserStore();
+  const { setTaskStartDate } = useUserStore();
+  const { setTaskFinishDate } = useUserStore();
+  const { setTaskComments } = useUserStore();
 
   const { data: taskData, refetch: refetchTasks } = useQuery(GETTASKSBYPROJECTID, {
     variables: {
@@ -111,7 +115,7 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
           value={searchInput}
           onChangeText={(text) => setSearchInput(text)}
         />
-        
+
         <TouchableOpacity
           style={{
             height: 40,
@@ -158,35 +162,53 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
                   setTaskName(task.name);
                   setTaskDescription(task.description);
                   setTaskIdUserResponsable(task.idUser);
+                  setTaskStatus(task.status);
+                  setTaskStartDate(task.startDate);
+                  setTaskFinishDate(task.finishDate);
+                  setTaskComments(task.comment);
                   navigate("TaskDetails");
                 }}
                 style={{
-                  backgroundColor: Colors.primary,
-                  paddingVertical: Spacing * 1,
-                  paddingHorizontal: Spacing * 2,
-                  width: "100%",
-                  borderRadius: Spacing,
-                  shadowColor: Colors.primary,
-                  shadowOffset: {
-                    width: 0,
-                    height: Spacing,
-                  },
-                  shadowOpacity: 0.3,
-                  shadowRadius: Spacing,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
+                  flex: 1,
                 }}
               >
-                <Text
+                <View
                   style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    fontSize: FontSize.large,
+                    backgroundColor: Colors.primary,
+                    paddingVertical: Spacing * 1,
+                    paddingHorizontal: Spacing * 2,
+                    borderRadius: Spacing,
+                    shadowColor: Colors.primary,
+                    shadowOffset: {
+                      width: 0,
+                      height: Spacing,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: Spacing,
+                    flexDirection: "column",  // Cambiado de "row" a "column"
+                    alignItems: "flex-start", // Cambiado de "center" a "flex-start"
+                    justifyContent: "center",
                   }}
                 >
-                  {task.name}
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.large,
+                    }}
+                  >
+                    {task.name}
+                  </Text>
+                  <Text style={{
+                    fontFamily: Font["poppins-bold"],
+                    fontSize: FontSize.medium,
+                    color: Colors.onPrimary,
+                  }}
+                  >
+                    {task.idUser ? "Con Asignación" : "Sin Asignación"}
+                  </Text>
+
+                </View>
               </TouchableOpacity>
             </View>
           ))
@@ -199,3 +221,15 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
 export default ViewTasks;
 
 const styles = StyleSheet.create({});
+
+/*
+<Text
+  style={{
+    fontFamily: Font["poppins-bold"],
+    color: Colors.onPrimary,
+    fontSize: FontSize.large,
+  }}
+>
+  {task.status}
+</Text>
+*/

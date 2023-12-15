@@ -1,4 +1,5 @@
-import { ActivityIndicator, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Button, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useEffect, useState } from "react";
 import Spacing from "../../../constants/Spacing";
 import FontSize from "../../../constants/FontSize";
@@ -24,6 +25,9 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [idUser, setIdUser] = useState(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [finishDate, setFinishDate] = useState<Date | null>(null);
+  const [open, setOpen] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
   const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSTEAMSIDS, {
@@ -51,8 +55,26 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   useEffect(() => {
-    refetchUsersData();
+    if(projectTeamsIds.length !== 0) {
+      refetchUsersData();
+    }
   }, [usersData]);
+
+  const renderDateTimePicker = (selectedDate: Date | null, setDate: React.Dispatch<React.SetStateAction<Date | null>>) => {
+    return (
+      <DateTimePicker
+        value={selectedDate || new Date()}
+        mode="date"
+        display="default"
+        onChange={(event, newDate) => {
+          if (newDate) {
+            setDate(newDate);
+            setOpen(false);
+          }
+        }}
+      />
+    );
+  };
 
   const handleTeamCreation = async () => {
     setIsSubmitting(true);
@@ -62,7 +84,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
         text1: "Error",
         text2: "Todos los campos deben estar llenos",
         position: "bottom",
-        visibilityTime: 1500, // Duration in milliseconds
+        visibilityTime: 1500,
         autoHide: true,
       });
     } else {
@@ -75,8 +97,8 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             idUser: idUser,
             name: taskName,
             description: taskDescription,
-            startDate: new Date(),
-            finishDate: null
+            startDate: startDate,
+            finishDate: finishDate,
           },
         });
         setIsLoading(false);
@@ -86,7 +108,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             text1: "La tarea ha sido creada",
             text2: "Regresando al dashboard",
             position: "bottom",
-            visibilityTime: 1500, // Duration in milliseconds
+            visibilityTime: 1500,
             autoHide: true,
           });
           navigate("ProjectDashboard");
@@ -99,7 +121,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
           text1: "Error",
           text2: e.message,
           position: "bottom",
-          visibilityTime: 3000, // Duration in milliseconds
+          visibilityTime: 3000,
           autoHide: true,
         });
       }
@@ -169,28 +191,96 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               marginVertical: Spacing * 1,
             }}
           >
-            <Picker
+            <TouchableOpacity
+              onPress={() => setOpen(true)}
               style={{
-                fontFamily: Font["poppins-regular"],
-                fontSize: FontSize.small,
-                padding: Spacing * 2,
                 backgroundColor: Colors.lightPrimary,
                 borderRadius: Spacing,
-                marginVertical: Spacing,
+                padding: Spacing * 1,
+                alignItems: "center",
               }}
-              selectedValue={idUser}
-              onValueChange={(itemValue, itemIndex) => setIdUser(itemValue)}
             >
-              <Picker.Item style={{ fontFamily: Font["poppins-regular"] }} label="Selecciona un usuario" value={null} />
-              
-              {filteredUsers?.map((user) => (
-                <Picker.Item key={user.id} label={user.name} value={user.id} />
-              ))}
-              
-            </Picker>
+              <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small }}>
+                Fecha de inicio:
+              </Text>
+              <Text>{startDate ? startDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
+            </TouchableOpacity>
+
+            {startDate && (
+              <TouchableOpacity
+                onPress={() => setStartDate(null)}
+                style={{
+                  backgroundColor: Colors.lightPrimary,
+                  borderRadius: Spacing,
+                  padding: Spacing * 1,
+                  alignItems: "center",
+                  marginTop: Spacing,
+                }}
+              >
+                <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: Colors.error }}>
+                  Eliminar fecha de inicio
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {open && renderDateTimePicker(startDate, setStartDate)}
           </View>
-          
-          
+          <View
+            style={{
+              marginVertical: Spacing * 1,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => setOpen(true)}
+              style={{
+                backgroundColor: Colors.lightPrimary,
+                borderRadius: Spacing,
+                padding: Spacing * 1,
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small }}>
+                Fecha de fin:
+              </Text>
+              <Text>{finishDate ? finishDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
+            </TouchableOpacity>
+
+            {finishDate && (
+              <TouchableOpacity
+                onPress={() => setFinishDate(null)}
+                style={{
+                  backgroundColor: Colors.lightPrimary,
+                  borderRadius: Spacing,
+                  padding: Spacing * 1,
+                  alignItems: "center",
+                  marginTop: Spacing,
+                }}
+              >
+                <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: Colors.error }}>
+                  Eliminar fecha de fin
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {open && renderDateTimePicker(finishDate, setFinishDate)}
+          </View>
+          <Picker
+            style={{
+              fontFamily: Font["poppins-regular"],
+              fontSize: FontSize.small,
+              padding: Spacing * 2,
+              backgroundColor: Colors.lightPrimary,
+              borderRadius: Spacing,
+              marginVertical: Spacing,
+            }}
+            selectedValue={idUser}
+            onValueChange={(itemValue, itemIndex) => setIdUser(itemValue)}
+          >
+            <Picker.Item style={{ fontFamily: Font["poppins-regular"] }} label="Usuario responsable (opcional)" value={null} />
+            {filteredUsers?.map((user) => (
+              <Picker.Item key={user.id} label={user.name} value={user.id} />
+            ))}
+          </Picker>
         </View>
 
         <TouchableOpacity
