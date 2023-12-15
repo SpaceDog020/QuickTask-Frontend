@@ -168,7 +168,7 @@ const ChangePassword: React.FC<Props> = ({ navigation: { navigate } }) => {
           {isLoading || isSubmitting ? (
             <ActivityIndicator size="large" color={Colors.primary} />
           ) : (
-            <Text style={styles.buttonText}>Cambiar contraseña</Text>
+            <Text style={styles.buttonText}>Cambiar Cpntraseña</Text>
           )}
         </TouchableOpacity>
       </View>

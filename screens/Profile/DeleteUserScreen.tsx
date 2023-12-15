@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AppTextInput from "../../components/AppTextInput";
 import Colors from "../../constants/Colors";
 import Font from "../../constants/Font";
@@ -15,7 +22,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
 import Toast from "react-native-toast-message";
-
+import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "DeleteUser">;
 
@@ -66,7 +73,8 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: "No puedes eliminar tu cuenta porque eres creador de un equipo",
+          text2:
+            "No puedes eliminar tu cuenta porque eres creador de un equipo",
           position: "bottom",
           visibilityTime: 2000, // Duration in milliseconds
           autoHide: true,
@@ -92,8 +100,7 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
             });
             logout();
           }
-        }
-        catch (e) {
+        } catch (e) {
           setIsSubmitting(false);
           setIsLoading(false);
           Toast.show({
@@ -111,79 +118,83 @@ const DeleteUser: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const logout = async () => {
     await removeAccessToken();
-    setUserName('');
-    setUserLastName('');
-    setUserEmail('');
+    setUserName("");
+    setUserLastName("");
+    setUserEmail("");
     setUserId(-1);
-    navigate('Welcome');
+    navigate("Welcome");
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          style={{
-            position: "absolute",
-            top: Spacing * 3.8,
-            left: Spacing * 0.3,
-            zIndex: 1,
-          }}
-          onPress={() => navigate("UserProfile")}
-        >
-          <Icon
-            raised
-            size={25}
-            name='arrow-back'
-            type='Ionicons'
-            color={Colors.primary} />
-        </TouchableOpacity>
-        <Text style={
-          styles.title
-        }>
-          Eliminar Usuario
-        </Text>
+    <GradientWrapper>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <TouchableOpacity
+            disabled={isLoading || isSubmitting}
+            style={{
+              position: "absolute",
+              top: Spacing * 3.8,
+              left: Spacing * 0.3,
+              zIndex: 1,
+            }}
+            onPress={() => navigate("UserProfile")}
+          >
+            <Icon
+              raised
+              size={25}
+              name="arrow-back"
+              type="Ionicons"
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
+          <Text style={styles.title}>Eliminar Usuario</Text>
 
-        <Text
-          style={{
-            fontFamily: Font["poppins-semiBold"],
-            fontSize: FontSize.large,
-            textAlign: "center",
-            marginBottom: Spacing * 2
-          }}
-        >
-          ¿Estás seguro de que deseas eliminar tu cuenta de usuario?
-        </Text>
+          <Text
+            style={{
+              fontFamily: Font["poppins-semiBold"],
+              fontSize: FontSize.large,
+              textAlign: "center",
+              marginBottom: Spacing * 2,
+            }}
+          >
+            ¿Estás seguro de que deseas eliminar tu cuenta de usuario?
+          </Text>
 
-        <AppTextInput
-          placeholder="Contraseña actual"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <AppTextInput
+            placeholder="Contraseña actual"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-        <AppTextInput
-          placeholder="Repita la contraseña"
-          value={repeatPassword}
-          onChangeText={setRepeatPassword}
-          secureTextEntry
-        />
+          <AppTextInput
+            placeholder="Repita la contraseña"
+            value={repeatPassword}
+            onChangeText={setRepeatPassword}
+            secureTextEntry
+          />
 
-        <TouchableOpacity style={[
-          styles.button,
-          {
-            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-          },
-        ]}
-          onPress={handleDeleteUser} disabled={isLoading || isSubmitting}>
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
-            <Text style={styles.buttonText}>Eliminar Usuario</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                backgroundColor: isSubmitting
+                  ? Colors.disabled
+                  : Colors.primary,
+              },
+            ]}
+            onPress={handleDeleteUser}
+            disabled={isLoading || isSubmitting}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text style={styles.buttonText}>Eliminar Usuario</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 
@@ -202,7 +213,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: Colors.primary,
     padding: Spacing * 2,
-    marginVertical: Spacing * 7,
+    marginVertical: Spacing * 4,
     borderRadius: Spacing,
   },
   buttonText: {

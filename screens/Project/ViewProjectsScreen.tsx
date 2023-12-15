@@ -16,12 +16,13 @@ import Font from "../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types";
 const { height } = Dimensions.get("window");
-import { useUserStore } from '../../stores/useUserStore';
+import { useUserStore } from "../../stores/useUserStore";
 import { useQuery } from "@apollo/client";
 import { GETPROJECTS } from "../../graphql/queries";
 import { useFocusEffect } from "@react-navigation/core";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import { Icon } from "@rneui/themed";
+import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ViewProjects">;
 
@@ -47,120 +48,122 @@ const ViewProjects: React.FC<Props> = ({ navigation: { navigate } }) => {
   useFocusEffect(
     React.useCallback(() => {
       refetchProjects()
-      .then(({ data }) => {
-        setProjects(data?.projects || []);
-      })
-      .catch((error) => {
-        console.log("Error al cargar equipos:", error);
-      });
+        .then(({ data }) => {
+          setProjects(data?.projects || []);
+        })
+        .catch((error) => {
+          console.log("Error al cargar equipos:", error);
+        });
     }, [projectData])
   );
 
   return (
-    <SafeAreaView>
-      <View>
-        <View
-          style={{
-            paddingTop: Spacing * 6,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: Spacing * 5,
-              left: Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("Dashboard")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xxLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              textAlign: "center",
-            }}
-          >
-            Proyectos
-          </Text>
-        </View>
-      </View>
-
-      <ScrollView style={{ maxHeight: 600 }}>
-        {projects.length === 0 ? (
+    <GradientWrapper>
+      <SafeAreaView>
+        <View>
           <View
             style={{
-              paddingHorizontal: Spacing * 2,
-              paddingTop: Spacing * 2,
-              justifyContent: "center",
-              alignItems: "center",
+              paddingTop: Spacing * 6,
             }}
           >
-            <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
-              No hay proyectos disponibles.
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                top: Spacing * 5,
+                left: Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("Dashboard")}
+            >
+              <Icon
+                raised
+                size={25}
+                name="arrow-back"
+                type="Ionicons"
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: FontSize.xxLarge,
+                color: Colors.primary,
+                fontFamily: Font["poppins-bold"],
+                textAlign: "center",
+              }}
+            >
+              Proyectos
             </Text>
           </View>
-        ) : (
-          projects.map((project) => (
+        </View>
+
+        <ScrollView style={{ maxHeight: 600 }}>
+          {projects.length === 0 ? (
             <View
-              key={project.id}
               style={{
                 paddingHorizontal: Spacing * 2,
                 paddingTop: Spacing * 2,
-                flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  setProjectId(project.id);
-                  setProjectName(project.name);
-                  setProjectDescription(project.description);
-                  setProjectTeamsIds(project.idTeams);
-                  navigate("ProjectDashboard");
-                }}
+              <Text style={{ fontSize: FontSize.large, color: Colors.primary }}>
+                No hay proyectos disponibles.
+              </Text>
+            </View>
+          ) : (
+            projects.map((project) => (
+              <View
+                key={project.id}
                 style={{
-                  backgroundColor: Colors.primary,
-                  paddingVertical: Spacing * 1,
                   paddingHorizontal: Spacing * 2,
-                  width: "100%",
-                  borderRadius: Spacing,
-                  shadowColor: Colors.primary,
-                  shadowOffset: {
-                    width: 0,
-                    height: Spacing,
-                  },
-                  shadowOpacity: 0.3,
-                  shadowRadius: Spacing,
+                  paddingTop: Spacing * 2,
                   flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: "space-between",
                 }}
               >
-                <Text
+                <TouchableOpacity
+                  onPress={() => {
+                    setProjectId(project.id);
+                    setProjectName(project.name);
+                    setProjectDescription(project.description);
+                    setProjectTeamsIds(project.idTeams);
+                    navigate("ProjectDashboard");
+                  }}
                   style={{
-                    fontFamily: Font["poppins-bold"],
-                    color: Colors.onPrimary,
-                    fontSize: FontSize.large,
+                    backgroundColor: Colors.primary,
+                    paddingVertical: Spacing * 1,
+                    paddingHorizontal: Spacing * 2,
+                    width: "100%",
+                    borderRadius: Spacing,
+                    shadowColor: Colors.primary,
+                    shadowOffset: {
+                      width: 0,
+                      height: Spacing,
+                    },
+                    shadowOpacity: 0.3,
+                    shadowRadius: Spacing,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
                   }}
                 >
-                  {project.name}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ))
-        )}
-      </ScrollView>
-    </SafeAreaView>
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-bold"],
+                      color: Colors.onPrimary,
+                      fontSize: FontSize.large,
+                    }}
+                  >
+                    {project.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </GradientWrapper>
   );
-
 };
 
 export default ViewProjects;

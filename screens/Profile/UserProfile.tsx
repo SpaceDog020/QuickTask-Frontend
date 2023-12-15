@@ -20,6 +20,7 @@ import { useMutation } from "@apollo/client";
 import { UPDATEUSER } from "../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../hooks/useButtonTimeout";
+import GradientWrapper from "../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "UserProfile">;
 
@@ -29,9 +30,14 @@ const capitalizeFirstLetter = (str: string) => {
 };
 
 const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
-  const { userName: initialUserName, setUserName: setInitialUserName } = useUserStore();
-  const { userLastName: initialUserLastName, setUserLastName: setInitialUserLastName } = useUserStore();
-  const { userEmail: initialUserEmail, setUserEmail: setInitialUserEmail } = useUserStore();
+  const { userName: initialUserName, setUserName: setInitialUserName } =
+    useUserStore();
+  const {
+    userLastName: initialUserLastName,
+    setUserLastName: setInitialUserLastName,
+  } = useUserStore();
+  const { userEmail: initialUserEmail, setUserEmail: setInitialUserEmail } =
+    useUserStore();
   const { role: initialRole, setRole: setInitialRole } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +63,12 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   const handleButtonPress = () => {
     if (editable) {
-      if (newName !== userName || newLastName !== userLastName || newRole !== role || newEmail.toLowerCase() !== userEmail.toLowerCase()) {
+      if (
+        newName !== userName ||
+        newLastName !== userLastName ||
+        newRole !== role ||
+        newEmail.toLowerCase() !== userEmail.toLowerCase()
+      ) {
         setNewName(userName);
         setNewLastName(userLastName);
         setNewEmail(userEmail.toLowerCase());
@@ -66,13 +77,17 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
     }
 
     setEditable(!editable);
-
   };
 
   const handleSaveChanges = async () => {
     setIsSubmitting(true);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (newName === "" || newLastName === "" || newEmail === "" || newRole === "") {
+    if (
+      newName === "" ||
+      newLastName === "" ||
+      newEmail === "" ||
+      newRole === ""
+    ) {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -84,10 +99,10 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
     } else {
       if (!emailRegex.test(newEmail)) {
         Toast.show({
-          type: 'error',
-          text1: 'Correo electrónico no válido',
-          text2: 'Intente nuevamente',
-          position: 'bottom',
+          type: "error",
+          text1: "Correo electrónico no válido",
+          text2: "Intente nuevamente",
+          position: "bottom",
           visibilityTime: 1500,
           autoHide: true,
         });
@@ -144,181 +159,134 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-          marginTop: Spacing * 2,
-        }}
-      >
+    <GradientWrapper>
+      <SafeAreaView>
         <View
           style={{
-            alignItems: "center",
+            padding: Spacing * 2,
+            marginTop: Spacing * 2,
           }}
         >
-          <TouchableOpacity
-            disabled={isLoading || isSubmitting}
+          <View
             style={{
-              position: "absolute",
-              top: Spacing * 1,
-              left: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("Dashboard")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 2,
+              alignItems: "center",
             }}
           >
-            Tu perfil
-          </Text>
-          <TouchableOpacity
-            disabled={isLoading || isSubmitting}
-            style={{
-              position: "absolute",
-              top: Spacing * 1,
-              right: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("DeleteUser")}
-          >
-            <Icon
-              raised
-              name='trash'
-              type='font-awesome-5'
-              color='black' />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Nombre
-          </Text>
-          <AppTextInput placeholder="Nombre" value={capitalizeFirstLetter(newName)} editable={editable} onChangeText={setNewName} />
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Apellido
-          </Text>
-          <AppTextInput placeholder="Apellido" value={capitalizeFirstLetter(newLastName)} editable={editable} onChangeText={setNewLastName} />
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Correo
-          </Text>
-          <AppTextInput placeholder="Correo" value={newEmail.toLowerCase()} editable={editable} onChangeText={setNewEmail} />
-          <Text
-            style={{
-              fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.medium,
-              marginHorizontal: 5,
-              maxWidth: "60%",
-              alignSelf: "flex-start",
-            }}
-          >
-            Rol
-          </Text>
-          <AppTextInput placeholder="Rol" value={newRole} editable={editable} onChangeText={setNewRole} />
-        </View>
+            <TouchableOpacity
+              disabled={isLoading || isSubmitting}
+              style={{
+                position: "absolute",
+                top: Spacing * 1,
+                left: -Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("Dashboard")}
+            >
+              <Icon
+                raised
+                size={25}
+                name="arrow-back"
+                type="Ionicons"
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
+                fontFamily: Font["poppins-bold"],
+                marginVertical: Spacing * 2,
+              }}
+            >
+              Tu perfil
+            </Text>
+            <TouchableOpacity
+              disabled={isLoading || isSubmitting}
+              style={{
+                position: "absolute",
+                top: Spacing * 1,
+                right: -Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("DeleteUser")}
+            >
+              <Icon raised name="trash" type="font-awesome-5" color="black" />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Text
+              style={{
+                fontFamily: Font["poppins-semiBold"],
+                fontSize: FontSize.medium,
+                marginHorizontal: 5,
+                maxWidth: "60%",
+                alignSelf: "flex-start",
+              }}
+            >
+              Nombre
+            </Text>
+            <AppTextInput
+              placeholder="Nombre"
+              value={capitalizeFirstLetter(newName)}
+              editable={editable}
+              onChangeText={setNewName}
+            />
+            <Text
+              style={{
+                fontFamily: Font["poppins-semiBold"],
+                fontSize: FontSize.medium,
+                marginHorizontal: 5,
+                maxWidth: "60%",
+                alignSelf: "flex-start",
+              }}
+            >
+              Apellido
+            </Text>
+            <AppTextInput
+              placeholder="Apellido"
+              value={capitalizeFirstLetter(newLastName)}
+              editable={editable}
+              onChangeText={setNewLastName}
+            />
+            <Text
+              style={{
+                fontFamily: Font["poppins-semiBold"],
+                fontSize: FontSize.medium,
+                marginHorizontal: 5,
+                maxWidth: "60%",
+                alignSelf: "flex-start",
+              }}
+            >
+              Correo
+            </Text>
+            <AppTextInput
+              placeholder="Correo"
+              value={newEmail.toLowerCase()}
+              editable={editable}
+              onChangeText={setNewEmail}
+            />
+            <Text
+              style={{
+                fontFamily: Font["poppins-semiBold"],
+                fontSize: FontSize.medium,
+                marginHorizontal: 5,
+                maxWidth: "60%",
+                alignSelf: "flex-start",
+              }}
+            >
+              Rol
+            </Text>
+            <AppTextInput
+              placeholder="Rol"
+              value={newRole}
+              editable={editable}
+              onChangeText={setNewRole}
+            />
+          </View>
 
-        <TouchableOpacity
-          disabled={isLoading || isSubmitting}
-          onPress={handleButtonPress}
-          style={{
-            padding: Spacing * 1,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Font["poppins-bold"],
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            {editable ? "Cancelar" : "Editar Datos"}
-          </Text>
-        </TouchableOpacity>
-
-        {editable && (
           <TouchableOpacity
             disabled={isLoading || isSubmitting}
-            onPress={handleSaveChanges}
-            style={{
-              padding: Spacing * 1,
-              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-              marginVertical: Spacing * 1,
-              borderRadius: Spacing,
-              shadowColor: Colors.primary,
-              shadowOffset: {
-                width: 0,
-                height: Spacing,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: Spacing,
-            }}
-          >
-            {isLoading || isSubmitting ? (
-              <ActivityIndicator size="large" color={Colors.primary} />
-            ) : (
-              <Text
-                style={{
-                  fontFamily: Font["poppins-bold"],
-                  color: Colors.onPrimary,
-                  textAlign: "center",
-                  fontSize: FontSize.large,
-                }}
-              >
-                Guardar
-              </Text>
-            )}
-          </TouchableOpacity>
-        )}
-
-        {!editable && (
-          <TouchableOpacity
-            disabled={isLoading || isSubmitting}
-            onPress={() => navigate("ChangePassword")}
+            onPress={handleButtonPress}
             style={{
               padding: Spacing * 1,
               backgroundColor: Colors.primary,
@@ -341,14 +309,81 @@ const UserProfile: React.FC<Props> = ({ navigation: { navigate } }) => {
                 fontSize: FontSize.large,
               }}
             >
-              Cambiar Contraseña
+              {editable ? "Cancelar" : "Editar Datos"}
             </Text>
           </TouchableOpacity>
-        )}
-      </View>
-    </SafeAreaView>
-  );
 
+          {editable && (
+            <TouchableOpacity
+              disabled={isLoading || isSubmitting}
+              onPress={handleSaveChanges}
+              style={{
+                padding: Spacing * 1,
+                backgroundColor: isSubmitting
+                  ? Colors.disabled
+                  : Colors.primary,
+                marginVertical: Spacing * 1,
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              {isLoading || isSubmitting ? (
+                <ActivityIndicator size="large" color={Colors.primary} />
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: Font["poppins-bold"],
+                    color: Colors.onPrimary,
+                    textAlign: "center",
+                    fontSize: FontSize.large,
+                  }}
+                >
+                  Guardar
+                </Text>
+              )}
+            </TouchableOpacity>
+          )}
+
+          {!editable && (
+            <TouchableOpacity
+              disabled={isLoading || isSubmitting}
+              onPress={() => navigate("ChangePassword")}
+              style={{
+                padding: Spacing * 1,
+                backgroundColor: Colors.primary,
+                marginVertical: Spacing * 1,
+                borderRadius: Spacing,
+                shadowColor: Colors.primary,
+                shadowOffset: {
+                  width: 0,
+                  height: Spacing,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: Spacing,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Cambiar Contraseña
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
+  );
 };
 
 export default UserProfile;

@@ -18,6 +18,7 @@ import { useUserStore } from '../stores/useUserStore';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { Icon } from '@rneui/themed';
+import GradientWrapper from '../components/GradientWrapper';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -111,6 +112,7 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
   );
 
   return (
+    <GradientWrapper>
     <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <View
         style={{
@@ -189,6 +191,7 @@ const Dashboard: React.FC<Props> = ({ navigation: { navigate } }) => {
         </View>
       </View>
     </SafeAreaView>
+    </GradientWrapper>
   );
 };
 

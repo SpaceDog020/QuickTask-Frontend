@@ -56,6 +56,7 @@ function RootNavigator() {
         headerShown: false,
       }}
     >
+      <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="PassVal" component={PassValScreen} />
@@ -71,7 +72,6 @@ function RootNavigator() {
       <Stack.Screen name="TeamDashboard" component={TeamDashboardScreen} />
       <Stack.Screen name="EditTeam" component={EditTeamScreen} />
       <Stack.Screen name="AddUser" component={AddUserScreen} />
-      <Stack.Screen name="UserDetails" component={UserDetailsScreen} />
       <Stack.Screen name="ProjectCreation" component={ProjectCreationScreen} />
       <Stack.Screen name="ViewProjects" component={ViewProjectsScreen} />
       <Stack.Screen name="ProjectDashboard" component={ProjectDashboardScreen} />
