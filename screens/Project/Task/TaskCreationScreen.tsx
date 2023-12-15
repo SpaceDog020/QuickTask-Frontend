@@ -27,7 +27,8 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [idUser, setIdUser] = useState(null);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [finishDate, setFinishDate] = useState<Date | null>(null);
-  const [open, setOpen] = useState(false);
+  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+  const [openFinishDatePicker, setOpenFinishDatePicker] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
   const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSTEAMSIDS, {
@@ -55,12 +56,12 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   useEffect(() => {
-    if(projectTeamsIds.length !== 0) {
+    if (projectTeamsIds.length !== 0) {
       refetchUsersData();
     }
   }, [usersData]);
 
-  const renderDateTimePicker = (selectedDate: Date | null, setDate: React.Dispatch<React.SetStateAction<Date | null>>) => {
+  const renderDateTimePicker = (selectedDate: Date | null, setDate: React.Dispatch<React.SetStateAction<Date | null>>, isOpen: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     return (
       <DateTimePicker
         value={selectedDate || new Date()}
@@ -192,7 +193,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             }}
           >
             <TouchableOpacity
-              onPress={() => setOpen(true)}
+              onPress={() => setOpenStartDatePicker(true)}
               style={{
                 backgroundColor: Colors.lightPrimary,
                 borderRadius: Spacing,
@@ -205,7 +206,6 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               </Text>
               <Text>{startDate ? startDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
             </TouchableOpacity>
-
             {startDate && (
               <TouchableOpacity
                 onPress={() => setStartDate(null)}
@@ -223,7 +223,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               </TouchableOpacity>
             )}
 
-            {open && renderDateTimePicker(startDate, setStartDate)}
+            {openStartDatePicker && renderDateTimePicker(startDate, setStartDate, openStartDatePicker, setOpenStartDatePicker)}
           </View>
           <View
             style={{
@@ -231,7 +231,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
             }}
           >
             <TouchableOpacity
-              onPress={() => setOpen(true)}
+              onPress={() => setOpenFinishDatePicker(true)}
               style={{
                 backgroundColor: Colors.lightPrimary,
                 borderRadius: Spacing,
@@ -244,7 +244,6 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               </Text>
               <Text>{finishDate ? finishDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
             </TouchableOpacity>
-
             {finishDate && (
               <TouchableOpacity
                 onPress={() => setFinishDate(null)}
@@ -261,8 +260,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
                 </Text>
               </TouchableOpacity>
             )}
-
-            {open && renderDateTimePicker(finishDate, setFinishDate)}
+            {openFinishDatePicker && renderDateTimePicker(finishDate, setFinishDate, openFinishDatePicker, setOpenFinishDatePicker)}
           </View>
           <Picker
             style={{

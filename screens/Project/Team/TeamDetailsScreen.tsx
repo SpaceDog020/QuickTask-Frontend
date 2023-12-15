@@ -74,7 +74,6 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                 variables: {
                     idProject: idProject,
                     idTeam: idTeam,
-                    idUsers: idUsers
                 },
             });
             setIsLoading(false);
