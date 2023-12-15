@@ -1,5 +1,12 @@
-import { ActivityIndicator, Button, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  ActivityIndicator,
+  Button,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useEffect, useState } from "react";
 import Spacing from "../../../constants/Spacing";
 import FontSize from "../../../constants/FontSize";
@@ -16,6 +23,7 @@ import { Icon } from "@rneui/themed";
 import { CREATETASK } from "../../../graphql/mutations";
 import { Picker } from "@react-native-picker/picker";
 import { GETUSERSTEAMSIDS } from "../../../graphql/queries";
+import GradientWrapper from "../../../components/GradientWrapper";
 
 type Props = NativeStackScreenProps<RootStackParamList, "TaskCreation">;
 
@@ -31,11 +39,14 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [openFinishDatePicker, setOpenFinishDatePicker] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
-  const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSTEAMSIDS, {
-    variables: {
-      teamIds: projectTeamsIds,
-    },
-  });
+  const { data: usersData, refetch: refetchUsers } = useQuery(
+    GETUSERSTEAMSIDS,
+    {
+      variables: {
+        teamIds: projectTeamsIds,
+      },
+    }
+  );
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +72,12 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
     }
   }, [usersData]);
 
-  const renderDateTimePicker = (selectedDate: Date | null, setDate: React.Dispatch<React.SetStateAction<Date | null>>, isOpen: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+  const renderDateTimePicker = (
+    selectedDate: Date | null,
+    setDate: React.Dispatch<React.SetStateAction<Date | null>>,
+    isOpen: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     return (
       <DateTimePicker
         value={selectedDate || new Date()}
@@ -130,191 +146,240 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-        }}
-      >
+    <GradientWrapper>
+      <SafeAreaView>
         <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: Spacing * 2,
-              left: -Spacing,
-              zIndex: 1,
-            }}
-            onPress={() => navigate("ProjectDashboard")}
-          >
-            <Icon
-              raised
-              size={25}
-              name='arrow-back'
-              type='Ionicons'
-              color={Colors.primary} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 3,
-              marginHorizontal: Spacing * 5,
-              textAlign: "center",
-            }}
-          >
-            Crea tu tarea
-          </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing * 1,
-          }}
-        >
-          <AppTextInput
-            placeholder="Nombre de la tarea"
-            value={taskName}
-            onChangeText={setTaskName}
-            maxLength={20}
-          />
-          <AppTextInput
-            placeholder="Descripción de la tarea"
-            value={taskDescription}
-            onChangeText={setTaskDescription}
-            maxLength={30}
-          />
-          <View
-            style={{
-              marginVertical: Spacing * 1,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => setOpenStartDatePicker(true)}
-              style={{
-                backgroundColor: Colors.lightPrimary,
-                borderRadius: Spacing,
-                padding: Spacing * 1,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small }}>
-                Fecha de inicio:
-              </Text>
-              <Text>{startDate ? startDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
-            </TouchableOpacity>
-            {startDate && (
-              <TouchableOpacity
-                onPress={() => setStartDate(null)}
-                style={{
-                  backgroundColor: Colors.lightPrimary,
-                  borderRadius: Spacing,
-                  padding: Spacing * 1,
-                  alignItems: "center",
-                  marginTop: Spacing,
-                }}
-              >
-                <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: Colors.error }}>
-                  Eliminar fecha
-                </Text>
-              </TouchableOpacity>
-            )}
-
-            {openStartDatePicker && renderDateTimePicker(startDate, setStartDate, openStartDatePicker, setOpenStartDatePicker)}
-          </View>
-          <View
-            style={{
-              marginVertical: Spacing * 1,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => setOpenFinishDatePicker(true)}
-              style={{
-                backgroundColor: Colors.lightPrimary,
-                borderRadius: Spacing,
-                padding: Spacing * 1,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small }}>
-                Fecha de termino:
-              </Text>
-              <Text>{finishDate ? finishDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
-            </TouchableOpacity>
-            {finishDate && (
-              <TouchableOpacity
-                onPress={() => setFinishDate(null)}
-                style={{
-                  backgroundColor: Colors.lightPrimary,
-                  borderRadius: Spacing,
-                  padding: Spacing * 1,
-                  alignItems: "center",
-                  marginTop: Spacing,
-                }}
-              >
-                <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: Colors.error }}>
-                  Eliminar fecha
-                </Text>
-              </TouchableOpacity>
-            )}
-            {openFinishDatePicker && renderDateTimePicker(finishDate, setFinishDate, openFinishDatePicker, setOpenFinishDatePicker)}
-          </View>
-          <Picker
-            style={{
-              fontFamily: Font["poppins-regular"],
-              fontSize: FontSize.small,
-              padding: Spacing * 2,
-              backgroundColor: Colors.lightPrimary,
-              borderRadius: Spacing,
-              marginVertical: Spacing,
-            }}
-            selectedValue={idUser}
-            onValueChange={(itemValue, itemIndex) => setIdUser(itemValue)}
-          >
-            <Picker.Item style={{ fontFamily: Font["poppins-regular"] }} label="Usuario responsable (opcional)" value={null} />
-            {filteredUsers?.map((user) => (
-              <Picker.Item key={user.id} label={user.name} value={user.id} />
-            ))}
-          </Picker>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => handleTeamCreation()}
-          disabled={isLoading || isSubmitting}
           style={{
             padding: Spacing * 2,
-            backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
-            marginVertical: Spacing * 1,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
           }}
         >
-          {isLoading || isSubmitting ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                top: Spacing * 2,
+                left: -Spacing,
+                zIndex: 1,
+              }}
+              onPress={() => navigate("ProjectDashboard")}
+            >
+              <Icon
+                raised
+                size={25}
+                name="arrow-back"
+                type="Ionicons"
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
             <Text
               style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
                 fontFamily: Font["poppins-bold"],
-                color: Colors.onPrimary,
+                marginVertical: Spacing * 3,
+                marginHorizontal: Spacing * 5,
                 textAlign: "center",
-                fontSize: FontSize.large,
               }}
             >
-              Crear Tarea
+              Crea tu tarea
             </Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          </View>
+          <View
+            style={{
+              marginVertical: Spacing * 1,
+            }}
+          >
+            <AppTextInput
+              placeholder="Nombre de la tarea"
+              value={taskName}
+              onChangeText={setTaskName}
+              maxLength={20}
+            />
+            <AppTextInput
+              placeholder="Descripción de la tarea"
+              value={taskDescription}
+              onChangeText={setTaskDescription}
+              maxLength={30}
+            />
+            <View
+              style={{
+                marginVertical: Spacing * 1,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => setOpenStartDatePicker(true)}
+                style={{
+                  backgroundColor: Colors.lightPrimary,
+                  borderRadius: Spacing,
+                  padding: Spacing * 1,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: Font["poppins-regular"],
+                    fontSize: FontSize.small,
+                  }}
+                >
+                  Fecha de inicio:
+                </Text>
+                <Text>
+                  {startDate
+                    ? startDate.toISOString().split("T")[0]
+                    : "Sin fecha"}
+                </Text>
+              </TouchableOpacity>
+              {startDate && (
+                <TouchableOpacity
+                  onPress={() => setStartDate(null)}
+                  style={{
+                    backgroundColor: Colors.lightPrimary,
+                    borderRadius: Spacing,
+                    padding: Spacing * 1,
+                    alignItems: "center",
+                    marginTop: Spacing,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-regular"],
+                      fontSize: FontSize.small,
+                      color: Colors.error,
+                    }}
+                  >
+                    Eliminar fecha
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {openStartDatePicker &&
+                renderDateTimePicker(
+                  startDate,
+                  setStartDate,
+                  openStartDatePicker,
+                  setOpenStartDatePicker
+                )}
+            </View>
+            <View
+              style={{
+                marginVertical: Spacing * 1,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => setOpenFinishDatePicker(true)}
+                style={{
+                  backgroundColor: Colors.lightPrimary,
+                  borderRadius: Spacing,
+                  padding: Spacing * 1,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: Font["poppins-regular"],
+                    fontSize: FontSize.small,
+                  }}
+                >
+                  Fecha de termino:
+                </Text>
+                <Text>
+                  {finishDate
+                    ? finishDate.toISOString().split("T")[0]
+                    : "Sin fecha"}
+                </Text>
+              </TouchableOpacity>
+              {finishDate && (
+                <TouchableOpacity
+                  onPress={() => setFinishDate(null)}
+                  style={{
+                    backgroundColor: Colors.lightPrimary,
+                    borderRadius: Spacing,
+                    padding: Spacing * 1,
+                    alignItems: "center",
+                    marginTop: Spacing,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: Font["poppins-regular"],
+                      fontSize: FontSize.small,
+                      color: Colors.error,
+                    }}
+                  >
+                    Eliminar fecha
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {openFinishDatePicker &&
+                renderDateTimePicker(
+                  finishDate,
+                  setFinishDate,
+                  openFinishDatePicker,
+                  setOpenFinishDatePicker
+                )}
+            </View>
+            <Picker
+              style={{
+                fontFamily: Font["poppins-regular"],
+                fontSize: FontSize.small,
+                padding: Spacing * 2,
+                backgroundColor: Colors.lightPrimary,
+                borderRadius: Spacing,
+                marginVertical: Spacing,
+              }}
+              selectedValue={idUser}
+              onValueChange={(itemValue, itemIndex) => setIdUser(itemValue)}
+            >
+              <Picker.Item
+                style={{ fontFamily: Font["poppins-regular"] }}
+                label="Usuario responsable (opcional)"
+                value={null}
+              />
+              {filteredUsers?.map((user) => (
+                <Picker.Item key={user.id} label={user.name} value={user.id} />
+              ))}
+            </Picker>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => handleTeamCreation()}
+            disabled={isLoading || isSubmitting}
+            style={{
+              padding: Spacing * 2,
+              backgroundColor: isSubmitting ? Colors.disabled : Colors.primary,
+              marginVertical: Spacing * 1,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+          >
+            {isLoading || isSubmitting ? (
+              <ActivityIndicator size="large" color={Colors.primary} />
+            ) : (
+              <Text
+                style={{
+                  fontFamily: Font["poppins-bold"],
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Crear Tarea
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 
