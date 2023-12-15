@@ -56,8 +56,16 @@ const ViewTasks: React.FC<Props> = ({ navigation: { navigate } }) => {
     refetchTasksData();
   }, [taskData]);
 
-  const filteredTasks = tasks?.filter((task) =>
-    task.name.toLowerCase().includes(searchInput.toLowerCase())
+  useFocusEffect(
+    React.useCallback(() => {
+      refetchTasksData();
+    }, [projectId])
+  );
+
+  const filteredTasks = tasks?.filter(
+    (task) =>
+      task.name.toLowerCase().includes(searchInput.toLowerCase()) &&
+      task.status !== "Eliminado"
   ) || [];
 
   const filteredMyTasks = showMyTasks ? filteredTasks?.filter((task) => task.idUser === userId) : filteredTasks;

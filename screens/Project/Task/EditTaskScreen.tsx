@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -11,15 +11,18 @@ import FontSize from "../../../constants/FontSize";
 import Colors from "../../../constants/Colors";
 import Font from "../../../constants/Font";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { RootStackParamList } from "../../../types";
 import { useUserStore } from "../../../stores/useUserStore";
 import { Icon } from "@rneui/themed";
 import AppTextInput from "../../../components/AppTextInput";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { DELETETASK, UPDATETASK } from "../../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../../hooks/useButtonTimeout";
 import Modal from "react-native-modal";
+import { GETUSERSTEAMSIDS } from "../../../graphql/queries";
+import { Picker } from "@react-native-picker/picker";
 
 type Props = NativeStackScreenProps<RootStackParamList, "EditTask">;
 
@@ -29,18 +32,46 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
   const [editable, setEditable] = useState(false);
   const { taskId } = useUserStore();
   const { projectId } = useUserStore();
+  const { projectTeamsIds } = useUserStore();
   const { taskName: oldTaskName, setTaskName: setOldTaskName } = useUserStore();
   const [newTaskName, setNewTaskName] = useState(oldTaskName);
   const { taskDescription: oldTaskDescription, setTaskDescription: setOldTaskDescription } = useUserStore();
   const [newTaskDescription, setNewTaskDescription] = useState(oldTaskDescription);
   const { taskIdUserResponsable: oldTaskIdUserResponsable, setTaskIdUserResponsable: setOldTaskIdUserResponsable } = useUserStore();
   const [newTaskIdUserResponsable, setNewTaskIdUserResponsable] = useState(oldTaskIdUserResponsable);
+  const [taskStatusOptions, setTaskStatusOptions] = useState(["Pendiente", "En Proceso", "Completado"]);
   const { taskStatus: oldTaskStatus, setTaskStatus: setOldTaskStatus } = useUserStore();
   const [newTaskStatus, setNewTaskStatus] = useState(oldTaskStatus);
   const { taskStartDate: oldTaskStartDate, setTaskStartDate: setOldTaskStartDate } = useUserStore();
-  const [newTaskStartDate, setNewTaskStartDate] = useState(oldTaskStartDate);
+  const [newTaskStartDate, setNewTaskStartDate] = useState<Date | null>(
+    oldTaskStartDate ? new Date(oldTaskStartDate) : null
+  );
   const { taskFinishDate: oldTaskFinishDate, setTaskFinishDate: setOldTaskFinishDate } = useUserStore();
-  const [newTaskFinishDate, setNewTaskFinishDate] = useState(oldTaskFinishDate);
+  const [newTaskFinishDate, setNewTaskFinishDate] = useState<Date | null>(
+    oldTaskFinishDate ? new Date(oldTaskFinishDate) : null
+  );
+
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+  const [openFinishDatePicker, setOpenFinishDatePicker] = useState(false);
+
+  const { data: usersData, refetch: refetchUsers } = useQuery(GETUSERSTEAMSIDS, {
+    variables: {
+      teamIds: projectTeamsIds,
+    },
+  });
+
+  const refetchUsersData = async () => {
+    await refetchUsers();
+    setFilteredUsers(usersData?.usersByTeamIds);
+  };
+
+  useEffect(() => {
+    if (projectTeamsIds.length !== 0) {
+      refetchUsersData();
+    }
+  }, [usersData]);
 
   const [updateTask] = useMutation(UPDATETASK);
   const [deleteTask] = useMutation(DELETETASK);
@@ -80,8 +111,8 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
       setIsLoading(false);
       Toast.show({
         type: "success",
-        text1: "Proyecto eliminado",
-        text2: "Se ha eliminado el proyecto correctamente",
+        text1: "Tarea eliminada",
+        text2: "Se ha eliminado la tarea correctamente",
         position: "bottom",
         visibilityTime: 3000, // Duration in milliseconds
         autoHide: true,
@@ -106,7 +137,7 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Todos los campos deben estar llenos",
+        text2: "Los campos nombre y descripcion deben estar llenos",
         position: "bottom",
         visibilityTime: 1500, // Duration in milliseconds
         autoHide: true,
@@ -114,7 +145,6 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
     } else {
       try {
         setIsLoading(true);
-        // Call the updateUser mutation with the updated user data
         await updateTask({
           variables: {
             id: taskId,
@@ -127,24 +157,21 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
             finishDate: newTaskFinishDate,
           },
         });
-        // Update the user data in your local state
         setOldTaskName(newTaskName);
         setOldTaskDescription(newTaskDescription);
         setOldTaskIdUserResponsable(newTaskIdUserResponsable);
         setOldTaskStatus(newTaskStatus);
-        setOldTaskStartDate(newTaskStartDate);
-        setOldTaskFinishDate(newTaskFinishDate);
+        setOldTaskStartDate(formatDate(newTaskStartDate));
+        setOldTaskFinishDate(formatDate(newTaskFinishDate));
         setIsLoading(false);
         Toast.show({
           type: "success",
           text1: "Datos actualizados",
           text2: "Se han guardado los datos",
           position: "bottom",
-          visibilityTime: 3000, // Duration in milliseconds
+          visibilityTime: 3000,
           autoHide: true,
         });
-
-        // Disable editability after saving changes
         setIsSubmitting(false);
         setEditable(false);
       } catch (e) {
@@ -155,11 +182,33 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
           text1: "Error al actualizar datos",
           text2: e.message,
           position: "bottom",
-          visibilityTime: 3000, // Duration in milliseconds
+          visibilityTime: 3000,
           autoHide: true,
         });
       }
     }
+  };
+
+  const formatDate = (date) => {
+    if (!date) return null;
+    const isoString = date.toISOString().split('T')[0];
+    return isoString;
+  };
+
+  const renderDateTimePicker = (selectedDate: Date | null, setDate: React.Dispatch<React.SetStateAction<Date | null>>, isOpen: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+    return (
+      <DateTimePicker
+        value={selectedDate || new Date()}
+        mode="date"
+        display="default"
+        onChange={(event, newDate) => {
+          if (newDate) {
+            setDate(newDate);
+            setOpen(false);
+          }
+        }}
+      />
+    );
   };
 
   return (
@@ -244,6 +293,118 @@ const EditTask: React.FC<Props> = ({ navigation: { navigate } }) => {
             Descripcion
           </Text>
           <AppTextInput placeholder="Descripción" value={newTaskDescription} editable={editable} onChangeText={setNewTaskDescription} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: Spacing * 1, marginVertical: Spacing, }}>
+            <View style={{ width: '48%' }}>
+              <TouchableOpacity
+                onPress={() => setOpenStartDatePicker(true)}
+                style={{
+                  backgroundColor: Colors.lightPrimary,
+                  borderRadius: Spacing,
+                  padding: Spacing * 1,
+                  alignItems: "center",
+                  width: '100%',
+                }}
+                disabled={!editable}
+              >
+                <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: editable ? 'black' : '#A3A3A3' }}>
+                  Fecha de inicio:
+                </Text>
+                <Text style={{ color: editable ? 'black' : '#A3A3A3' }}>{newTaskStartDate ? newTaskStartDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
+              </TouchableOpacity>
+              {newTaskStartDate && (
+                <TouchableOpacity
+                  onPress={() => setNewTaskStartDate(null)}
+                  style={{
+                    backgroundColor: Colors.lightPrimary,
+                    borderRadius: Spacing,
+                    padding: Spacing * 1,
+                    alignItems: "center",
+                    marginTop: Spacing,
+                    width: '100%',
+                  }}
+                  disabled={!editable}
+                >
+                  <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: editable ? Colors.error : '#A3A3A3' }}>
+                    Eliminar fecha
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {openStartDatePicker && renderDateTimePicker(newTaskStartDate, setNewTaskStartDate, openStartDatePicker, setOpenStartDatePicker)}
+            </View>
+
+            <View style={{ width: '48%' }}>
+              <TouchableOpacity
+                onPress={() => setOpenFinishDatePicker(true)}
+                style={{
+                  backgroundColor: Colors.lightPrimary,
+                  borderRadius: Spacing,
+                  padding: Spacing * 1,
+                  alignItems: "center",
+                  width: '100%',
+                }}
+                disabled={!editable}
+              >
+                <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: editable ? 'black' : '#A3A3A3' }}>
+                  Fecha de termino:
+                </Text>
+                <Text style={{ color: editable ? 'black' : '#A3A3A3' }}>{newTaskFinishDate ? newTaskFinishDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
+              </TouchableOpacity>
+              {newTaskFinishDate && (
+                <TouchableOpacity
+                  onPress={() => setNewTaskFinishDate(null)}
+                  style={{
+                    backgroundColor: Colors.lightPrimary,
+                    borderRadius: Spacing,
+                    padding: Spacing * 1,
+                    alignItems: "center",
+                    marginTop: Spacing,
+                    width: '100%',
+                  }}
+                  disabled={!editable}
+                >
+                  <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: editable ? Colors.error : '#A3A3A3' }}>
+                    Eliminar fecha
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {openFinishDatePicker && renderDateTimePicker(newTaskFinishDate, setNewTaskFinishDate, openFinishDatePicker, setOpenFinishDatePicker)}
+            </View>
+          </View>
+          <Picker
+            style={{
+              fontFamily: Font["poppins-regular"],
+              fontSize: FontSize.small,
+              padding: Spacing * 2,
+              backgroundColor: Colors.lightPrimary,
+              borderRadius: Spacing,
+              marginVertical: Spacing,
+            }}
+            selectedValue={newTaskIdUserResponsable}
+            onValueChange={(itemValue, itemIndex) => setNewTaskIdUserResponsable(itemValue)}
+            enabled={editable}
+          >
+            <Picker.Item style={{ fontFamily: Font["poppins-regular"], color: editable ? 'black' : '#A3A3A3' }} label="Usuario responsable (opcional)" value={null} />
+            {filteredUsers?.map((user) => (
+              <Picker.Item style={{ color: editable ? 'black' : '#A3A3A3' }} key={user.id} label={user.name} value={user.id} />
+            ))}
+          </Picker>
+          <Picker
+            style={{
+              fontFamily: Font["poppins-regular"],
+              fontSize: FontSize.small,
+              padding: Spacing * 2,
+              backgroundColor: Colors.lightPrimary,
+              borderRadius: Spacing,
+              marginVertical: Spacing,
+            }}
+            selectedValue={newTaskStatus}
+            onValueChange={(itemValue, itemIndex) => setNewTaskStatus(itemValue)}
+            enabled={editable}
+          >
+            {taskStatusOptions.map((status) => (
+              <Picker.Item style={{ color: editable ? 'black' : '#A3A3A3' }} key={status} label={status} value={status} />
+            ))}
+          </Picker>
         </View>
 
         <TouchableOpacity

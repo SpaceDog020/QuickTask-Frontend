@@ -218,7 +218,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
                 }}
               >
                 <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: Colors.error }}>
-                  Eliminar fecha de inicio
+                  Eliminar fecha
                 </Text>
               </TouchableOpacity>
             )}
@@ -240,7 +240,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
               }}
             >
               <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small }}>
-                Fecha de fin:
+                Fecha de termino:
               </Text>
               <Text>{finishDate ? finishDate.toISOString().split('T')[0] : 'Sin fecha'}</Text>
             </TouchableOpacity>
@@ -256,7 +256,7 @@ const TaskCreation: React.FC<Props> = ({ navigation: { navigate } }) => {
                 }}
               >
                 <Text style={{ fontFamily: Font["poppins-regular"], fontSize: FontSize.small, color: Colors.error }}>
-                  Eliminar fecha de fin
+                  Eliminar fecha
                 </Text>
               </TouchableOpacity>
             )}

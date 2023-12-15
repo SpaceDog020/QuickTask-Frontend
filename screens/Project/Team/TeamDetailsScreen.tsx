@@ -1,5 +1,4 @@
 import {
-    Modal,
     SafeAreaView,
     ScrollView,
     Text,
@@ -18,6 +17,7 @@ import Colors from "../../../constants/Colors";
 import Font from "../../../constants/Font";
 import FontSize from "../../../constants/FontSize";
 import { Icon } from "@rneui/themed";
+import Modal from "react-native-modal";
 import { REMOVETEAMPROJECT } from "../../../graphql/mutations";
 import Toast from "react-native-toast-message";
 import useButtonTimeout from "../../../hooks/useButtonTimeout";
@@ -30,6 +30,8 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
     const { projectTeamsIds, setProjectTeamsIds } = useUserStore();
     const [modalVisible, setModalVisible] = useState(false);  // Nuevo estado para controlar la visibilidad del modal
     const [modalUsers, setModalUsers] = useState([]);
+    const [teamId, setTeamId] = useState(null);
+    const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
@@ -66,7 +68,12 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
         }
     };
 
-    const kickTeam = async (idProject, idTeam, idUsers) => {
+    const handleKickTeam = async (teamId) => {
+        setTeamId(teamId);
+        setDeleteModalVisible(true);
+    }
+
+    const kickTeam = async (idProject, idTeam) => {
         setIsSubmitting(true);
         try {
             setIsLoading(true);
@@ -87,6 +94,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                     autoHide: true,
                 });
                 refetchTeams();
+                setDeleteModalVisible(false);
                 setProjectTeamsIds(projectTeamsIds.filter((teamId) => teamId !== idTeam));
                 setIsSubmitting(false);
             }
@@ -199,7 +207,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', width: '50%' }}>
                                     <TouchableOpacity
                                         disabled={isLoading || isSubmitting}
-                                        onPress={() => kickTeam(projectId, team.id, team.idUsers)}
+                                        onPress={() => handleKickTeam(team.id)}
                                         style={{
                                             backgroundColor: Colors.error,
                                             paddingVertical: Spacing * 1,
@@ -229,12 +237,8 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
             </ScrollView>
 
             <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
+                isVisible={modalVisible}
+                onBackdropPress={() => setModalVisible(false)}
             >
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                     <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, elevation: 5, width: '80%', maxHeight: '80%' }}>
@@ -269,6 +273,7 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                             </TouchableOpacity>
                         ))}
                         <TouchableOpacity
+                            disabled={isLoading || isSubmitting}
                             onPress={() => setModalVisible(!modalVisible)}
                             style={{ marginTop: Spacing * 2 }}
                         >
@@ -277,7 +282,58 @@ const TeamDetails: React.FC<Props> = ({ navigation: { navigate } }) => {
                     </View>
                 </View>
             </Modal>
-
+            <Modal
+                isVisible={isDeleteModalVisible}
+                onBackdropPress={() => setDeleteModalVisible(false)}
+            >
+                <View style={{ backgroundColor: 'white', padding: 20 }}>
+                    <Text style={{ fontSize: 20, fontFamily: Font["poppins-bold"], marginBottom: 20 }}>
+                        ¿Estás seguro de que quieres expulsar este equipo?
+                    </Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                        <TouchableOpacity
+                            disabled={isLoading || isSubmitting}
+                            onPress={() => setDeleteModalVisible(false)}
+                            style={{
+                                backgroundColor: Colors.primary,
+                                padding: Spacing * 1,
+                                borderRadius: Spacing,
+                                shadowColor: Colors.primary,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: Spacing,
+                                },
+                                shadowOpacity: 0.3,
+                                shadowRadius: Spacing,
+                            }}
+                        >
+                            <Text style={{ fontFamily: Font["poppins-bold"], color: Colors.onPrimary, fontSize: FontSize.large }}>
+                                Cancelar
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            disabled={isLoading || isSubmitting}
+                            onPress={() => kickTeam(projectId, teamId)}
+                            style={{
+                                backgroundColor: Colors.error,
+                                padding: Spacing * 1,
+                                borderRadius: Spacing,
+                                shadowColor: Colors.error,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: Spacing,
+                                },
+                                shadowOpacity: 0.3,
+                                shadowRadius: Spacing,
+                            }}
+                        >
+                            <Text style={{ fontFamily: Font["poppins-bold"], color: Colors.onPrimary, fontSize: FontSize.large }}>
+                                Eliminar
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 };
