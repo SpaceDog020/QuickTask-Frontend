@@ -1,5 +1,14 @@
 import { gql } from '@apollo/client';
 
+export const GETTEAMS = gql`
+    query Teams {
+        teams {
+            id
+            name
+        }
+    }
+`;
+
 export const GETUSERIDBYEMAIL = gql`
   query email($email: String!) {
     email(email: $email) {
@@ -14,6 +23,8 @@ export const GETTEAMDETAILS = gql`
             id
             name
             description
+            idUsers
+            idCreator
         }
     }
 `;
@@ -27,4 +38,85 @@ export const GETTEAMBYID = gql`
             idCreator
         }
     }
+`;
+
+export const GETTEAMSBYIDS = gql`
+    query TeamsByIds($ids: [Int!]!) {
+        teamsByIds(ids: $ids) {
+            id
+            name
+            description
+            idUsers
+        }
+    }
+`;
+
+export const GETUSERSBYIDS = gql`
+    query UsersByIds($ids: [Int!]!) {
+        usersByIds(ids: $ids) {
+            id
+            name
+            lastName
+            email
+            role
+        }
+    }
+`;
+
+export const FINDTEAMSBYCREATORID = gql`
+    query FindTeamsByCreatorId($id: Int!) {
+        findTeamsByCreatorId(id: $id) {
+
+            response
+
+        }
+    }
+`;
+
+export const GETPROJECTS = gql`
+    query Projects {
+        projects {
+            id
+            name
+            description
+            idTeams
+        }
+    }
+`;
+
+export const GETUSERSBYTEAMID = gql`
+    query UsersByTeamId($id: Int!) {
+        usersByTeamId(teamId: $id) {
+            id
+            name
+            lastName
+            role
+        }
+    }
+`;
+
+export const GETUSERSTEAMSIDS = gql`
+    query usersByTeamIds($teamIds: [Int!]!) {
+        usersByTeamIds(teamIds: $teamIds) {
+            id
+            name
+        }
+    }
+`;
+
+export const GETTASKSBYPROJECTID = gql`
+  query TasksByProjectId($projectId: Int!) {
+    tasksByProjectId(projectId: $projectId) {
+      id
+      idCreator
+      idProject
+      idUser
+      name
+      description
+      status
+      startDate
+      finishDate
+      comment
+    }
+  }
 `;

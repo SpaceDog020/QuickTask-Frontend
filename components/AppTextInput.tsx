@@ -9,13 +9,18 @@ import Font from "../constants/Font";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 
-const AppTextInput: React.FC<TextInputProps> = ({ ...otherProps }) => {
+interface AppTextInputProps extends TextInputProps {
+  maxLength?: number; // Define maxLength prop
+}
+
+const AppTextInput: React.FC<TextInputProps> = ({ maxLength,...otherProps }) => {
   const [focused, setFocused] = useState<boolean>(false);
   return (
     <TextInput
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       placeholderTextColor={Colors.darkText}
+      maxLength={maxLength} 
       style={[
         {
           fontFamily: Font["poppins-regular"],
